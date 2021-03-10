@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/contentModel.xml
+/.idea.CryptographySolution.iml
+# Datasource local storage ignored files
+/../../../../../../../../../../../:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\.idea\.idea.CryptographySolution\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

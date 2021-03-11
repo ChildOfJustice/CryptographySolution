@@ -34,7 +34,7 @@ namespace Task_1
                 //shift and get the new first bit (& 1):  ((value >> N) & 1)
                 //Shift result to add a new byte (permutedValue << 1) |
                 
-                permutedValue = (permutedValue << 1) | ((value >> (permutationRule[permutationRule.Length - i - 1] - 1)) & 1);
+                permutedValue = (permutedValue << 1) | ((value >> (permutationRule[permutationRule.Length - i - 1])) & 1);
             }
             return permutedValue;
         }
@@ -42,9 +42,11 @@ namespace Task_1
         
         public static void Main(string[] args)
         {
+            ulong a = 0b_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100;
+            //                   1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000
             try
             {
-                Console.WriteLine(Permute(10, InitialPermutation));
+                Console.WriteLine(Convert.ToString((long)Permute(a, InitialPermutation), 2));
                 
             } catch (ArgumentNullException e)
             {

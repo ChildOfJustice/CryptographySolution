@@ -2,7 +2,7 @@
 
 namespace Task_1
 {
-    internal class Program
+    public class Program
     {
         
         static byte[] InitialPermutation =
@@ -12,7 +12,7 @@ namespace Task_1
             57, 49, 41, 33, 25, 17,  9, 1, 59, 51, 43, 35, 27, 19, 11, 3,
             61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7
         };
-        static ulong Permute(ulong value, byte[] permutationRule)
+        static public ulong Permute(ulong value, byte[] permutationRule)
         {
             if (permutationRule == null)
             {

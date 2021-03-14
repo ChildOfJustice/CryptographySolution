@@ -2,14 +2,14 @@
 
 namespace Task_2
 {
-    internal class Program
+    public class Program
     {
         const byte Mask4Bit = (1 << 4) - 1;
         static byte[] Permutation =
         {
             16, 1, 2, 3, 4, 5, 6, 7
         };
-        static ulong Substitute(ulong value, byte[] permutationRule)
+        static public ulong Substitute(ulong value, byte[] permutationRule)
         {
             if (permutationRule == null)
             {
@@ -22,16 +22,19 @@ namespace Task_2
             
             ulong result = 0;
             ulong currentMask = Mask4Bit;
-            for (byte i = 0; i < sizeof(ulong)*8; i++)
+            //going through ulong (64 bits) but with step = 4 bits
+            for (byte i = 0; i < sizeof(ulong)*8/4; i++)
             {
-                byte curr4Bits = (byte) (value & currentMask);
-                if (permutationRule[curr4Bits / 2] > 255) throw new ArgumentException("Wrong array");
+                //Console.WriteLine(i);
+                byte curr4Bits = (byte) ((value & currentMask) >> i*4);
+                //Console.WriteLine(curr4Bits);
+                if (permutationRule[curr4Bits / 2] > 255) throw new ArgumentException("Wrong array on index " + i);
                 byte curr8BitsRule = permutationRule[curr4Bits/2];
                 //Console.WriteLine(curr8BitsRule);
                 byte new4Bits = 0;
                 if (curr4Bits % 2 == 0)
                 {
-                    new4Bits = (byte) (curr8BitsRule & (Mask4Bit << 4));
+                    new4Bits = (byte) ((curr8BitsRule & (Mask4Bit << 4)) >> 4);//get the left 4 bits and then shift them to right so we will only have 4 bits digit
                     //Console.WriteLine(new4Bits);
                 }
                 else

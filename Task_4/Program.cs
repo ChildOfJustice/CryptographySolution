@@ -14,13 +14,13 @@ namespace Task_4
             st.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
 
-            FeistelNet fn = new FeistelNet();
+            FeistelNet fn = new NotAbstractFeistelNet();
             fn.Key = 255;
-            var result = fn.Cipher(st, true);
+            var result = fn.CipherTemplateMethod(st, true);
             result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
 	        
-            var decrypted = fn.Cipher(result, false);
+            var decrypted = fn.CipherTemplateMethod(result, false);
             decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
         }

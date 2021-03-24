@@ -7,7 +7,7 @@ namespace Task_2
         const byte Mask4Bit = (1 << 4) - 1;
         static byte[] Permutation =
         {
-            16, 1, 2, 3, 4, 5, 6, 7
+            16, 1, 2, 3, 4, 5, 6, 7 // [0001]_0000_0000_0001_[0000]_0010 ...
         };
         static public ulong Substitute(ulong value, byte[] permutationRule)
         {
@@ -57,6 +57,19 @@ namespace Task_2
         {
             ulong a = 0b_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0100;
             Console.WriteLine(Convert.ToString((long)Substitute(a, Permutation), 2));
+            
+            // try
+            // {
+            //     Console.WriteLine(Convert.ToString((long)Permute(a, InitialPermutation), 2));
+            //     
+            // } catch (ArgumentNullException e)
+            // {
+            //     Console.WriteLine(e.Message);
+            // }
+            // catch (ArgumentException e)
+            // {
+            //     Console.WriteLine(e.Message);
+            // }
         }
     }
 }

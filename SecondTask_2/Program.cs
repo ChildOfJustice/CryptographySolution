@@ -39,12 +39,6 @@ namespace SecondTask_2
                 Console.Write(GetInversedSboxElement((uint)i).ToString("X") + " ");
             }
             
-
-
-            // foreach (var number in MakeReducedDeductionSystem(42))
-            // {
-            //     Console.Write(number + ", ");
-            // }
         }
         public static uint GetSboxElement(uint i)
         {
@@ -91,38 +85,35 @@ namespace SecondTask_2
         }
         public static uint GetInversedSboxElement(uint i)
         {
-            for (int j = 0; j < 256; j++)
-            {
-                if (GetSboxElement((uint)j) == i)
-                    return (uint)j;
-            }
+            var currVector = new uint[8];
+            
+             uint currI = SecondTask_1.Program.GaloisReverse(i);//SecondTask_1.Program.GaloisReverse
+             for (int k = 0; k < 8; k++)
+             {
+                 currVector[k] = (currI >> k) & 1;
+             }
+            
+             var resVector = GaloisVectorMatrixMultiplication(revA, currVector);
+             // foreach (var VARIABLE in resVector)
+             // {
+             //     Console.Write(VARIABLE + " ");
+             // }
+             // Console.Write("|||");
+             uint res = 0;
+             for (int k = 0; k < 8; k++)
+             {
+                 res += (resVector[k] << k);
+             }
+            
+             res ^= 0x5;
+            
+             for (int j = 0; j < 256; j++)
+             {
+                 if (GetSboxElement((uint)j) == i)
+                     return (uint)j;
+             }
 
-            return 257;
-            //1
-            // var currVector = new uint[8];
-            //
-            // uint currI = SecondTask_1.Program.GaloisReverse(i);//SecondTask_1.Program.GaloisReverse
-            // for (int k = 0; k < 8; k++)
-            // {
-            //     currVector[k] = (currI >> k) & 1;
-            // }
-            //
-            // var resVector = GaloisVectorMatrixMultiplication(revA, currVector);
-            // // foreach (var VARIABLE in resVector)
-            // // {
-            // //     Console.Write(VARIABLE + " ");
-            // // }
-            // // Console.Write("|||");
-            // uint res = 0;
-            // for (int k = 0; k < 8; k++)
-            // {
-            //     res += (resVector[k] << k);
-            // }
-            //
-            // res ^= 0x5;
-            //
-            // // Console.Write(res.ToString("X") + " ");
-            // return res;
+             return res;
         }
 
         public static uint Xorbits(uint a)

@@ -32,6 +32,16 @@ namespace SecondTask_2
         public static void Main(string[] args)
         {
 
+            Console.WriteLine("S box:");
+            for (int i = 0; i < 256; i++)
+            {
+                if(i % 16 == 0)
+                    Console.WriteLine();
+                Console.Write(GetSboxElement((uint)i).ToString("X") + " ");
+            }
+
+            Console.WriteLine("\n\n");
+            Console.WriteLine("inversed S box:");
             for (int i = 0; i < 256; i++)
             {
                 if(i % 16 == 0)
@@ -42,23 +52,6 @@ namespace SecondTask_2
         }
         public static uint GetSboxElement(uint i)
         {
-            // uint m = 0xf8;
-            //     
-            // var r = 0u;
-            // var b = 0u;
-            // if (i == 0)
-            //     b = 0;
-            // else b = SecondTask_1.Program.GaloisReverse(i);
-            //     
-            // for (var j = 0; j < 8; j++)
-            // {
-            //     r = (r << 1) | Xorbits(b & m);
-            //     m = (m >> 1) | ((m & 1) << 7);
-            // }
-            //     
-            // r ^= 0x63;
-
-
             var currVector = new uint[8];
             
             uint currI = SecondTask_1.Program.GaloisReverse(i);
@@ -68,11 +61,7 @@ namespace SecondTask_2
             }
             
             var resVector = GaloisVectorMatrixMultiplication(A, currVector);
-            // foreach (var VARIABLE in resVector)
-            // {
-            //     Console.Write(VARIABLE + " ");
-            // }
-            // Console.Write("|||");
+            
             uint res = 0;
             for (int k = 0; k < 8; k++)
             {
@@ -87,18 +76,14 @@ namespace SecondTask_2
         {
             var currVector = new uint[8];
             
-             uint currI = SecondTask_1.Program.GaloisReverse(i);//SecondTask_1.Program.GaloisReverse
+             uint currI = i;
              for (int k = 0; k < 8; k++)
              {
                  currVector[k] = (currI >> k) & 1;
              }
             
              var resVector = GaloisVectorMatrixMultiplication(revA, currVector);
-             // foreach (var VARIABLE in resVector)
-             // {
-             //     Console.Write(VARIABLE + " ");
-             // }
-             // Console.Write("|||");
+            
              uint res = 0;
              for (int k = 0; k < 8; k++)
              {
@@ -106,14 +91,8 @@ namespace SecondTask_2
              }
             
              res ^= 0x5;
-            
-             for (int j = 0; j < 256; j++)
-             {
-                 if (GetSboxElement((uint)j) == i)
-                     return (uint)j;
-             }
-
-             return res;
+             
+             return SecondTask_1.Program.GaloisReverse(res);
         }
 
         public static uint Xorbits(uint a)
@@ -133,7 +112,6 @@ namespace SecondTask_2
         {
             uint[] resultMatrix;
             
-  
             resultMatrix = new uint[8];
             
             for (var i = 0; i < 8; i++)
@@ -145,47 +123,7 @@ namespace SecondTask_2
                     resultMatrix[i] ^= inputMartix[i, k] & vector[k];
                 }
             }
-           
-
             return resultMatrix;
-        }
-        
-        
-        static List<uint> MakeReducedDeductionSystem(uint m)
-        {
-            var result = new List<uint>();
-            result.Add(1);
-            for (int i = 2; i < m; i++)
-            {
-                if (EuclidAlgorithm(m, (uint)i) == 1)
-                {
-                    result.Add((uint)i);
-                }
-            }
-
-            return result;
-        }
-        
-        
-        
-        static uint EuclidAlgorithm(uint m, uint n)
-        {
-            while(m != n)
-            {
-                if(m > n)
-                {
-                    m = m - n;
-                }
-                else
-                {
-                    n = n - m;
-                }
-            }
-            return n;
         }
     }
 }
-
-//http://www.allmath.ru/highermath/algebra/theorychisel-ugu/17.htm
-//https://code-enjoy.ru/algoritm_evklida_na_c_sharp/
-

@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondTask_1", "SecondTask_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondTask_2", "SecondTask_2\SecondTask_2.csproj", "{20185C04-5014-467B-8141-63FC1F24A3E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagentaAlgorithm", "MagentaAlgorithm\MagentaAlgorithm.csproj", "{C18B37FE-708A-45F5-B399-FD4F3CCC0815}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{20185C04-5014-467B-8141-63FC1F24A3E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20185C04-5014-467B-8141-63FC1F24A3E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20185C04-5014-467B-8141-63FC1F24A3E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18B37FE-708A-45F5-B399-FD4F3CCC0815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18B37FE-708A-45F5-B399-FD4F3CCC0815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18B37FE-708A-45F5-B399-FD4F3CCC0815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18B37FE-708A-45F5-B399-FD4F3CCC0815}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

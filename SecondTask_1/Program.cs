@@ -11,6 +11,11 @@ namespace SecondTask_1
 	        uint element = 115;
 	        Console.WriteLine("b * b^-1 = " + GaloisMultiplication(element, FastPowMode(element, 254, 256)));
             //должна получиться единица
+
+            Console.WriteLine("\n\n");
+            Console.WriteLine("Check the ");
+            Console.WriteLine(CheckIrreduciblePolynomial(283));
+            Console.WriteLine(CheckIrreduciblePolynomial(282));
         }
         
         
@@ -52,7 +57,11 @@ namespace SecondTask_1
         {
 	        if (division < divisor)
 	        {
-		        throw new Exception("Cannot find the first non null bit when dividing by a greater value");
+		        throw new ArgumentException("Cannot find the first non null bit when dividing by a greater value");
+	        }
+	        if (divisor == 0)
+	        {
+		        throw new DivideByZeroException();
 	        }
 	        
 	        var maxNonNullBitForDivisor = GetMaxNonNullBitNumber(divisor);
@@ -90,6 +99,19 @@ namespace SecondTask_1
 		        result = GaloisMultiplication(result, result, 283);
 	        }
 	        return result;
+        }
+
+        public static bool CheckIrreduciblePolynomial(uint poly)
+        {
+	        for (int i = 2; i < 256; i++)
+	        {
+		        if (ModeDivide(poly, (uint) i) == 0)
+		        {
+			        return false;
+		        }
+	        }
+
+	        return true;
         }
     }
 }

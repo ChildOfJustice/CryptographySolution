@@ -16,6 +16,23 @@ namespace SecondTask_1
             Console.WriteLine("Check the ");
             Console.WriteLine(CheckIrreduciblePolynomial(283));
             Console.WriteLine(CheckIrreduciblePolynomial(282));
+            Console.WriteLine(CheckIrreduciblePolynomial(500));
+            
+            
+
+            // for (int i = 2; i < 255; i++)
+            // {
+	           //  // Console.WriteLine(FastPowMode((uint)i, 8, 256)^FastPowMode((uint)i, 4, 256)^FastPowMode((uint)i, 3, 256)^FastPowMode((uint)i, 1, 256)^1);
+	           //  if ((FastPowMode((uint) i, 1, 256) ^ 1) == 0)
+	           //  {
+		          //   Console.WriteLine("IT IS NOT!!!");
+		          //   
+		          //   break;
+	           //  }
+	           //  Console.WriteLine(FastPowMode((uint) i, 1, 256) ^ 1);
+	           //  
+            // }
+            //Console.WriteLine("IT IS");
         }
         
         
@@ -103,9 +120,10 @@ namespace SecondTask_1
 
         public static bool CheckIrreduciblePolynomial(uint poly)
         {
-	        for (int i = 2; i < 256; i++)
+	        for (int i = 2; i < poly; i++)
 	        {
-		        if (ModeDivide(poly, (uint) i) == 0)
+		        
+		        if (i != poly && ModeDivide(poly, (uint) i) == 0)
 		        {
 			        return false;
 		        }

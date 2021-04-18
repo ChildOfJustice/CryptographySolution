@@ -8,9 +8,11 @@ namespace Task_4
         //public abstract ulong[] generateRoundKeys();//RoundKeys = new ulong[16];
         
         
-        const ulong Mask32Bit = ((ulong)1 << 32) - 1;
+        //const ulong Mask32Bit = ((ulong)1 << 32) - 1;
+
+        public int FeistelRoundQuantity;
         
-        
+        protected int DataSize;
         protected ulong Data;
 
         public byte[] CipherTemplateMethod(byte[] DataBytes, bool encrypt)
@@ -24,18 +26,25 @@ namespace Task_4
 
         protected void ProcessDataBytes(byte[] DataBytes)
         {
-	        if (DataBytes.Length != 8)
+	        DataSize = DataBytes.Length;
+	        if (DataBytes.Length == 8)
 	        {
-		        throw new ArgumentException("DataBytes");
+		        Data = BitConverter.ToUInt64(DataBytes, 0);
 	        }
-	        Data = BitConverter.ToUInt64(DataBytes, 0);
+	        else
+	        {
+		        Data = BitConverter.ToUInt64(DataBytes, 0);
+		        Data <<= 64;
+		        Data |= BitConverter.ToUInt64(DataBytes, 64);
+	        }
         }
 
         protected void DoTheJob(bool encrypt)
         {
-	        uint L = (uint)((Data >> 32) & Mask32Bit), PreviousL = L;
-	        uint R = (uint)(Data & Mask32Bit), PreviousR = R;
-	        for (byte Round = 0; Round < 16; Round++)
+	        ulong mask = ((ulong)1 << DataSize/4) - 1;
+	        ulong L = (ulong)((Data >> DataSize/4) & mask), PreviousL = L;
+	        ulong R = (ulong)(Data & mask), PreviousR = R;
+	        for (byte Round = 0; Round < FeistelRoundQuantity; Round++)
 	        {
 		        if (encrypt)
 		        {
@@ -47,16 +56,16 @@ namespace Task_4
 		        else
 		        {
 			        R = PreviousL;
-			        L = PreviousR ^ AbstractFeistelFunction(PreviousL, RoundKeys[15 - Round]);
+			        L = PreviousR ^ AbstractFeistelFunction(PreviousL, RoundKeys[FeistelRoundQuantity-1 - Round]);
 			        PreviousR = R;
 			        PreviousL = L;
 		        }
 	        }
 	        //return BitConverter.GetBytes(Permute(((ulong)L << 32) | R, FinalPermutation));
-	        Data = ((ulong) L << 32) | R;
+	        Data = ((ulong) L << DataSize/4) | R;
         }
 
-        protected abstract uint AbstractFeistelFunction(uint R, ulong RoundKey);
+        protected abstract ulong AbstractFeistelFunction(ulong R, ulong RoundKey);
         
         protected virtual void Hook1() { }
 

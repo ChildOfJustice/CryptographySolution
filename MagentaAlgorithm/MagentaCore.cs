@@ -51,7 +51,7 @@ namespace MagentaAlgorithm
             //
             //The F function equals the first eight bytes of S(C(3,(X(2),SK(n)))).
             //(X(2),X(1) xor F(X(2),SK(n)))
-            Console.WriteLine(F(R, RoundKey).ToString("X"));
+            //Console.WriteLine(F(R, RoundKey).ToString("X"));
             return F(R, RoundKey);
         }
 
@@ -107,8 +107,8 @@ namespace MagentaAlgorithm
             {
                 var pe = PE(GetByte(digit16bytes, i), GetByte(digit16bytes, (i+byteSize)));
                 //Console.WriteLine(Convert.ToString((long)pe, 2));
-                BigInteger tempPe = new BigInteger(pe) << i * 2 * byteSize;
-                res <<= 2 * byteSize;
+                BigInteger tempPe = new BigInteger(pe);
+                res <<= 2*byteSize;
                 res |= tempPe;
             }
             //Console.Write("Pi(" + from0to15 + ")=");
@@ -158,10 +158,12 @@ namespace MagentaAlgorithm
         //
         public BigInteger C(int n, BigInteger w)
         {
+            //Console.WriteLine("INPUT: " + w.ToString("X"));
             if (n == 1)
                 return T(w);
-        
-            return T(w ^ S(C(n-1, w)));
+            var res = T(w ^ S(C(n - 1, w)));
+            //Console.WriteLine("RES " + res.ToString("X"));
+            return res;
         }
         //
         //
@@ -171,9 +173,9 @@ namespace MagentaAlgorithm
             R <<= byteSize*8;
             R |= subKey;
             //The F function equals the first eight bytes of S(C(3,(X(2),SK(n)))).
-            // var fValue = S(C(3, R));
-            var fValue = C(3, R);
-            Console.WriteLine(fValue.ToString("X"));
+            var fValue = S(C(3, R));
+            //var fValue = C(3, R);
+            //Console.WriteLine(fValue.ToString("X"));
             fValue >>= 8 * byteSize;
             
             return (ulong)fValue;

@@ -77,7 +77,7 @@ namespace Task_4
         protected override ulong AbstractFeistelFunction(ulong R, ulong RoundKey)
         {
             ulong XorResult = Task_1.Program.Permute(R, ExpandingPermutation) ^ RoundKey;
-            uint FeistelFunctionResult = 0;
+            ulong FeistelFunctionResult = 0;
             for (byte I = 0, SixBits, Row, Column; I < 8; I++)
             {
                 SixBits = (byte)((XorResult >> ((7 - I) * 6)) & Mask6Bit);

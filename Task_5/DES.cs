@@ -125,7 +125,7 @@ namespace Task_5
 		    Data = Task_1.Program.Permute(Data, FinalPermutation);
 	    }
 
-	    protected override uint AbstractFeistelFunction(uint R, ulong RoundKey)
+	    protected override ulong AbstractFeistelFunction(ulong R, ulong RoundKey)
         {
             ulong XorResult = Task_1.Program.Permute(R, ExpandingPermutation) ^ RoundKey;
             uint FeistelFunctionResult = 0;
@@ -146,6 +146,9 @@ namespace Task_5
 		        {
 			        throw new ArgumentException("Key");
 		        }
+
+		        FeistelRoundQuantity = 16;
+		        
 		        RoundKeys = new ulong[16];
 		        ulong PermutedKey = Task_1.Program.Permute(value, KeyPermutation);
 		        ulong C = (ulong)((PermutedKey >> 28) & Mask28Bit), D = (ulong)(PermutedKey & Mask28Bit);

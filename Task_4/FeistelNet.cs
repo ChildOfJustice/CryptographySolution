@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace Task_4
 {
@@ -14,6 +15,8 @@ namespace Task_4
         
         protected int DataSize;
         protected ulong Data;
+
+        private int byteSize = 8;
 
         public byte[] CipherTemplateMethod(byte[] DataBytes, bool encrypt)
         {
@@ -35,14 +38,18 @@ namespace Task_4
 	        {
 		        Data = BitConverter.ToUInt64(DataBytes, 0);
 		        Data <<= 64;
-		        Data |= BitConverter.ToUInt64(DataBytes, 64);
+		        Data |= BitConverter.ToUInt64(DataBytes, 8);
+		        foreach (var VARIABLE in BitConverter.GetBytes(Data))
+		        {
+			        Console.Write(" " + VARIABLE);
+		        }
 	        }
         }
 
         protected void DoTheJob(bool encrypt)
         {
-	        ulong mask = ((ulong)1 << DataSize/4) - 1;
-	        ulong L = (ulong)((Data >> DataSize/4) & mask), PreviousL = L;
+	        ulong mask = ((ulong)1 << (DataSize*byteSize)/2) - 1;
+	        ulong L = (ulong)((Data >> (DataSize*byteSize)/2) & mask), PreviousL = L;
 	        ulong R = (ulong)(Data & mask), PreviousR = R;
 	        for (byte Round = 0; Round < FeistelRoundQuantity; Round++)
 	        {
@@ -62,7 +69,7 @@ namespace Task_4
 		        }
 	        }
 	        //return BitConverter.GetBytes(Permute(((ulong)L << 32) | R, FinalPermutation));
-	        Data = ((ulong) L << DataSize/4) | R;
+	        Data = ((ulong) L << (DataSize*byteSize)/2) | R;
         }
 
         protected abstract ulong AbstractFeistelFunction(ulong R, ulong RoundKey);

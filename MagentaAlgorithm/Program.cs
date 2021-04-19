@@ -11,46 +11,46 @@ namespace MagentaAlgorithm
         public static void Main(string[] args)
         {
             
-            // byte[] st = new byte[8];
-            // st[0] = 115;
-            // st[1] = 2;
-            // st[2] = 113;
-            // st[3] = 46;
-            // st[4] = 26;
-            // st[5] = 46;
-            // st[6] = 186;
-            // st[7] = 225;
-            // st.ToList().ForEach(i => Console.Write(i.ToString() + " "));
-            // Console.WriteLine();
-            //
-            // FeistelNet fn = new MagentaCore();
-            // fn.FeistelRoundQuantity = 6;
-            // fn.Key = 2153432223452212;
-            // var result = fn.CipherTemplateMethod(st, true);
-            // result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
-            // Console.WriteLine();
-            //
-            // var decrypted = fn.CipherTemplateMethod(result, false);
-            // decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
-            // Console.WriteLine();
+            byte[] st = new byte[16];
+            st[0] = 115;
+            st[1] = 2;
+            st[2] = 113;
+            st[3] = 46;
+            st[4] = 26;
+            st[5] = 46;
+            st[6] = 186;
+            st[7] = 225;
+            st.ToList().ForEach(i => Console.Write(i.ToString() + " "));
+            Console.WriteLine();
+            
+            FeistelNet fn = new MagentaCore();
+            fn.FeistelRoundQuantity = 6;
+            fn.Key = 2153432223452212;
+            var result = fn.CipherTemplateMethod(st, true);
+            result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
+            Console.WriteLine();
+            
+            var decrypted = fn.CipherTemplateMethod(result, false);
+            decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
+            Console.WriteLine();
 
             
             // MagentaCore magenta2 = new MagentaCore();
             // for (int i = 0; i < 256; i++)
             // {
-            //     Console.WriteLine(magenta2.F(i,212).ToString("X"));
+            //     Console.WriteLine(magenta2.F(i, 100).ToString("X"));
             // }
             
             
             
             
-            MagentaCore magenta3 = new MagentaCore();
-            
-            var t2 = BigInteger.Pow(2, 56) + BigInteger.Pow(2, 120) + BigInteger.Pow(2, 121);
-            
-            Console.WriteLine();
-            var temp2 = magenta3.C(3,t2);
-            Console.WriteLine(temp2.ToString("X"));
+            // MagentaCore magenta3 = new MagentaCore();
+            //
+            // var t2 = BigInteger.Pow(2, 56) + BigInteger.Pow(2, 120) + BigInteger.Pow(2, 121);
+            //
+            // Console.WriteLine();
+            // var temp2 = magenta3.C(3,t2);
+            // Console.WriteLine(temp2.ToString("X"));
             return;
             
             MagentaCore magenta = new MagentaCore();

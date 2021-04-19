@@ -30,8 +30,22 @@ namespace Task_4
 
 	        var leftByteArray = new byte[DataSize / 2];
 	        var rightByteArray = new byte[DataSize / 2];
-	        leftByteArray = BitConverter.GetBytes((uint)R); //TODO!!!!!
-	        rightByteArray = BitConverter.GetBytes((uint)L); //TODO!!!!!
+
+
+	        if (DataSize == 8)
+	        {
+		        leftByteArray = BitConverter.GetBytes((uint)R); 
+		        rightByteArray = BitConverter.GetBytes((uint)L); 
+	        } else if (DataSize == 16)
+	        {
+		        leftByteArray = BitConverter.GetBytes(R); 
+		        rightByteArray = BitConverter.GetBytes(L);
+	        }
+	        else
+	        {
+		        throw new ArgumentException("Wrong data block size in the end of the cipher function");
+	        }
+	        
 	        var resultByteArray = new byte[DataSize];
 	        for (int i = 0; i < DataSize/2; i++)
 	        {
@@ -92,8 +106,10 @@ namespace Task_4
 		        // Data = new BigInteger(unsignedDataBytes);
 		        //Data = BitConverter.ToUInt64(DataBytes, 0);
 	        }
-	        else
+	        else if(DataSize == 16)
 	        {
+		        R = BitConverter.ToUInt64(DataBytes, 0);
+		        L = BitConverter.ToUInt64(DataBytes, DataSize/2);
 		        // Data = BitConverter.ToUInt64(DataBytes, 0);
 		        // Data <<= 64;
 		        // Data |= BitConverter.ToUInt64(DataBytes, 8);
@@ -101,6 +117,10 @@ namespace Task_4
 		        // {
 			       //  Console.Write(" " + VARIABLE);
 		        // }
+	        }
+	        else
+	        {
+		        throw new ArgumentException("Wrong data block size");
 	        }
         }
 

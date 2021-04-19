@@ -20,6 +20,7 @@ namespace MagentaAlgorithm
             st[5] = 46;
             st[6] = 186;
             st[7] = 225;
+            st[15] = 211;
             st.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
             

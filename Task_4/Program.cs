@@ -15,7 +15,8 @@ namespace Task_4
             Console.WriteLine();
 
             FeistelNet fn = new NotAbstractFeistelNet();
-            fn.Key = 255;
+            fn.FeistelRoundQuantity = 16;
+            fn.Key = 100;
             var result = fn.CipherTemplateMethod(st, true);
             result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();

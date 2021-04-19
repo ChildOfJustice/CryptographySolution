@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using System.Numerics;
+using System.Text;
 using Task_4;
 
 namespace MagentaAlgorithm
@@ -39,89 +42,178 @@ namespace MagentaAlgorithm
             118, 236, 189, 31, 62, 124, 248, 149, 79,
             158, 89, 178, 0
         };
+        
 
-        protected override uint AbstractFeistelFunction(uint R, ulong RoundKey)
+        protected override ulong AbstractFeistelFunction(ulong R, ulong RoundKey)
         {
-            throw new NotImplementedException();
+            // 64  64
+            //Each Feistel round is expressed as taking (X(1),X(2)), where each X is half the block, 64 bits in length, and replacing it with (X(2),X(1) xor F(X(2),SK(n))), where n is the round number, and SK(n) the n-th subkey.
+            //
+            //The F function equals the first eight bytes of S(C(3,(X(2),SK(n)))).
+            //(X(2),X(1) xor F(X(2),SK(n)))
+            //Console.WriteLine(F(R, RoundKey).ToString("X"));
+            return F(R, RoundKey);
         }
 
         public override ulong Key
         {
-            set => throw new NotImplementedException();
+            set
+            {
+                // K1, K2, and the subkeys for the six rounds in order are K1, K1, K2, K2, K1, K1.
+                ulong mask = ((ulong)1 << 64) - 1;
+                var K1 = (value >> 64);
+                var K2 = value & mask;
+                RoundKeys = new ulong[FeistelRoundQuantity];
+                RoundKeys[0] = K1;
+                RoundKeys[1] = K1;
+                RoundKeys[2] = K2;
+                RoundKeys[3] = K2;
+                RoundKeys[4] = K1;
+                RoundKeys[5] = K1;
+            }
         }
 
         #region MagentaFunctions
 
         public byte f(byte x)
         {
+            // Console.Write("f(" + x + ")=");
+            // Console.WriteLine(Convert.ToString(MagentaSbox[x], 2));
             return MagentaSbox[x];
         }
 
         public byte A(byte x, byte y)
         {
+            // Console.Write("A(" + x + ","+y+")=");
+            // Console.WriteLine(Convert.ToString(f((byte)(x ^ f(y))), 2));
             return f((byte)(x ^ f(y)));
         }
 
         public int PE(byte x, byte y)
         {
+            //Console.Write("INPUT: " + x + " " + y + " res: ");
+            //Console.WriteLine((A(x, y) << byteSize) | A(y, x));
             return (A(x, y) << byteSize) | A(y, x);
         }
         
-        public ulong Pi(ulong from0to15)
+        public BigInteger Pi(BigInteger digit16bytes)
         {
-            ulong res = 0;
-            for (int i = 0; i < 2*byteSize; i++)
+            //Console.Write("INPUT: " + from0to15 + " res: ");
+            //Console.WriteLine(digit16bytes.ToString("X"));
+            //Console.WriteLine("0 byte: " + GetByte(digit16bytes, 0));
+            //Console.WriteLine("8 byte: " + GetByte(digit16bytes, 8));
+            BigInteger res = 0;
+            for (int i = 0; i < byteSize; i++)
             {
-                var pe = PE(GetBit(from0to15, (byte)i), GetBit(from0to15, (byte)(i+byteSize)));
-                ulong tempPe = (ulong)pe << i * 2 * byteSize;
-                res <<= 2 * byteSize;
+                var pe = PE(GetByte(digit16bytes, i), GetByte(digit16bytes, (i+byteSize)));
+                //Console.WriteLine(Convert.ToString((long)pe, 2));
+                BigInteger tempPe = new BigInteger(pe);
+                res <<= 2*byteSize;
                 res |= tempPe;
             }
-
+            //Console.Write("Pi(" + from0to15 + ")=");
+            //Console.WriteLine(Convert.ToString(f((byte)(x ^ f(y))), 2));
+            //Console.WriteLine(res);
+            // Console.WriteLine(Convert.ToString((long)res, 2));
             return res;
         }
-        public byte GetBit(ulong value, byte i)
+        public byte GetByte(BigInteger value, int i)
         {
+            uint MaskByte = ((uint)1 << 8) - 1;
             var res = value;
-            for (int j = 0; j < i; j++)
+            for (int j = 15-i; j > 0; j--)
             {
-                res >>= 1;
+                res >>= byteSize;
+                //Console.WriteLine("!!" + res.ToString("X"));
             }
-
-            return (byte)(res & 1);
+            return (byte)(res & MaskByte);
         }
 
 
-        public ulong T(ulong from0to15)
+        public BigInteger T(BigInteger digit16bytes)
         {
-            return Pi(Pi(Pi(Pi(from0to15))));
+            //Console.WriteLine(Convert.ToString((long)Pi(Pi(Pi(Pi(from0to15)))), 2));
+            return Pi(Pi(Pi(Pi(digit16bytes))));
         }
+        //
+        public BigInteger S(BigInteger digit16bytes)
+        {
+            uint MaskByte = ((uint)1 << 8) - 1;
+            
+            BigInteger res = 0;
+            for (int i = 15; i > 0; i-=2)
+            {
+                res <<= byteSize;
+                res |= ((digit16bytes >> i*byteSize) & MaskByte);
+            }
+            for (int i = 14; i > 0; i-=2)
+            {
+                res <<= byteSize;
+                res |= ((digit16bytes >> i*byteSize) & MaskByte);
+            }
         
-        public ulong S(ulong from0to15)
-        {
-            ulong res = 0;
-            for (int i = 0; i < 2*byteSize; i+=2)
-            {
-                res <<= 1;
-                res |= ((from0to15 >> i) & 1);
-            }
-            for (int i = 1; i < 2*byteSize; i+=2)
-            {
-                res <<= 1;
-                res |= ((from0to15 >> i) & 1);
-            }
-
+            
             return res;
         }
-
-        public ulong C(int n, ulong w)
+        //
+        public BigInteger C(int n, BigInteger w)
         {
+            //Console.WriteLine("INPUT: " + w.ToString("X"));
             if (n == 1)
                 return T(w);
-
-            return T(w ^ S(C(n-1, w)));
+            var res = T(w ^ S(C(n - 1, w)));
+            //Console.WriteLine("RES " + res.ToString("X"));
+            return res;
         }
-
+        //
+        //
+        public ulong F(BigInteger rightHalf, ulong subKey)
+        {
+            BigInteger R = rightHalf;
+            R <<= byteSize*8;
+            R |= subKey;
+            //The F function equals the first eight bytes of S(C(3,(X(2),SK(n)))).
+            var fValue = S(C(3, R));
+            //var fValue = C(3, R);
+            //Console.WriteLine(fValue.ToString("X"));
+            fValue >>= 8 * byteSize;
+            
+            return (ulong)fValue;
+        }
         #endregion
+        
+        
+        
+        
+        
+        public static string ToBinaryString(BigInteger bigint)
+        {
+            var bytes = bigint.ToByteArray();
+            var idx = bytes.Length - 1;
+
+            // Create a StringBuilder having appropriate capacity.
+            var base2 = new StringBuilder(bytes.Length * 8);
+
+            // Convert first byte to binary.
+            var binary = Convert.ToString(bytes[idx], 2);
+
+            // Ensure leading zero exists if value is positive.
+            if (binary[0] != '0' && bigint.Sign == 1)
+            {
+                base2.Append('0');
+            }
+
+            // Append binary string to StringBuilder.
+            base2.Append(binary);
+
+            // Convert remaining bytes adding leading zeros.
+            for (idx--; idx >= 0; idx--)
+            {
+                base2.Append(Convert.ToString(bytes[idx], 2).PadLeft(8, '0'));
+            }
+
+            return base2.ToString();
+        }
     }
+    
 }

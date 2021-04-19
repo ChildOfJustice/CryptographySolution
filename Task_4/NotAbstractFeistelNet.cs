@@ -74,10 +74,10 @@ namespace Task_4
 				{ 2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11 }
 			}
 		};
-        protected override uint AbstractFeistelFunction(uint R, ulong RoundKey)
+        protected override ulong AbstractFeistelFunction(ulong R, ulong RoundKey)
         {
             ulong XorResult = Task_1.Program.Permute(R, ExpandingPermutation) ^ RoundKey;
-            uint FeistelFunctionResult = 0;
+            ulong FeistelFunctionResult = 0;
             for (byte I = 0, SixBits, Row, Column; I < 8; I++)
             {
                 SixBits = (byte)((XorResult >> ((7 - I) * 6)) & Mask6Bit);
@@ -85,7 +85,7 @@ namespace Task_4
                 Column = (byte)((SixBits >> 1) & Mask4Bit);
                 FeistelFunctionResult = (FeistelFunctionResult << 4) | SBoxes[I, Row, Column];
             }
-            return (uint)Task_1.Program.Permute(FeistelFunctionResult, FeistelPermutation);
+            return (ulong)Task_1.Program.Permute(FeistelFunctionResult, FeistelPermutation);
         }
 
         

@@ -33,6 +33,68 @@ namespace AES
             }
         }
 
+        public byte[] Key
+        {
+            set
+            {
+                ulong mask = ((ulong)1 << 2*bytesize) - 1;
+                byte[] Rcon = 
+                {
+                    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
+                };
+                byte temp;
+                
+                CipherKey = new AesMatrix(value);
+                
+                RoundKeys = new AesMatrix[10];
+
+
+                
+                
+                
+                var curr4Bytes = new byte[4];
+                byte[] arrForNewSubKey = new byte[16];
+
+                for (int k = 0; k < 3; k++)
+                {
+                    temp = CipherKey.Get(k+1, 3);
+                    curr4Bytes[k] = (byte) SecondTask_2.Program.GetSboxElement(
+                        (uint) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
+                }
+                temp = CipherKey.Get(0, 3);
+                curr4Bytes[3] =
+                    (byte) SecondTask_2.Program.GetSboxElement(
+                        (uint) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
+
+
+                var subForRcon4Bytes = new byte[4];
+
+                for (int k = 0; k < 4; k++)
+                {
+                    subForRcon4Bytes[k] = CipherKey.Get(k, 0);
+                }
+
+                for (int k = 0; k < 4; k++)
+                {
+                    curr4Bytes[k] ^= subForRcon4Bytes[k];
+                }
+
+                curr4Bytes[0] ^= Rcon[0];
+
+                for (int k = 0; k < 4; k++)
+                {
+                    arrForNewSubKey[k] = curr4Bytes[k];
+                    Console.WriteLine(curr4Bytes[k].ToString("X"));
+                }
+
+            }
+        }
+
+
+
+
+
+
         public void SubBytes()
         {
             //my S-box generation function does not generate any arrays
@@ -56,7 +118,6 @@ namespace AES
             
             //State.PrintMatrixHex();
         }
-
         private byte ConvertIndexesToByte(byte i, byte j)  // i - the first byte, j - the second one
         {
             byte result = 0;
@@ -97,7 +158,6 @@ namespace AES
             }
             State.Set(temp, 3, 0);
         }
-
         public void MixColumns()
         {
             
@@ -130,7 +190,6 @@ namespace AES
             }
             
         }
-
         public void AddRoundKey(AesMatrix roundKey)
         {
             State.PrintMatrixHex();

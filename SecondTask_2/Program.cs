@@ -2,7 +2,7 @@
 
 namespace SecondTask_2
 {
-    internal class Program
+    public class Program
     {
         private static uint[,] A =
         {

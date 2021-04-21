@@ -7,9 +7,9 @@ namespace SecondTask_1
         public static void Main(string[] args)
         {
 	        //Console.WriteLine(GaloisMultiplication(0xd4*8 + 0xbf*4 + 0x5d*2 + 0x30,0x03*8+0x01*40+0x01*2+0x02, 0x01 * 16 + 0x01).ToString("X"));
-	        Console.WriteLine((GaloisMultiplication(0xd4, 2)^GaloisMultiplication(0xbf, 3)^GaloisMultiplication(0x5d, 1)^GaloisMultiplication(0x30, 1)).ToString("X"));
-	        Console.WriteLine((GaloisMultiplication(0xd4, 1)^GaloisMultiplication(0xbf, 2)^GaloisMultiplication(0x5d, 3)^GaloisMultiplication(0x30, 1)).ToString("X"));
-	        return;
+	        // Console.WriteLine((GaloisMultiplication(0xd4, 2)^GaloisMultiplication(0xbf, 3)^GaloisMultiplication(0x5d, 1)^GaloisMultiplication(0x30, 1)).ToString("X"));
+	        // Console.WriteLine((GaloisMultiplication(0xd4, 1)^GaloisMultiplication(0xbf, 2)^GaloisMultiplication(0x5d, 3)^GaloisMultiplication(0x30, 1)).ToString("X"));
+	        // return;
 	        
 	        //Проверка умножения элемента 115 на обратный к нему, полученный быстрым возведением в степень 254
 	        Console.WriteLine("Should be 1:");
@@ -75,7 +75,7 @@ namespace SecondTask_1
 
         public static uint GaloisReverse(uint b)
         {
-	        return FastPowMode(b, 254, 256);
+	        return FastPowMode(b, 254, 256);//256?
         }
         static uint ModeDivide(uint division, uint divisor)
         {

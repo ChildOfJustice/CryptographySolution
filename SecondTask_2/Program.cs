@@ -51,6 +51,11 @@ namespace SecondTask_2
         }
         public static uint GetSboxElement(uint i)
         {
+            
+            // byte s = 0;
+            // s = (byte)(SecondTask_1.Program.GaloisMultiplication(SecondTask_1.Program.GaloisReverse(i), 31) ^ 99);
+            // return s;
+            
             var currVector = new uint[8];
             
             uint currI = SecondTask_1.Program.GaloisReverse(i);
@@ -73,6 +78,13 @@ namespace SecondTask_2
         }
         public static uint GetInversedSboxElement(uint i)
         {
+            
+            
+            // var s = Convert.ToByte(SecondTask_1.Program.GaloisMultiplication(i, 74) ^ 5);
+            // s = (byte)SecondTask_1.Program.GaloisReverse(s);
+            // return s;
+            
+            
             var currVector = new uint[8];
             
              uint currI = i;

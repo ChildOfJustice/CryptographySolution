@@ -16,6 +16,8 @@ namespace AES
             ProcessDataBytes(DataBytes);
         }
         
+        
+        
         protected void ProcessDataBytes(byte[] DataBytes)
         {
             var DataSize = DataBytes.Length;
@@ -28,7 +30,7 @@ namespace AES
                 // PrintDigitAsByteArray(L);
                 // PrintDigitAsByteArray(R);
 
-                Console.WriteLine();
+                //Console.WriteLine();
                 // Data = BitConverter.ToUInt64(DataBytes, 0);
                 // Data <<= 64;
                 // Data |= BitConverter.ToUInt64(DataBytes, 8);
@@ -43,6 +45,23 @@ namespace AES
             }
         }
 
+        public byte[] ToByteArray()
+        {
+            var res = new byte[16];
+            int counter = 0;
+            for (int j = 0; j < 4; j++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    res[counter] = Get(i, j);
+                    counter++;
+                }
+            }
+
+            return res;
+        }
+        
+        
         public void PrintDigitAsByteArray(ulong digit)
         {
             var arr=BitConverter.GetBytes(digit);

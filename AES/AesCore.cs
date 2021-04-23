@@ -52,12 +52,12 @@ namespace AES
             {
                 temp = previousRoundKey.Get(k+1, 3);
                 curr4Bytes[k] = (byte) SecondTask_2.Program.GetSboxElement(
-                    (uint) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
+                    (byte) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
             }
             temp = previousRoundKey.Get(0, 3);
             curr4Bytes[3] =
                 (byte) SecondTask_2.Program.GetSboxElement(
-                    (uint) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
+                    (byte) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
 
 
             var subForRcon4Bytes = new byte[4];
@@ -106,12 +106,12 @@ namespace AES
 
             for (int i = 0; i < roundsQuantity; i++)
             {
-                Console.WriteLine("////////////////ROUND " + i);
-                State.PrintMatrixHex();
+                //Console.WriteLine("////////////////ROUND " + i);
+                //State.PrintMatrixHex();
                 
-                Console.WriteLine("-----------SubBytes:");
+                //Console.WriteLine("-----------SubBytes:");
                 SubBytes();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
                 //Console.WriteLine("-----------ShiftRows:");
                 ShiftRows();
@@ -119,9 +119,9 @@ namespace AES
                 
                 if (i != 9)
                 {
-                    Console.WriteLine("-----------MixColumns:");
+                    //Console.WriteLine("-----------MixColumns:");
                     MixColumns();
-                    State.PrintMatrixHex();
+                    //State.PrintMatrixHex();
                 }
                     
                 //Console.WriteLine("-----------AddRoundKey:");
@@ -257,7 +257,7 @@ namespace AES
             
             for (int i = 0; i < roundsQuantity; i++)
             {
-                Console.WriteLine("////////////////ROUND " + i);
+                //Console.WriteLine("////////////////ROUND " + i);
                 //State.PrintMatrixHex();
                 
                 //Console.WriteLine("-----------AddRoundKey:");
@@ -266,20 +266,20 @@ namespace AES
                 
                 if (i != 0)
                 {
-                    Console.WriteLine("-----------InversedMixColumns:");
+                    //Console.WriteLine("-----------InversedMixColumns:");
                     InversedMixColumns();
-                    State.PrintMatrixHex();
+                    //State.PrintMatrixHex();
                 }
                 
-                Console.WriteLine("-----------InversedShiftRows:");
+                //Console.WriteLine("-----------InversedShiftRows:");
                 InversedShiftRows();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
                
                     
-                Console.WriteLine("-----------InversedSubBytes:");
+                //Console.WriteLine("-----------InversedSubBytes:");
                 InversedSubBytes();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
                 
                 

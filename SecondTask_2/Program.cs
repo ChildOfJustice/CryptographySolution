@@ -4,7 +4,7 @@ namespace SecondTask_2
 {
     public class Program
     {
-        private static uint[,] A =
+        private static byte[,] A =
         {
             { 1, 0, 0, 0, 1, 1, 1, 1 },
             { 1, 1, 0, 0, 0, 1, 1, 1 },
@@ -15,7 +15,7 @@ namespace SecondTask_2
             { 0, 0, 1, 1, 1, 1, 1, 0 },
             { 0, 0, 0, 1, 1, 1, 1, 1 }
         };
-        private static uint[,] revA =
+        private static byte[,] revA =
         {
             { 0, 0, 1, 0, 0, 1, 0, 1 },
             { 1, 0, 0, 1, 0, 0, 1, 0 },
@@ -36,7 +36,7 @@ namespace SecondTask_2
             {
                 if(i % 16 == 0)
                     Console.WriteLine();
-                Console.Write(GetSboxElement((uint)i).ToString("X") + " ");
+                Console.Write(GetSboxElement((byte)i).ToString("X") + " ");
             }
 
             Console.WriteLine("\n\n");
@@ -45,38 +45,38 @@ namespace SecondTask_2
             {
                 if(i % 16 == 0)
                     Console.WriteLine();
-                Console.Write(GetInversedSboxElement((uint)i).ToString("X") + " ");
+                Console.Write(GetInversedSboxElement((byte)i).ToString("X") + " ");
             }
             
         }
-        public static uint GetSboxElement(uint i)
+        public static byte GetSboxElement(byte i)
         {
             
             // byte s = 0;
             // s = (byte)(SecondTask_1.Program.GaloisMultiplication(SecondTask_1.Program.GaloisReverse(i), 31) ^ 99);
             // return s;
             
-            var currVector = new uint[8];
+            var currVector = new byte[8];
             
-            uint currI = SecondTask_1.Program.GaloisReverse(i);
+            byte currI = SecondTask_1.Program.GaloisReverse(i);
             for (int k = 0; k < 8; k++)
             {
-                currVector[k] = (currI >> k) & 1;
+                currVector[k] = (byte)((currI >> k) & 1);
             }
             
             var resVector = GaloisVectorMatrixMultiplication(A, currVector);
             
-            uint res = 0;
+            byte res = 0;
             for (int k = 0; k < 8; k++)
             {
-                res += (resVector[k] << k);
+                res += (byte)(resVector[k] << k);
             }
             
             res ^= 0x63;
 
             return res;
         }
-        public static uint GetInversedSboxElement(uint i)
+        public static uint GetInversedSboxElement(byte i)
         {
             
             
@@ -85,20 +85,20 @@ namespace SecondTask_2
             // return s;
             
             
-            var currVector = new uint[8];
+            var currVector = new byte[8];
             
-             uint currI = i;
+            byte currI = i;
              for (int k = 0; k < 8; k++)
              {
-                 currVector[k] = (currI >> k) & 1;
+                 currVector[k] = (byte)((currI >> k) & 1);
              }
             
              var resVector = GaloisVectorMatrixMultiplication(revA, currVector);
             
-             uint res = 0;
+             byte res = 0;
              for (int k = 0; k < 8; k++)
              {
-                 res += (resVector[k] << k);
+                 res += (byte)(resVector[k] << k);
              }
             
              res ^= 0x5;
@@ -119,11 +119,11 @@ namespace SecondTask_2
         }
         
         
-        static uint[] GaloisVectorMatrixMultiplication(uint[,] inputMartix, uint[] vector)
+        static byte[] GaloisVectorMatrixMultiplication(byte[,] inputMartix, byte[] vector)
         {
-            uint[] resultMatrix;
+            byte[] resultMatrix;
             
-            resultMatrix = new uint[8];
+            resultMatrix = new byte[8];
             
             for (var i = 0; i < 8; i++)
             {
@@ -131,7 +131,7 @@ namespace SecondTask_2
             
                 for (var k = 0; k < 8; k++)
                 {
-                    resultMatrix[i] ^= inputMartix[i, k] & vector[k];
+                    resultMatrix[i] ^= (byte)(inputMartix[i, k] & vector[k]);
                 }
             }
             return resultMatrix;

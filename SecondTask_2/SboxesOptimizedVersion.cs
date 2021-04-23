@@ -42,17 +42,37 @@ namespace SecondTask_2
             }
             return p;
         }
-
         public static byte[] GenerateSbox()
         {
             byte[] res = new byte[256];
             byte d = 0;
             for (int i = 0; i < 256; i++)
             {
-                    byte s = 0;
-                    s = Convert.ToByte(MultyplyPolynoms(InversePolynom(d), 31) ^ 99);
-                    res[i] = s;
-                    d++;
+                byte b = InversePolynom(d);
+                res[i] = Convert.ToByte(b ^ RotL(b, 1) ^ RotL(b, 2) ^ RotL(b, 3) ^ RotL(b, 4) ^ 99);
+                d++;
+                int j = b ^ RotL(b, 1) ^ RotL(b, 2) ^ RotL(b, 3) ^ RotL(b, 4) ^ 99;
+            }
+            return res;
+        }
+
+
+        private static byte RotL(byte value, byte bits)
+        {
+            return Convert.ToByte((value << bits | value >> (8 - bits)) & 255);
+        }
+       
+        public static byte[] GenerateInvSbox()
+        {
+            byte[] res = new byte[256];
+            byte d = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                byte s = 0;
+                s = Convert.ToByte(RotL(d, 1) ^ RotL(d, 3) ^ RotL(d, 6) ^ 5);
+                s = InversePolynom(s);
+                res[i] = s;
+                d++;
             }
             return res;
         }
@@ -99,19 +119,6 @@ namespace SecondTask_2
             //     d++;
             // }
         }
-        public static byte[] GenerateInvSbox()
-        {
-            byte[] res = new byte[256];
-            byte d = 0;
-            for (int i = 0; i < 256; i++)
-            {              
-                    byte s = 0;
-                    s = Convert.ToByte(MultyplyPolynoms(d, 74) ^ 5);
-                    s = InversePolynom(s);
-                    res[i] = s;
-                    d++;
-            }
-            return res;
-        }
+        
     }
 }

@@ -16,6 +16,8 @@ namespace AES
             ProcessDataBytes(DataBytes);
         }
         
+        
+        
         protected void ProcessDataBytes(byte[] DataBytes)
         {
             var DataSize = DataBytes.Length;
@@ -24,18 +26,6 @@ namespace AES
             {
                 L = BitConverter.ToUInt64(DataBytes, 0);
                 R = BitConverter.ToUInt64(DataBytes, DataSize/2);
-
-                // PrintDigitAsByteArray(L);
-                // PrintDigitAsByteArray(R);
-
-                Console.WriteLine();
-                // Data = BitConverter.ToUInt64(DataBytes, 0);
-                // Data <<= 64;
-                // Data |= BitConverter.ToUInt64(DataBytes, 8);
-                // foreach (var VARIABLE in BigIntToByteArray(Data, DataSize))
-                // {
-                //  Console.Write(" " + VARIABLE);
-                // }
             }
             else
             {
@@ -43,6 +33,23 @@ namespace AES
             }
         }
 
+        public byte[] ToByteArray()
+        {
+            var res = new byte[16];
+            int counter = 0;
+            for (int j = 0; j < 4; j++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    res[counter] = Get(i, j);
+                    counter++;
+                }
+            }
+
+            return res;
+        }
+        
+        
         public void PrintDigitAsByteArray(ulong digit)
         {
             var arr=BitConverter.GetBytes(digit);
@@ -237,51 +244,5 @@ namespace AES
             L ^= operand.L;
             R ^= operand.R;
         }
-        // public byte Get(int i, int j)
-        // {
-        //     ulong res = 0;
-        //     if (i < 2)
-        //     {
-        //         //left part
-        //         ulong mask4Bytes = ((ulong)1 << (bytesize*4)) - 1;
-        //         ulong mask1Byte = ((ulong)1 << (bytesize)) - 1;
-        //         res = L;
-        //         for (int k = 1; k > i; k--)
-        //         {
-        //             res >>= bytesize*4;
-        //         }
-        //
-        //         res &= mask4Bytes;
-        //
-        //         for (int k = 3; k > j; k--)
-        //         {
-        //             res >>= bytesize;
-        //         }
-        //
-        //         res &= mask1Byte;
-        //         
-        //     }
-        //     else
-        //     {
-        //         //right part
-        //         ulong mask4Bytes = ((ulong)1 << (bytesize*4)) - 1;
-        //         ulong mask1Byte = ((ulong)1 << (bytesize)) - 1;
-        //         res = R;
-        //         for (int k = 3; k > i; k--)
-        //         {
-        //             res >>= bytesize*4;
-        //         }
-        //
-        //         res &= mask4Bytes;
-        //
-        //         for (int k = 3; k > j; k--)
-        //         {
-        //             res >>= bytesize;
-        //         }
-        //
-        //         res &= mask1Byte;
-        //     }
-        //     return (byte)res;
-        // }
     }
 }

@@ -1,0 +1,9 @@
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\bin\Debug\SecondTask_2.exe
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\bin\Debug\SecondTask_2.pdb
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\obj\Debug\SecondTask_2.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\obj\Debug\SecondTask_2.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\obj\Debug\SecondTask_2.exe
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\obj\Debug\SecondTask_2.pdb
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\bin\Debug\SecondTask_1.exe
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\bin\Debug\SecondTask_1.pdb
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\SecondTask_2\obj\Debug\SecondTask_2.csproj.CopyComplete

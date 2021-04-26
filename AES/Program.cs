@@ -7,6 +7,44 @@ namespace AES
     {
         public static void Main(string[] args)
         {
+            // byte[] data3 = 
+            // {
+            //     0x19, 0x3d, 0xe3, 0xbe, 0xa0, 0xf4, 0xe2, 0x2b, 0x9a, 0xc6, 0x8d, 0x2a, 0xe9, 0xf8, 0x48, 0x08, 0xe9, 0xf8, 0x48, 0x08, 0xe9, 0xf8, 0x48, 0x08
+            // };
+            // byte[] cipherKey3 = 
+            // {
+            //     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
+            // };
+            // AesCore aes3 = new AesCore();
+            //
+            // AesMatrix testM = new AesMatrix(data3);
+            //
+            // byte counter = 101;
+            //  for (int i = 0; i < 4; i++)
+            //  {
+            //      for (int j = 0; j < 6; j++)
+            //      {
+            //          testM.Set(counter, i, j);
+            //          counter++;
+            //      }
+            //      
+            //  }
+            //  testM.PrintMatrix();
+            //
+            // return;
+            //
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             //   ulong mask = ((ulong)1 << 4) - 1; 
             //   AesCore aes2 = new AesCore();
             //   var indexI = (byte)(0x2B >> 4);
@@ -21,7 +59,7 @@ namespace AES
             
             byte[] data = 
             {
-                0x19, 0x3d, 0xe3, 0xbe, 0xa0, 0xf4, 0xe2, 0x2b, 0x9a, 0xc6, 0x8d, 0x2a, 0xe9, 0xf8, 0x48, 0x08
+                0x19, 0x3d, 0xe3, 0xbe, 0xa0, 0xf4, 0xe2, 0x2b, 0x9a, 0xc6, 0x8d, 0x2a, 0xe9, 0xf8, 0x48, 0x08, 0xe9, 0xf8, 0x48, 0x08, 0xe9, 0xf8, 0x48, 0x08
             };
             byte[] cipherKey = 
             {

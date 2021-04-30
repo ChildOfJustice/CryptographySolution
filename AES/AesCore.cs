@@ -10,7 +10,7 @@ namespace AES
 
         private int bytesize = 8;
 
-        private int roundsQuantity = 10;
+        private int roundsQuantity;
 
         private byte[] Sbox = SecondTask_2.SboxesOptimizedVersion.GenerateSbox();
         private byte[] inversedSbox = SecondTask_2.SboxesOptimizedVersion.GenerateInvSbox();
@@ -21,20 +21,10 @@ namespace AES
         {
             set
             {
-                byte[] Rcon = 
-                {
-                    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
-                };
+                
                 
                 CipherKey = new AesMatrix(value);
                 
-                RoundKeys = new AesMatrix[10];
-
-
-                RoundKeys[0] = GenerateNextRoundKey(CipherKey, Rcon[0]);
-
-                for (int roundNumber = 1; roundNumber < 10; roundNumber++)
-                    RoundKeys[roundNumber] = GenerateNextRoundKey(RoundKeys[roundNumber-1], Rcon[roundNumber]);
                 
             }
         }
@@ -46,15 +36,15 @@ namespace AES
             
             
             var curr4Bytes = new byte[4];
-            byte[] arrForNewSubKey = new byte[16];
+            byte[] arrForNewSubKey = new byte[State.Nb * 4];
 
             for (int k = 0; k < 3; k++)
             {
-                temp = previousRoundKey.Get(k+1, 3);
+                temp = previousRoundKey.Get(k+1, State.Nb-1);
                 curr4Bytes[k] = (byte) SecondTask_2.Program.GetSboxElement(
                     (byte) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
             }
-            temp = previousRoundKey.Get(0, 3);
+            temp = previousRoundKey.Get(0, State.Nb-1);
             curr4Bytes[3] =
                 (byte) SecondTask_2.Program.GetSboxElement(
                     (byte) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
@@ -83,11 +73,11 @@ namespace AES
             }
 
             //The last three columns of a new round key
-            for (int columntIndex = 1; columntIndex < 4; columntIndex++)
+            for (int columnIndex = 1; columnIndex < State.Nb; columnIndex++)
             {
                 for (int k = 0; k < 4; k++)
                 {
-                    arrForNewSubKey[columntIndex*4 + k] = (byte)(previousRoundKey.Get(k,columntIndex) ^ arrForNewSubKey[(columntIndex-1)*4 + k]);
+                    arrForNewSubKey[columnIndex*4 + k] = (byte)(previousRoundKey.Get(k,columnIndex) ^ arrForNewSubKey[(columnIndex-1)*4 + k]);
                     //Console.WriteLine(arrForNewSubKey[columntIndex*4 + k].ToString("X"));
                 }
             }
@@ -104,6 +94,8 @@ namespace AES
         {
             State = new AesMatrix(DataBytes);
 
+            SetRoundsQuantityAndGenerateAllSubKeys(DataBytes.Length);//TODO KEY SIZE
+            
             for (int i = 0; i < roundsQuantity; i++)
             {
                 //Console.WriteLine("////////////////ROUND " + i);
@@ -117,7 +109,7 @@ namespace AES
                 ShiftRows();
                 //State.PrintMatrixHex();
                 
-                if (i != 9)
+                if (i != roundsQuantity-1)
                 {
                     //Console.WriteLine("-----------MixColumns:");
                     MixColumns();
@@ -132,8 +124,32 @@ namespace AES
             return State.ToByteArray();
         }
 
-        
+        private void SetRoundsQuantityAndGenerateAllSubKeys(int dataSize, int keySize=4)
+        {
+            if (dataSize == 16)
+                roundsQuantity = 10;
+            if (dataSize == 24)
+                roundsQuantity = 12;
+            if (dataSize == 32)
+                roundsQuantity = 14;
+            
+            
+            byte[] Rcon = 
+            {
+                0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
+            };
+            RoundKeys = new AesMatrix[roundsQuantity];
 
+
+            RoundKeys[0] = GenerateNextRoundKey(CipherKey, Rcon[0]);
+
+            for (int roundNumber = 1; roundNumber < roundsQuantity; roundNumber++)
+                RoundKeys[roundNumber] = GenerateNextRoundKey(RoundKeys[roundNumber-1], Rcon[roundNumber%10]);
+
+        }
+
+        
+        
 
 
 
@@ -147,7 +163,7 @@ namespace AES
             ulong mask = ((ulong)1 << bytesize/2) - 1;
             //State.PrintMatrixHex();
             //Console.WriteLine(SecondTask_2.Program.GetSboxElement((uint)ConvertIndexesToByte(1, 9)).ToString("X"));
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < State.Nb; j++)
             {
                 for (int i = 0; i < 4; i++)
                 {
@@ -179,26 +195,26 @@ namespace AES
             
             //shift 1
             var temp = State.Get(1, 0);
-            for (int k = 1; k < 4; k++)
+            for (int k = 1; k < State.Nb; k++)
             {
                 State.Set(State.Get(1,k), 1, k-1);
             }
-            State.Set(temp, 1, 3);
+            State.Set(temp, 1, State.Nb-1);
             
             
             //shift 2
             var temp1 = State.Get(2, 0);
             var temp2 = State.Get(2, 1);
-            for (int k = 2; k < 4; k++)
+            for (int k = 2; k < State.Nb; k++)
             {
                 State.Set(State.Get(2,k), 2, k-2);
             }
-            State.Set(temp1, 2, 2);
-            State.Set(temp2, 2, 3);
+            State.Set(temp1, 2, State.Nb-2);
+            State.Set(temp2, 2, State.Nb-1);
             
             //shift 3
-            temp = State.Get(3, 3);
-            for (int k = 2; k >= 0; k--)
+            temp = State.Get(3, State.Nb-1);
+            for (int k = State.Nb-1; k >= 0; k--)
             {
                 State.Set(State.Get(3,k), 3, k+1);
             }
@@ -207,7 +223,7 @@ namespace AES
         public void MixColumns()
         {
             
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < State.Nb; j++)
             {
                 byte value1 = (byte) (SecondTask_1.Program.GaloisMultiplication(State.Get(0, j), 2) ^
                                       SecondTask_1.Program.GaloisMultiplication(State.Get(1, j), 3) ^
@@ -254,6 +270,7 @@ namespace AES
         {
             State = new AesMatrix(DataBytes);
 
+            SetRoundsQuantityAndGenerateAllSubKeys(DataBytes.Length);//TODO KEY SIZE
             
             for (int i = 0; i < roundsQuantity; i++)
             {
@@ -282,15 +299,6 @@ namespace AES
                 //State.PrintMatrixHex();
                 
                 
-                
-                
-                
-                
-                
-                // if(i != 0)//TODO
-                //     InversedMixColumns();
-                // InversedShiftRows();
-                // InversedSubBytes();
             }
 
             return State.ToByteArray();
@@ -300,7 +308,7 @@ namespace AES
         public void InversedMixColumns()
         {
             
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < State.Nb; j++)
             {
                 byte value1 = (byte) (SecondTask_1.Program.GaloisMultiplication(State.Get(0, j), 14) ^
                                       SecondTask_1.Program.GaloisMultiplication(State.Get(1, j), 11) ^
@@ -335,8 +343,8 @@ namespace AES
             //...
             
             //shift 1
-            var temp = State.Get(1, 3);
-            for (int k = 3; k > 0; k--)
+            var temp = State.Get(1, State.Nb-1);
+            for (int k = State.Nb-1; k > 0; k--)
             {
                 State.Set(State.Get(1,k-1), 1, k);
             }
@@ -344,9 +352,9 @@ namespace AES
             
             
             //shift 2
-            var temp1 = State.Get(2, 2);
-            var temp2 = State.Get(2, 3);
-            for (int k = 0; k < 2; k++)
+            var temp1 = State.Get(2, State.Nb-2);
+            var temp2 = State.Get(2, State.Nb-1);
+            for (int k = State.Nb-3; k >= 0; k--)
             {
                 State.Set(State.Get(2,k), 2, k+2);
             }
@@ -355,11 +363,11 @@ namespace AES
             
             //shift 3
             temp = State.Get(3, 0);
-            for (int k = 1; k < 4; k++)
+            for (int k = 1; k < State.Nb; k++)
             {
                 State.Set(State.Get(3,k), 3, k-1);
             }
-            State.Set(temp, 3, 3);
+            State.Set(temp, 3, State.Nb-1);
         }
         public void InversedSubBytes()
         {
@@ -369,7 +377,7 @@ namespace AES
             ulong mask = ((ulong)1 << bytesize/2) - 1;
             //State.PrintMatrixHex();
             //Console.WriteLine(SecondTask_2.Program.GetSboxElement((uint)ConvertIndexesToByte(1, 9)).ToString("X"));
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < State.Nb; j++)
             {
                 for (int i = 0; i < 4; i++)
                 {

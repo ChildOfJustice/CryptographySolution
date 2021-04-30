@@ -98,27 +98,27 @@ namespace AES
             
             for (int i = 0; i < roundsQuantity; i++)
             {
-                Console.WriteLine("////////////////ROUND " + i);
-                State.PrintMatrixHex();
+                //Console.WriteLine("////////////////ROUND " + i);
+                //State.PrintMatrixHex();
                 
-                Console.WriteLine("-----------SubBytes:");
+                //Console.WriteLine("-----------SubBytes:");
                 SubBytes();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
-                Console.WriteLine("-----------ShiftRows:");
+                //Console.WriteLine("-----------ShiftRows:");
                 ShiftRows();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
-                if (i != 9)
+                if (i != roundsQuantity-1)
                 {
-                    Console.WriteLine("-----------MixColumns:");
+                    //Console.WriteLine("-----------MixColumns:");
                     MixColumns();
-                    State.PrintMatrixHex();
+                    //State.PrintMatrixHex();
                 }
                     
-                Console.WriteLine("-----------AddRoundKey:");
+                //Console.WriteLine("-----------AddRoundKey:");
                 AddRoundKey(RoundKeys[i]);
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
             }
 
             return State.ToByteArray();
@@ -274,29 +274,29 @@ namespace AES
             
             for (int i = 0; i < roundsQuantity; i++)
             {
-                Console.WriteLine("////////////////ROUND " + i);
-                State.PrintMatrixHex();
+                //Console.WriteLine("////////////////ROUND " + i);
+                //State.PrintMatrixHex();
                 
-                Console.WriteLine("-----------AddRoundKey:");
+                //Console.WriteLine("-----------AddRoundKey:");
                 AddRoundKey(RoundKeys[roundsQuantity-1 - i]);
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
                 if (i != 0)
                 {
-                    Console.WriteLine("-----------InversedMixColumns:");
+                    //Console.WriteLine("-----------InversedMixColumns:");
                     InversedMixColumns();
-                    State.PrintMatrixHex();
+                    //State.PrintMatrixHex();
                 }
                 
-                Console.WriteLine("-----------InversedShiftRows:");
+                //Console.WriteLine("-----------InversedShiftRows:");
                 InversedShiftRows();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
                
                     
-                Console.WriteLine("-----------InversedSubBytes:");
+                //Console.WriteLine("-----------InversedSubBytes:");
                 InversedSubBytes();
-                State.PrintMatrixHex();
+                //State.PrintMatrixHex();
                 
                 
             }
@@ -354,7 +354,7 @@ namespace AES
             //shift 2
             var temp1 = State.Get(2, State.Nb-2);
             var temp2 = State.Get(2, State.Nb-1);
-            for (int k = 0; k < State.Nb-2; k++)
+            for (int k = State.Nb-3; k >= 0; k--)
             {
                 State.Set(State.Get(2,k), 2, k+2);
             }

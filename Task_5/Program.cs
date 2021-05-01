@@ -15,11 +15,11 @@ namespace Task_5
             
             DES des = new DES();
             des.Key = 41827491293;
-            var result = des.CipherTemplateMethod(st, true);
+            var result = des.Encrypt(st);
             result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
 	        
-            var decrypted = des.CipherTemplateMethod(result, false);
+            var decrypted = des.Decrypt(result);
             decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
         }

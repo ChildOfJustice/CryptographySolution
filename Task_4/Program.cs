@@ -17,11 +17,11 @@ namespace Task_4
             FeistelNet fn = new NotAbstractFeistelNet();
             fn.FeistelRoundQuantity = 16;
             fn.Key = 100;
-            var result = fn.CipherTemplateMethod(st, true);
+            var result = fn.Encrypt(st);
             result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
 	        
-            var decrypted = fn.CipherTemplateMethod(result, false);
+            var decrypted = fn.Decrypt(result);
             decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
         }

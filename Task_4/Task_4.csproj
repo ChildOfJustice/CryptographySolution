@@ -40,6 +40,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="FeistelNet.cs" />
+        <Compile Include="ICypherAlgorithm.cs" />
         <Compile Include="NotAbstractFeistelNet.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

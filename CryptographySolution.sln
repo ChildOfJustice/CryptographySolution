@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AES", "AES\AES.csproj", "{8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_1", "ThirdTask_1\ThirdTask_1.csproj", "{6E39CC7A-C3C2-4198-90AA-471FE280E382}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionModes", "EncryptionModes\EncryptionModes.csproj", "{2755EB56-10B9-4F4A-A373-44AACA5F0A6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +68,9 @@ Global
 		{6E39CC7A-C3C2-4198-90AA-471FE280E382}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E39CC7A-C3C2-4198-90AA-471FE280E382}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E39CC7A-C3C2-4198-90AA-471FE280E382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2755EB56-10B9-4F4A-A373-44AACA5F0A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2755EB56-10B9-4F4A-A373-44AACA5F0A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2755EB56-10B9-4F4A-A373-44AACA5F0A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2755EB56-10B9-4F4A-A373-44AACA5F0A6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

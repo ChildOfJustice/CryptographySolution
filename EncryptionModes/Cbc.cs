@@ -6,11 +6,10 @@ namespace EncryptionModes
 {
     public class Cbc : EncryptionMode
     {
-        public Cbc(byte[] iv, ICypherAlgorithm _algorithm, int _blockSize)
+        public Cbc(byte[] iv, ICypherAlgorithm _algorithm)
         {
             IV = iv;
             algorithm = _algorithm;
-            blockSize = _blockSize;
         }
 
         private void EncryptChain(byte[] prevBlock, byte[][] allData, int blockNumber, byte[][] result)

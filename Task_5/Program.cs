@@ -29,7 +29,7 @@ namespace Task_5
             DES des = new DES();
             des.Key = key;
 
-            Cbc mode = new Cbc(st1, des, 64);
+            Cbc mode = new Cbc(st1, des);
             byte[][] allBlocks = 
             {
                 st2,

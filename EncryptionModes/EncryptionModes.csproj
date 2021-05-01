@@ -4,11 +4,11 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{528394CF-F302-44EB-ABE3-80F60030EC44}</ProjectGuid>
-        <OutputType>Exe</OutputType>
+        <ProjectGuid>{2755EB56-10B9-4F4A-A373-44AACA5F0A6A}</ProjectGuid>
+        <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>Task_5</RootNamespace>
-        <AssemblyName>Task_5</AssemblyName>
+        <RootNamespace>EncryptionModes</RootNamespace>
+        <AssemblyName>EncryptionModes</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -32,27 +32,25 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="EncryptionModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\EncryptionModes\bin\Debug\EncryptionModes.dll</HintPath>
-        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="DES.cs" />
-        <Compile Include="Program.cs" />
+        <Compile Include="Cbc.cs" />
+        <Compile Include="Ecb.cs" />
+        <Compile Include="EncryptionMode.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Task_1\Task_1.csproj">
-        <Project>{e9d42ef4-7d1d-4b15-8e0a-b17d8e7fed60}</Project>
-        <Name>Task_1</Name>
-      </ProjectReference>
       <ProjectReference Include="..\Task_4\Task_4.csproj">
         <Project>{0e4b6d49-fe46-4111-8743-d782779f528e}</Project>
         <Name>Task_4</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\Task_5\Task_5.csproj">
+        <Project>{528394cf-f302-44eb-abe3-80f60030ec44}</Project>
+        <Name>Task_5</Name>
       </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

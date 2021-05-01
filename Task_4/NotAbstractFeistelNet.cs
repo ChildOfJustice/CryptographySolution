@@ -109,16 +109,17 @@ namespace Task_4
         {
 	        1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
         };
-        public override ulong Key
+        public override byte[] Key
         {
 	        set
 	        {
-		        if (value > Mask56Bit)
+		        var temp = BitConverter.ToUInt64(value, 0);
+		        if (temp > Mask56Bit)
 		        {
 			        throw new ArgumentException("Key");
 		        }
 		        RoundKeys = new ulong[16];
-		        ulong PermutedKey = Task_1.Program.Permute(value, KeyPermutation);
+		        ulong PermutedKey = Task_1.Program.Permute(temp, KeyPermutation);
 		        ulong C = (ulong)((PermutedKey >> 28) & Mask28Bit), D = (ulong)(PermutedKey & Mask28Bit);
 		        for (byte Round = 0, Shift; Round < 16; Round++)
 		        {

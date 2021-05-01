@@ -24,14 +24,21 @@ namespace MagentaAlgorithm
             st.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
             
+            
+            
+            byte[] key = new byte[8];
+            key[5] = 3;
+            key[1] = 3;
+            key[2] = 4;
+            
             FeistelNet fn = new MagentaCore();
             fn.FeistelRoundQuantity = 6;
-            fn.Key = 2153432223452212;
-            var result = fn.CipherTemplateMethod(st, true);
+            fn.Key = key;
+            var result = fn.Encrypt(st);
             result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
             
-            var decrypted = fn.CipherTemplateMethod(result, false);
+            var decrypted = fn.Decrypt(result);
             decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
 

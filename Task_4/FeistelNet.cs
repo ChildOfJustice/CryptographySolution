@@ -198,7 +198,7 @@ namespace Task_4
 
         protected virtual void Hook2() { }
         
-        public abstract  ulong Key
+        public abstract  byte[] Key
         {
 	        set;
         }

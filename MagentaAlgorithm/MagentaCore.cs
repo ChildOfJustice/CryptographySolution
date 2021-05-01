@@ -55,14 +55,15 @@ namespace MagentaAlgorithm
             return F(R, RoundKey);
         }
 
-        public override ulong Key
+        public override byte[] Key
         {
             set
             {
+                var temp = BitConverter.ToUInt64(value, 0);
                 // K1, K2, and the subkeys for the six rounds in order are K1, K1, K2, K2, K1, K1.
                 ulong mask = ((ulong)1 << 64) - 1;
-                var K1 = (value >> 64);
-                var K2 = value & mask;
+                var K1 = (temp >> 64);
+                var K2 = temp & mask;
                 RoundKeys = new ulong[FeistelRoundQuantity];
                 RoundKeys[0] = K1;
                 RoundKeys[1] = K1;

@@ -2,32 +2,35 @@
 
 namespace EncryptionModes
 {
-    public class Cbc : EncryptionMode
+    public class Cfb : EncryptionMode
     {
-        public Cbc(byte[] iv, ICypherAlgorithm _algorithm)
+        public Cfb(byte[] iv, ICypherAlgorithm _algorithm)
         {
             IV = iv;
             algorithm = _algorithm;
         }
 
-        private void EncryptChain(byte[] prevBlock, byte[][] allData, int blockNumber, byte[][] result)
+        private byte[][] EncryptChain(byte[] prevBlock, byte[][] allData, int blockNumber, byte[][] result)
         {
-            for (int i = 0; i < allData[blockNumber].Length; i++)
+            
+            var encryptedIv = algorithm.Encrypt(prevBlock);
+            
+            result[blockNumber] = encryptedIv;
+            for (int i = 0; i < encryptedIv.Length; i++)
             {
-                allData[blockNumber][i] ^= prevBlock[i];
+                result[blockNumber][i] = (byte)(encryptedIv[i] ^ allData[blockNumber][i]);
             }
-
-            result[blockNumber] = algorithm.Encrypt(allData[blockNumber]);
+            
             
             if(blockNumber == allData.Length-1)
-                return;
-            EncryptChain(result[blockNumber], allData, blockNumber + 1, result);
+                return result;
+            return EncryptChain(result[blockNumber], allData, blockNumber + 1, result);
         }
 
         public byte[][] EncryptAll(byte[][] allBlocks)
         {
             byte[][] result = new byte[allBlocks.Length][];
-            EncryptChain(IV, allBlocks, 0, result);
+            result = EncryptChain(IV, allBlocks, 0, result);
             return result;
         }
 
@@ -37,11 +40,11 @@ namespace EncryptionModes
 
         public byte[] Decrypt(byte[] prevCypherBlock, byte[] currentCypherBlock)
         {
-            var data = algorithm.Decrypt(currentCypherBlock);
-            byte[] res = new byte[prevCypherBlock.Length];
-            for (int i = 0; i < prevCypherBlock.Length; i++)
+            var data = algorithm.Encrypt(prevCypherBlock);
+            byte[] res = new byte[currentCypherBlock.Length];
+            for (int i = 0; i < currentCypherBlock.Length; i++)
             {
-                res[i] = (byte)(prevCypherBlock[i] ^ data[i]);
+                res[i] = (byte)(currentCypherBlock[i] ^ data[i]);
             }
 
             return res;

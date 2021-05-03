@@ -1,8 +1,9 @@
-/Task_1/bin/Debug/*
-/Task_1/obj/Debug/*
-/Task_2/bin/Debug/*
-/Task_2/obj/Debug/*
-/Task_3/bin/Debug/*
-/Task_3/obj/Debug/*
-/Task_4/bin/Debug/*
-/Task_4/obj/Debug/*
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+packages
+
+/bin
+/obj

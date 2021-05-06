@@ -15,18 +15,29 @@ namespace AES
 
         private byte[] Sbox = SecondTask_2.SboxesOptimizedVersion.GenerateSbox();
         private byte[] inversedSbox = SecondTask_2.SboxesOptimizedVersion.GenerateInvSbox();
-        
+
+
+        private int blockSize;
+        private int keySize;
+
+        public AesCore(byte[] key, int _blockSize = 16)
+        {
+            blockSize = _blockSize;
+            keySize = key.Length;
+            
+            Key = key;
+            
+            SetRoundsQuantityAndGenerateAllSubKeys(blockSize, keySize);
+        }
         
         
         public byte[] Key
         {
             set
             {
-                
-                
                 CipherKey = new AesMatrix(value);
-                
-                
+                if (CipherKey.Nb * 4 != keySize)
+                    throw new ArgumentException("Wrong key size, should be " + keySize + " bytes");
             }
         }
 
@@ -37,15 +48,15 @@ namespace AES
             
             
             var curr4Bytes = new byte[4];
-            byte[] arrForNewSubKey = new byte[State.Nb * 4];
+            byte[] arrForNewSubKey = new byte[blockSize];
 
             for (int k = 0; k < 3; k++)
             {
-                temp = previousRoundKey.Get(k+1, State.Nb-1);
+                temp = previousRoundKey.Get(k+1, blockSize/4-1);
                 curr4Bytes[k] = (byte) SecondTask_2.Program.GetSboxElement(
                     (byte) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
             }
-            temp = previousRoundKey.Get(0, State.Nb-1);
+            temp = previousRoundKey.Get(0, blockSize/4-1);
             curr4Bytes[3] =
                 (byte) SecondTask_2.Program.GetSboxElement(
                     (byte) ConvertIndexesToByte((byte) (temp >> 2 * bytesize), (byte) (temp & mask)));
@@ -74,7 +85,7 @@ namespace AES
             }
 
             //The last three columns of a new round key
-            for (int columnIndex = 1; columnIndex < State.Nb; columnIndex++)
+            for (int columnIndex = 1; columnIndex < blockSize/4; columnIndex++)
             {
                 for (int k = 0; k < 4; k++)
                 {
@@ -95,8 +106,6 @@ namespace AES
         {
             State = new AesMatrix(DataBytes);
 
-            SetRoundsQuantityAndGenerateAllSubKeys(DataBytes.Length);//TODO KEY SIZE
-            
             for (int i = 0; i < roundsQuantity; i++)
             {
                 // Console.WriteLine("////////////////ROUND " + i);
@@ -125,14 +134,14 @@ namespace AES
             return State.ToByteArray();
         }
 
-        private void SetRoundsQuantityAndGenerateAllSubKeys(int dataSize, int keySize=4)
+        private void SetRoundsQuantityAndGenerateAllSubKeys(int dataSize, int keySize)
         {
-            if (dataSize == 16)
-                roundsQuantity = 10;
-            if (dataSize == 24)
-                roundsQuantity = 12;
-            if (dataSize == 32)
+            if (dataSize == 32 || keySize == 32)
                 roundsQuantity = 14;
+            else if (dataSize == 24 || keySize == 24)
+                roundsQuantity = 12;
+            else if (dataSize == 16 && keySize == 16)
+                roundsQuantity = 10;
             
             
             byte[] Rcon = 
@@ -163,7 +172,6 @@ namespace AES
             //
             ulong mask = ((ulong)1 << bytesize/2) - 1;
             //State.PrintMatrixHex();
-            //Console.WriteLine(SecondTask_2.Program.GetSboxElement((uint)ConvertIndexesToByte(1, 9)).ToString("X"));
             for (int j = 0; j < State.Nb; j++)
             {
                 for (int i = 0; i < 4; i++)
@@ -174,8 +182,6 @@ namespace AES
                     var indexJ = (byte)(currValue & mask);
 
                     State.Set(Sbox[ConvertIndexesToByte(indexI, indexJ)], i, j);
-                    
-                    // State.Set((byte)SecondTask_2.Program.GetSboxElement((uint)ConvertIndexesToByte(indexI, indexJ)), i, j);
                 }
             }
             
@@ -270,8 +276,6 @@ namespace AES
         public byte[] Decrypt(byte[] DataBytes)
         {
             State = new AesMatrix(DataBytes);
-
-            SetRoundsQuantityAndGenerateAllSubKeys(DataBytes.Length);//TODO KEY SIZE
             
             for (int i = 0; i < roundsQuantity; i++)
             {
@@ -377,7 +381,6 @@ namespace AES
             //
             ulong mask = ((ulong)1 << bytesize/2) - 1;
             //State.PrintMatrixHex();
-            //Console.WriteLine(SecondTask_2.Program.GetSboxElement((uint)ConvertIndexesToByte(1, 9)).ToString("X"));
             for (int j = 0; j < State.Nb; j++)
             {
                 for (int i = 0; i < 4; i++)
@@ -388,8 +391,6 @@ namespace AES
                     var indexJ = (byte)(currValue & mask);
                     
                     State.Set(inversedSbox[ConvertIndexesToByte(indexI, indexJ)], i, j);
-                    
-                    // State.Set((byte)SecondTask_2.Program.GetInversedSboxElement((uint)ConvertIndexesToByte(indexI, indexJ)), i, j);
                 }
             }
             

@@ -73,7 +73,7 @@ namespace AES
             AesCore aes = new AesCore(cipherKey);
             //aes.Key = cipherKey;
             var res = aes.Encrypt(data);
-            return;
+            
             
             
             foreach (var VARIABLE in data)

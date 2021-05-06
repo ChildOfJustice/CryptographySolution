@@ -42,6 +42,7 @@
         <Compile Include="Cfb.cs" />
         <Compile Include="Ecb.cs" />
         <Compile Include="EncryptionMode.cs" />
+        <Compile Include="Ofb.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>

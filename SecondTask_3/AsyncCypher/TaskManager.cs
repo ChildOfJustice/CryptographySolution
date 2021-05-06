@@ -178,6 +178,16 @@ namespace Task_8.AsyncCypher
                     
                     result = mode.EncryptAll(allBlocks);
                     break;
+                case "CFB":
+                    Cfb cfbMode = new Cfb(IV, RijndaelFramework);
+                    
+                    result = cfbMode.EncryptAll(allBlocks);
+                    break;
+                case "OFB":
+                    Ofb ofbMode = new Ofb(IV, RijndaelFramework);
+                    
+                    result = ofbMode.EncryptAll(allBlocks);
+                    break;
             }
             
             
@@ -339,9 +349,19 @@ namespace Task_8.AsyncCypher
             switch (EncryptionMode)
             {
                 case "CBC":
-                    Cbc mode = new Cbc(IV, RijndaelFramework);
+                    Cbc cbcMode = new Cbc(IV, RijndaelFramework);
                     
-                    result = mode.DecryptAll(allBlocks);
+                    result = cbcMode.DecryptAll(allBlocks);
+                    break;
+                case "CFB":
+                    Cfb cfbMode = new Cfb(IV, RijndaelFramework);
+                    
+                    result = cfbMode.DecryptAll(allBlocks);
+                    break;
+                case "OFB":
+                    Ofb ofbMode = new Ofb(IV, RijndaelFramework);
+                    
+                    result = ofbMode.DecryptAll(allBlocks);
                     break;
             }
             
@@ -360,13 +380,14 @@ namespace Task_8.AsyncCypher
                         if(i == result.Length - 2)
                         {
                             outputStream.Write(result[i], 0, Int32.Parse(new ASCIIEncoding().GetString(result[result.Length-1])));
+                            
                         }
                         else
                             outputStream.Write(result[i], 0, result[i].Length);
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e.Message);
+                        //TODO : MessageBox.Show(e.Message);
                     }
                 }
                 

@@ -26,9 +26,9 @@ namespace Task_8.AsyncCypher
             byte[] decryptedData = null;
             
             
-            MessageBox.Show("Data to be decrypted: " + new ASCIIEncoding().GetString(props.Data));
+            //MessageBox.Show("Data to be decrypted: " + new ASCIIEncoding().GetString(props.Data));
             decryptedData = props.RijndaelFramework.Decrypt(props.Data); 
-            MessageBox.Show("decrypted data: " + new ASCIIEncoding().GetString(decryptedData));
+            //MessageBox.Show("decrypted data: " + new ASCIIEncoding().GetString(decryptedData));
             
             return new TaskProperties(props.BlockNumber, props.BlocksQuantity, props.RijndaelFramework, decryptedData);
          

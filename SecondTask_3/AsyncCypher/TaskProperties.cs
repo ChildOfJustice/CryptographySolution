@@ -1,6 +1,8 @@
 ﻿
 
+using AES;
 using SecondTask_3.AsyncCypher;
+using Task_4;
 
 namespace Task_8.AsyncCypher
 {
@@ -8,15 +10,14 @@ namespace Task_8.AsyncCypher
     {
         public int BlockNumber;
         public int BlocksQuantity;
-        // TODO public AesCore RijndaelFramework; 
-        public CypherAlgorithm Algorithm;
+        public AesCore RijndaelFramework;
         public byte[] Data;
 
-        public TaskProperties(int blockNumber, int blocksQuantity, CypherAlgorithm algorithm, byte[] data)
+        public TaskProperties(int blockNumber, int blocksQuantity, AesCore rijndaelFramework, byte[] data)
         {
             BlockNumber = blockNumber;
             BlocksQuantity = blocksQuantity;
-            Algorithm = algorithm;
+            RijndaelFramework = rijndaelFramework;
             Data = data;
         }
     }

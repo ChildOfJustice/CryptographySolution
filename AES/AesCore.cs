@@ -8,7 +8,7 @@ namespace AES
     {
         private AesMatrix State;
         private AesMatrix CipherKey;
-        private AesMatrix[] RoundKeys;
+        public AesMatrix[] RoundKeys;
 
         private int bytesize = 8;
 
@@ -21,14 +21,23 @@ namespace AES
         private int blockSize;
         private int keySize;
 
-        public AesCore(byte[] key, int _blockSize = 16)
+        public AesCore(byte[] key, bool generateRoundKeys = true, int _blockSize = 16)
         {
             blockSize = _blockSize;
             keySize = key.Length;
-            
-            Key = key;
-            
-            SetRoundsQuantityAndGenerateAllSubKeys(blockSize, keySize);
+
+            if (_blockSize == 32 || keySize == 32)
+                roundsQuantity = 14;
+            else if (_blockSize == 24 || keySize == 24)
+                roundsQuantity = 12;
+            else if (_blockSize == 16 && keySize == 16)
+                roundsQuantity = 10;
+
+            if (generateRoundKeys)
+            {
+                Key = key;
+                GenerateAllSubKeys(blockSize, keySize);
+            }
         }
         
         
@@ -135,16 +144,8 @@ namespace AES
             return State.ToByteArray();
         }
 
-        private void SetRoundsQuantityAndGenerateAllSubKeys(int dataSize, int keySize)
+        private void GenerateAllSubKeys(int dataSize, int keySize)
         {
-            if (dataSize == 32 || keySize == 32)
-                roundsQuantity = 14;
-            else if (dataSize == 24 || keySize == 24)
-                roundsQuantity = 12;
-            else if (dataSize == 16 && keySize == 16)
-                roundsQuantity = 10;
-            
-            
             byte[] Rcon = 
             {
                 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
@@ -165,8 +166,8 @@ namespace AES
             // }
         }
 
-        
-        
+
+
 
 
 
@@ -420,7 +421,7 @@ namespace AES
                 inputStream.Read(temp, 0, keySize); // 8 bytes = 64 bit key
 
             Key = temp;
-            SetRoundsQuantityAndGenerateAllSubKeys(blockSize, keySize);
+            GenerateAllSubKeys(blockSize, keySize);
         }
     }
 }

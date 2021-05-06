@@ -30,6 +30,8 @@ namespace Task_8.AsyncCypher
         private int blockSize;
         private int keySize;
         private int blocksQuantity;
+
+        private AesCore RijndaelFramework;
         
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         
@@ -52,6 +54,9 @@ namespace Task_8.AsyncCypher
         public void RunEncryptionProcess()
         {
             ImportCypherKey();
+
+            
+            RijndaelFramework = new AesCore(TempKey, _blockSize: blockSize);
             
             //https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcompletionsource-1?view=net-5.0
             CancellationToken ct = tokenSource.Token;
@@ -85,6 +90,9 @@ namespace Task_8.AsyncCypher
                         int endPositionToRead = (i1 + 1) * blockSize;
                         string keyFilePathToUse = keyFilePath;
 
+                        var tempRF = new AesCore(TempKey, generateRoundKeys:false);
+                        tempRF.RoundKeys = RijndaelFramework.RoundKeys;
+                        
                         if (i1 == blocksQuantity-1)
                         {
                             //encrypt the size and add it
@@ -93,7 +101,7 @@ namespace Task_8.AsyncCypher
                             Array.Copy(tempArr, block, tempArr.Length);
                             
                             taskCompletionSource.SetResult(CypherMethods.encryptBlock(new TaskProperties(i1,
-                                    blocksQuantity, algorithm,
+                                    blocksQuantity, tempRF,
                                     block), TempKey, keySize,
                                 keyFilePathToUse));
                         }
@@ -101,7 +109,7 @@ namespace Task_8.AsyncCypher
                         {
                             using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
                                 taskCompletionSource.SetResult(CypherMethods.encryptBlock(new TaskProperties(i1,
-                                        blocksQuantity, algorithm,
+                                        blocksQuantity, tempRF,
                                         ReadDesiredPart(fs, i1 * blockSize, endPositionToRead)), TempKey, keySize,
                                     keyFilePathToUse));
                         }
@@ -166,7 +174,7 @@ namespace Task_8.AsyncCypher
             switch (EncryptionMode)
             {
                 case "CBC":
-                    Cbc mode = new Cbc(IV, new AesCore(TempKey, blockSize));
+                    Cbc mode = new Cbc(IV, RijndaelFramework);
                     
                     result = mode.EncryptAll(allBlocks);
                     break;
@@ -200,6 +208,7 @@ namespace Task_8.AsyncCypher
         public void RunDecryptionProcess()
         {
             ImportCypherKey();
+            RijndaelFramework = new AesCore(TempKey, _blockSize:blockSize);
             
             //https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskcompletionsource-1?view=net-5.0
             CancellationToken ct = tokenSource.Token;
@@ -228,10 +237,14 @@ namespace Task_8.AsyncCypher
                     {
                         int endPositionToRead = (i1 + 1) * blockSize;
                         string keyFilePathToUse = keyFilePath;
+                        
+                        var tempRF = new AesCore(TempKey, generateRoundKeys:false);
+                        tempRF.RoundKeys = RijndaelFramework.RoundKeys;
 
+                       
                         using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
                         {
-                            var result = CypherMethods.decryptBlock(new TaskProperties(i1, blocksQuantity, algorithm,
+                            var result = CypherMethods.decryptBlock(new TaskProperties(i1, blocksQuantity, tempRF,
                                 ReadDesiredPart(fs, i1 * blockSize, endPositionToRead)), TempKey, keySize, keyFilePathToUse);
                             taskCompletionSource.SetResult(result);
                         }
@@ -266,7 +279,7 @@ namespace Task_8.AsyncCypher
                         {
                             if (blockNumber == blocksQuantity - 1)
                             {
-                                //MessageBox.Show("blocknumber : " +blockNumber+" blocks: " + blocksQuantity + "file SIZE IS: " + new ASCIIEncoding().GetString(promise.Result.Data));
+                                MessageBox.Show("blocknumber : " +blockNumber+" blocks: " + blocksQuantity + "file SIZE IS: " + new ASCIIEncoding().GetString(promise.Result.Data));
                                 actualFileSize = Int32.Parse(new ASCIIEncoding().GetString(promise.Result.Data));
                             }
                             else
@@ -326,7 +339,7 @@ namespace Task_8.AsyncCypher
             switch (EncryptionMode)
             {
                 case "CBC":
-                    Cbc mode = new Cbc(IV, new AesCore(TempKey, blockSize));
+                    Cbc mode = new Cbc(IV, RijndaelFramework);
                     
                     result = mode.DecryptAll(allBlocks);
                     break;
@@ -373,6 +386,7 @@ namespace Task_8.AsyncCypher
             var temp = new byte[keySize];
             using (var inputStream = File.OpenRead(keyFilePath))
                 inputStream.Read(temp, 0, keySize);
+
             TempKey = temp;
         }
         private void importIv()

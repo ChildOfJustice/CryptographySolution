@@ -59,7 +59,7 @@ namespace AES
             
             byte[] data = 
             {
-                0x19, 0x3d, 0xe3, 0xbe, 0xa0, 0xf4, 0xe2, 0x2b, 0x9a, 0xc6, 0x8d, 0x2a, 0xe9, 0xf8, 0x48, 0x08
+                0x19, 0x3d, 0xe3, 0xbe, 0xa0, 0xf4, 0xe2, 0x2b, 0x9a, 0xc6, 0x8d, 0x2a, 0xe9, 0xf8, 0x48, 0x08, 0x09, 0xcf, 0x4f, 0x3c, 0x09, 0xcf, 0x4f, 0x3c, 0x09, 0xcf, 0x4f, 0x3c, 0x09, 0xcf, 0x4f, 0x3c
             };
             byte[] cipherKey = 
             {
@@ -70,6 +70,12 @@ namespace AES
             //byte[] secretKey = Encoding.Default.GetBytes("aesEncryptionKey");
             
             
+            AesCore aes = new AesCore(cipherKey);
+            //aes.Key = cipherKey;
+            var res = aes.Encrypt(data);
+            return;
+            
+            
             foreach (var VARIABLE in data)
             {
                 Console.Write(VARIABLE.ToString("X") + " ");
@@ -78,9 +84,7 @@ namespace AES
             Console.WriteLine();
             
             
-            AesCore aes = new AesCore(cipherKey);
-            //aes.Key = cipherKey;
-            var res = aes.Encrypt(data);
+           
 
             foreach (var VARIABLE in res)
             {

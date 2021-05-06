@@ -156,6 +156,12 @@ namespace AES
             for (int roundNumber = 1; roundNumber < roundsQuantity; roundNumber++)
                 RoundKeys[roundNumber] = GenerateNextRoundKey(RoundKeys[roundNumber-1], Rcon[roundNumber%10]);
 
+
+            // foreach (var VARIABLE in RoundKeys)
+            // {
+            //     VARIABLE.PrintMatrixHex();
+            //     Console.WriteLine();
+            // }
         }
 
         
@@ -413,6 +419,7 @@ namespace AES
                 inputStream.Read(temp, 0, keySize); // 8 bytes = 64 bit key
 
             Key = temp;
+            SetRoundsQuantityAndGenerateAllSubKeys(blockSize, keySize);
         }
     }
 }

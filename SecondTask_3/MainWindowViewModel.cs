@@ -15,8 +15,10 @@ namespace Task_8
         
         public int RijndaelBlockSize = 16;
         public int RijndaelKeySize = 16;
+        public string EncryptionMode = "ECB";
 
         public String SymmetricKeyFile;
+        public string IvFilePath;
         public String DataFile;
         public String PublicKeyFile;
         public String PrivateKeyFile;

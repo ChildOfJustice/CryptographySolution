@@ -95,6 +95,18 @@
         <Project>{8500df95-86be-4d45-90e7-50bcbce5c904}</Project>
         <Name>AES</Name>
       </ProjectReference>
+      <ProjectReference Include="..\EncryptionModes\EncryptionModes.csproj">
+        <Project>{2755eb56-10b9-4f4a-a373-44aaca5f0a6a}</Project>
+        <Name>EncryptionModes</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\SecondTask_1\SecondTask_1.csproj">
+        <Project>{12c3dbfb-4813-4fff-8887-3e9fb58adcbc}</Project>
+        <Name>SecondTask_1</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\Task_4\Task_4.csproj">
+        <Project>{0e4b6d49-fe46-4111-8743-d782779f528e}</Project>
+        <Name>Task_4</Name>
+      </ProjectReference>
     </ItemGroup>
     <ItemGroup>
       <Content Include="resources\key" />

@@ -43,6 +43,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         
                         <StackPanel
@@ -55,9 +56,19 @@
                             <Button Click="OnChooseSymmetricKeyFileButtonClick">
                                 Key file
                             </Button>
+                            <Button Click="OnChooseIvFileButtonClick">
+                                IV file
+                            </Button>
                             <TextBox
                                 x:Name="OutPutFilePathHolder">
                                 OutPutFilePath
+                            </TextBox>
+                            <TextBlock TextAlignment="Center">
+                                Irreducible Polynomial
+                            </TextBlock>
+                            <TextBox
+                                x:Name="IrreduciblePolynomialHolder">
+                                283
                             </TextBox>
                         </StackPanel>
                         
@@ -85,6 +96,20 @@
                                 <TextBlock>128</TextBlock>
                                 <TextBlock>192</TextBlock>
                                 <TextBlock>256</TextBlock>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="3"
+                            Grid.Row="0">
+                            <TextBlock TextAlignment="Center">
+                                Encryption mode
+                            </TextBlock>
+                            <ComboBox Height="30" VerticalAlignment="Top"
+                                      SelectionChanged="ComboBoxEncryptionModeSelected">
+                                <TextBlock>ECB</TextBlock>
+                                <TextBlock>CBC</TextBlock>
+                                <TextBlock>CFB</TextBlock>
+                                <TextBlock>OFB</TextBlock>
                             </ComboBox>
                         </StackPanel>
                     </Grid>

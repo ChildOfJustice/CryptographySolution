@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using Task_4;
 
 namespace AES
 {
-    public class AesCore
+    public class AesCore : ICypherAlgorithm
     {
         private AesMatrix State;
         private AesMatrix CipherKey;

@@ -8,6 +8,7 @@ namespace Task_8.AsyncCypher
     {
         public int BlockNumber;
         public int BlocksQuantity;
+        // TODO public AesCore RijndaelFramework; 
         public CypherAlgorithm Algorithm;
         public byte[] Data;
 

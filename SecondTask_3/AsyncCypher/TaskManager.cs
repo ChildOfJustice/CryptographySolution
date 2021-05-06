@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using AES;
+using EncryptionModes;
 using SecondTask_3.AsyncCypher;
 
 namespace Task_8.AsyncCypher
@@ -14,10 +16,15 @@ namespace Task_8.AsyncCypher
         public string outputFilePath = "result.txt";
         public string inputFilePath = "./resources/text.txt";
         public string keyFilePath = "./resources/key";
+        public string ivFilePath = "./resources/IV";
         public string pubKeyFilePath = "keypub";
         public string privateKeyFilePath = "./resources/keyprivate";
 
+        public string EncryptionMode;
+        private int irreduciblePoly;
+
         public byte[] TempKey;
+        private byte[] IV;
 
         public CypherAlgorithm algorithm;
         private int blockSize;
@@ -26,12 +33,18 @@ namespace Task_8.AsyncCypher
         
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         
-        public TaskManager(CypherAlgorithm _algorithm, int _blockSize, int _keySize)
+        public TaskManager(CypherAlgorithm _algorithm, int _blockSize, int _keySize, string _encryptionMode = "ECB", int _irreduciblePoly = 283)
         {
             algorithm = _algorithm;
             blockSize = _blockSize;
             keySize = _keySize;
-            
+
+            EncryptionMode = _encryptionMode;
+
+            if (!SecondTask_1.Program.CheckIrreduciblePolynomial(_irreduciblePoly))
+                throw new ArgumentException("It's not an irreducible polynomial: " + _irreduciblePoly);
+            irreduciblePoly = _irreduciblePoly;
+
             //new ASCIIEncoding().GetBytes(sData);
             //MessageBox.Show("Decrypted data: " + new ASCIIEncoding().GetString(Final));
         }
@@ -45,7 +58,15 @@ namespace Task_8.AsyncCypher
             
             blocksQuantity = DetermineBlocksQuantity(true);
 
-            MessageBox.Show("Split the file into "+blocksQuantity);
+            MessageBox.Show("Split the file into "+blocksQuantity+" blocks");
+
+            if (EncryptionMode != "ECB")
+            {
+                RunEncryptionProcessInMode();
+                return;
+            }
+                
+            
             
             Task<TaskProperties>[] allTasks = new Task<TaskProperties>[blocksQuantity];
             for (int i = 0; i < blocksQuantity; i++)
@@ -123,14 +144,58 @@ namespace Task_8.AsyncCypher
             }
         }
 
-        private void ImportCypherKey()
+        private void RunEncryptionProcessInMode()
         {
-            MessageBox.Show("Importing secret key...");
-            var temp = new byte[keySize];
-            using (var inputStream = File.OpenRead(keyFilePath))
-                inputStream.Read(temp, 0, keySize);
-            TempKey = temp;
+            importIv();
+            
+            
+            var allBlocks = new byte[blocksQuantity][];
+            for (int i = 0; i < blocksQuantity-1; i++)
+            {
+                int endPositionToRead = (i + 1) * blockSize;
+                using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                    allBlocks[i] = ReadDesiredPart(fs, i * blockSize, endPositionToRead);
+            }
+            //allBlocks[blocksQuantity-1] = new ASCIIEncoding().GetBytes(new FileInfo(inputFilePath).Length.ToString());
+            byte[] theLastBlock = new byte[blockSize];
+            var tempArr = new ASCIIEncoding().GetBytes(new FileInfo(inputFilePath).Length.ToString());
+            Array.Copy(tempArr, theLastBlock, tempArr.Length);
+            allBlocks[blocksQuantity - 1] = theLastBlock;
+            
+            var result = new byte[blocksQuantity][];
+            switch (EncryptionMode)
+            {
+                case "CBC":
+                    Cbc mode = new Cbc(IV, new AesCore(TempKey, blockSize));
+                    
+                    result = mode.EncryptAll(allBlocks);
+                    break;
+            }
+            
+            
+            outputFilePath = "./resources/" + outputFilePath;
+            using (var outputStream = File.Open(outputFilePath, FileMode.Create))
+            {
+                foreach (var block in result)
+                {
+                    try
+                    {
+                        outputStream.Write(block, 0, block.Length);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                MessageBox.Show("Output file is " + outputFilePath);
+                outputStream.Close();
+            }
         }
+        
+        
+        
+        
+        
 
         public void RunDecryptionProcess()
         {
@@ -141,6 +206,13 @@ namespace Task_8.AsyncCypher
 
             blocksQuantity = DetermineBlocksQuantity(false);
 
+            
+            if (EncryptionMode != "ECB")
+            {
+                RunDecryptionProcessInMode();
+                return;
+            }
+            
             Task<TaskProperties>[] allTasks = new Task<TaskProperties>[blocksQuantity];
             for (int i = 0; i < blocksQuantity; i++)
             {
@@ -236,6 +308,80 @@ namespace Task_8.AsyncCypher
                 }
             }
             
+        }
+        private void RunDecryptionProcessInMode()
+        {
+            importIv();
+            
+            
+            var allBlocks = new byte[blocksQuantity][];
+            for (int i = 0; i < blocksQuantity; i++)
+            {
+                int endPositionToRead = (i + 1) * blockSize;
+                using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                    allBlocks[i] = ReadDesiredPart(fs, i * blockSize, endPositionToRead);
+            }
+            
+            var result = new byte[blocksQuantity][];
+            switch (EncryptionMode)
+            {
+                case "CBC":
+                    Cbc mode = new Cbc(IV, new AesCore(TempKey, blockSize));
+                    
+                    result = mode.DecryptAll(allBlocks);
+                    break;
+            }
+            
+            
+            // MessageBox.Show(new ASCIIEncoding().GetString(result[0]));
+            // MessageBox.Show(new ASCIIEncoding().GetString(result[1]));
+            
+            outputFilePath = "./resources/" + outputFilePath;
+            using (var outputStream = File.Open(outputFilePath, FileMode.Create))
+            {
+                for (int i = 0; i < result.Length-1; i++)
+                {
+                    
+                    try
+                    {
+                        if(i == result.Length - 2)
+                        {
+                            outputStream.Write(result[i], 0, Int32.Parse(new ASCIIEncoding().GetString(result[result.Length-1])));
+                        }
+                        else
+                            outputStream.Write(result[i], 0, result[i].Length);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                
+                MessageBox.Show("Output file is " + outputFilePath);
+                outputStream.Close();
+            }
+        }
+        
+        
+        
+        
+        
+        
+        private void ImportCypherKey()
+        {
+            MessageBox.Show("Importing secret key...");
+            var temp = new byte[keySize];
+            using (var inputStream = File.OpenRead(keyFilePath))
+                inputStream.Read(temp, 0, keySize);
+            TempKey = temp;
+        }
+        private void importIv()
+        {
+            // MessageBox.Show("Importing secret key...");
+            var temp = new byte[blockSize];
+            using (var inputStream = File.OpenRead(ivFilePath))
+                inputStream.Read(temp, 0, blockSize);
+            IV = temp;
         }
 
         private int DetermineBlocksQuantity(bool encrypt)

@@ -99,8 +99,11 @@ namespace SecondTask_1
         {
 	        return FastPowMode(b, 254, 256);//256?
         }
-        static uint ModeDivide(uint division, uint divisor)
+        static uint ModeDivide(int _division, int _divisor)
         {
+	        uint division = (uint) _division;
+	        uint divisor = (uint) _divisor;
+	        
 	        if (division < divisor)
 	        {
 		        throw new ArgumentException("Cannot find the first non null bit when dividing by a greater value");
@@ -147,12 +150,12 @@ namespace SecondTask_1
 	        return result;
         }
 
-        public static bool CheckIrreduciblePolynomial(uint poly)
+        public static bool CheckIrreduciblePolynomial(int poly)
         {
 	        for (int i = 2; i < poly; i++)
 	        {
 		        
-		        if (i != poly && ModeDivide(poly, (uint) i) == 0)
+		        if (i != poly && ModeDivide(poly,  i) == 0)
 		        {
 			        return false;
 		        }

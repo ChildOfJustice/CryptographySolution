@@ -42,12 +42,28 @@ namespace SecondTask_3
             _mainWindowViewModel.RijndaelKeySize = Int32.Parse(selectedItem.Text)/8;
             // MessageBox.Show(selectedItem.Text);
         }
-        
-        
+        private void ComboBoxEncryptionModeSelected(object sender, RoutedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            TextBlock selectedItem = (TextBlock)comboBox.SelectedItem;
+            _mainWindowViewModel.EncryptionMode = selectedItem.Text;
+            // MessageBox.Show(selectedItem.Text);
+        }
         
         private void OnEncryptButtonClick(object sender, RoutedEventArgs e)
         {
             var outputFileName = OutPutFilePathHolder.Text;
+
+            int irreduciblePoly = 283;
+            try
+            {
+                irreduciblePoly = Int32.Parse(IrreduciblePolynomialHolder.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Wrong Irreducible Polynomial, will be used <283>");
+            }
+            
 
             Task.Run(() =>
             {
@@ -59,16 +75,20 @@ namespace SecondTask_3
                     });
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(CypherAlgorithm.Rijndael,
-                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize);
-
-                    if (_mainWindowViewModel.SymmetricKeyFile == null)
-                        throw new NullReferenceException("The key file path is empty");
-                    if (_mainWindowViewModel.DataFile == null)
-                        throw new NullReferenceException("The data file path is empty");
-                    if (outputFileName == null || outputFileName == "")
-                        throw new NullReferenceException("The output file name is empty");
+                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize, _mainWindowViewModel.EncryptionMode);
                     
-                    _mainWindowViewModel.MainTaskManager.keyFilePath = _mainWindowViewModel.SymmetricKeyFile;
+
+                    // if (_mainWindowViewModel.SymmetricKeyFile == null)
+                    //     throw new NullReferenceException("The key file path is empty");
+                    // if (_mainWindowViewModel.IvFilePath == null && _mainWindowViewModel.MainTaskManager.EncryptionMode != "ECB")
+                    //     throw new NullReferenceException("The IV file path is empty");
+                    // if (_mainWindowViewModel.DataFile == null)
+                    //     throw new NullReferenceException("The data file path is empty");
+                    // if (outputFileName == null || outputFileName == "")
+                    //     throw new NullReferenceException("The output file name is empty");
+                    
+                    //_mainWindowViewModel.MainTaskManager.keyFilePath = _mainWindowViewModel.SymmetricKeyFile;
+                    //_mainWindowViewModel.MainTaskManager.ivFilePath = _mainWindowViewModel.IvFilePath;
                     _mainWindowViewModel.MainTaskManager.inputFilePath = _mainWindowViewModel.DataFile;
                     _mainWindowViewModel.MainTaskManager.outputFilePath = outputFileName;
                     
@@ -104,16 +124,19 @@ namespace SecondTask_3
                     
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(CypherAlgorithm.Rijndael,
-                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize);
+                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize, _mainWindowViewModel.EncryptionMode);
 
-                    if (_mainWindowViewModel.SymmetricKeyFile == null)
-                        throw new NullReferenceException("The key file path is empty");
-                    if (_mainWindowViewModel.DataFile == null)
-                        throw new NullReferenceException("The data file path is empty");
-                    if (outputFileName == null || outputFileName == "")
-                        throw new NullReferenceException("The output file name is empty");
+                    // if (_mainWindowViewModel.SymmetricKeyFile == null)
+                    //     throw new NullReferenceException("The key file path is empty");
+                    // if (_mainWindowViewModel.IvFilePath == null && _mainWindowViewModel.MainTaskManager.EncryptionMode != "ECB")
+                    //     throw new NullReferenceException("The IV file path is empty");
+                    // if (_mainWindowViewModel.DataFile == null)
+                    //     throw new NullReferenceException("The data file path is empty");
+                    // if (outputFileName == null || outputFileName == "")
+                    //     throw new NullReferenceException("The output file name is empty");
 
-                    _mainWindowViewModel.MainTaskManager.keyFilePath = _mainWindowViewModel.SymmetricKeyFile;
+                    //_mainWindowViewModel.MainTaskManager.keyFilePath = _mainWindowViewModel.SymmetricKeyFile;
+                    //_mainWindowViewModel.MainTaskManager.ivFilePath = _mainWindowViewModel.IvFilePath;
                     _mainWindowViewModel.MainTaskManager.inputFilePath = _mainWindowViewModel.DataFile;
                     _mainWindowViewModel.MainTaskManager.outputFilePath = outputFileName;
                     
@@ -149,6 +172,22 @@ namespace SecondTask_3
                 // Open document 
                 string filename = dlg.FileName;
                 _mainWindowViewModel.SymmetricKeyFile = filename;
+            }
+        }
+        private void OnChooseIvFileButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+            
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                string filename = dlg.FileName;
+                _mainWindowViewModel.IvFilePath = filename;
             }
         }
         private void OnChooseDataFileButtonClick(object sender, RoutedEventArgs e)

@@ -84,7 +84,7 @@ namespace AES
         public void PrintDigitAsByteArray(ulong digit)
         {
             var arr=BitConverter.GetBytes(digit);
-            foreach (var VARIABLE in arr.Reverse())
+            foreach (var VARIABLE in arr)
             {
                 Console.Write(VARIABLE + " ");
             }
@@ -298,48 +298,65 @@ namespace AES
                 if (j < 2)
                 {
                     //left part
+                    
                     ulong mask1Byte = ((ulong) 1 << (bytesize)) - 1;
 
                     var eraser = mask1Byte;
                     ulong newValue = value;
 
-                    for (int k = 1; k > j; k--)
+                    if (j == 1)
                     {
                         eraser <<= bytesize * 4;
                         newValue <<= bytesize * 4;
                     }
-                   
-
-                    for (int k = 3; k > i; k--)
+                    for (int k = 0; k < i; k++)
                     {
                         eraser <<= bytesize;
                         newValue <<= bytesize;
                     }
+                    
 
+                    // for (int k = 1; k > j; k--)
+                    // {
+                    //     eraser <<= bytesize * 4;
+                    //     newValue <<= bytesize * 4;
+                    // }
+                    //
+                    //
+                    // for (int k = 3; k > i; k--)
+                    // {
+                    //     eraser <<= bytesize;
+                    //     newValue <<= bytesize;
+                    // }
+                    //
                     eraser = ~eraser;
-
-
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
-                   
+                    //
+                    //
+                    // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                    // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                    //
                     L &= eraser;
                     L |= newValue;
+                    
+                    // Console.WriteLine("Left part is:");
+                    // PrintDigitAsByteArray(L);
+                    // Console.WriteLine();
                 }
                 else
                 {
                     //right part
+                    
                     ulong mask1Byte = ((ulong) 1 << (bytesize)) - 1;
 
                     var eraser = mask1Byte;
                     ulong newValue = value;
 
-                    for (int k = 1; k > j - 2; k--)
+                    if (j == 3)
                     {
                         eraser <<= bytesize * 4;
                         newValue <<= bytesize * 4;
                     }
-
-                    for (int k = 3; k > i; k--)
+                    for (int k = 0; k < i; k++)
                     {
                         eraser <<= bytesize;
                         newValue <<= bytesize;
@@ -347,60 +364,83 @@ namespace AES
 
                     eraser = ~eraser;
 
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                    // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                    // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
                    
                     R &= eraser;
                     R |= newValue;
+                    
+                    // Console.WriteLine("Right part is:");
+                    // PrintDigitAsByteArray(R);
+                    // Console.WriteLine();
                 }
             }
             else if (Nb == 6)
             {
+                
+                
                 if (j < 2)
                 {
                     //left part
+                    
                     ulong mask1Byte = ((ulong) 1 << (bytesize)) - 1;
 
                     var eraser = mask1Byte;
                     ulong newValue = value;
 
-                    for (int k = 1; k > j; k--)
+                    if (j == 1)
                     {
                         eraser <<= bytesize * 4;
                         newValue <<= bytesize * 4;
                     }
-                   
-
-                    for (int k = 3; k > i; k--)
+                    for (int k = 0; k < i; k++)
                     {
                         eraser <<= bytesize;
                         newValue <<= bytesize;
                     }
+                    
 
+                    // for (int k = 1; k > j; k--)
+                    // {
+                    //     eraser <<= bytesize * 4;
+                    //     newValue <<= bytesize * 4;
+                    // }
+                    //
+                    //
+                    // for (int k = 3; k > i; k--)
+                    // {
+                    //     eraser <<= bytesize;
+                    //     newValue <<= bytesize;
+                    // }
+                    //
                     eraser = ~eraser;
-
-
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
-                   
+                    //
+                    //
+                    // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                    // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                    //
                     L &= eraser;
                     L |= newValue;
+                    
+                    // Console.WriteLine("Left part is:");
+                    // PrintDigitAsByteArray(L);
+                    // Console.WriteLine();
                 }
                 else if (j < 4)
                 {
                     //right part
+                    
                     ulong mask1Byte = ((ulong) 1 << (bytesize)) - 1;
 
                     var eraser = mask1Byte;
                     ulong newValue = value;
 
-                    for (int k = 1; k > j - 2; k--)
+                    if (j == 3)
                     {
                         eraser <<= bytesize * 4;
                         newValue <<= bytesize * 4;
                     }
-
-                    for (int k = 3; k > i; k--)
+                    for (int k = 0; k < i; k++)
                     {
                         eraser <<= bytesize;
                         newValue <<= bytesize;
@@ -408,48 +448,53 @@ namespace AES
 
                     eraser = ~eraser;
 
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                    // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                    // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
                    
                     R &= eraser;
                     R |= newValue;
+                    
+                    // Console.WriteLine("Right part is:");
+                    // PrintDigitAsByteArray(R);
+                    // Console.WriteLine();
                 }
-                else 
+                else
                 {
-                    //the third part
-                    ulong mask1Byte = ((ulong) 1 << (bytesize)) - 1;
+                    
+                        //the third part
+                        ulong mask1Byte = ((ulong) 1 << (bytesize)) - 1;
 
-                    var eraser = mask1Byte;
-                    ulong newValue = value;
+                        var eraser = mask1Byte;
+                        ulong newValue = value;
 
-                    for (int k = 1; k > j - 4; k--)
-                    {
-                        eraser <<= bytesize * 4;
-                        newValue <<= bytesize * 4;
-                    }
+                        if (j == 5)
+                        {
+                            eraser <<= bytesize * 4;
+                            newValue <<= bytesize * 4;
+                        }
+                        for (int k = 0; k < i; k++)
+                        {
+                            eraser <<= bytesize;
+                            newValue <<= bytesize;
+                        }
+
+                        eraser = ~eraser;
                     
 
-                    for (int k = 3; k > i; k--)
-                    {
-                        eraser <<= bytesize;
-                        newValue <<= bytesize;
-                    }
-
-                    eraser = ~eraser;
+                        // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                        // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                        //Console.WriteLine("Will be:");
+                        //PrintDigitAsByteArray(eraser);
+                        //PrintDigitAsByteArray(newValue);
+                        Tail &= eraser;
+                        Tail |= newValue;
+                        //PrintDigitAsByteArray(Tail);
                     
-
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
-                    //Console.WriteLine("Will be:");
-                    //PrintDigitAsByteArray(eraser);
-                    //PrintDigitAsByteArray(newValue);
-                    Tail &= eraser;
-                    Tail |= newValue;
-                    //PrintDigitAsByteArray(Tail);
                 }
             }
             else if (Nb == 8)
             {
+                
                 if (j < 2)
                 {
                     //left part
@@ -458,14 +503,12 @@ namespace AES
                     var eraser = mask1Byte;
                     ulong newValue = value;
 
-                    for (int k = 1; k > j; k--)
+                    if (j == 1)
                     {
                         eraser <<= bytesize * 4;
                         newValue <<= bytesize * 4;
                     }
-                   
-
-                    for (int k = 3; k > i; k--)
+                    for (int k = 0; k < i; k++)
                     {
                         eraser <<= bytesize;
                         newValue <<= bytesize;
@@ -474,8 +517,8 @@ namespace AES
                     eraser = ~eraser;
 
 
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                    // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                    // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
                    
                     L &= eraser;
                     L |= newValue;
@@ -488,13 +531,12 @@ namespace AES
                     var eraser = mask1Byte;
                     ulong newValue = value;
 
-                    for (int k = 1; k > j - 2; k--)
+                    if (j == 3)
                     {
                         eraser <<= bytesize * 4;
                         newValue <<= bytesize * 4;
                     }
-
-                    for (int k = 3; k > i; k--)
+                    for (int k = 0; k < i; k++)
                     {
                         eraser <<= bytesize;
                         newValue <<= bytesize;
@@ -502,8 +544,8 @@ namespace AES
 
                     eraser = ~eraser;
 
-                    eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
-                    newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
+                    // eraser = BitConverter.ToUInt64(BitConverter.GetBytes(eraser).Reverse().ToArray(), 0);
+                    // newValue = BitConverter.ToUInt64(BitConverter.GetBytes(newValue).Reverse().ToArray(), 0);
                    
                     R &= eraser;
                     R |= newValue;

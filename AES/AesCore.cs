@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace AES
 {
@@ -98,27 +99,27 @@ namespace AES
             
             for (int i = 0; i < roundsQuantity; i++)
             {
-                //Console.WriteLine("////////////////ROUND " + i);
-                //State.PrintMatrixHex();
+                // Console.WriteLine("////////////////ROUND " + i);
+                // State.PrintMatrixHex();
                 
-                //Console.WriteLine("-----------SubBytes:");
+                // Console.WriteLine("-----------SubBytes:");
                 SubBytes();
-                //State.PrintMatrixHex();
+                // State.PrintMatrixHex();
                 
-                //Console.WriteLine("-----------ShiftRows:");
+                // Console.WriteLine("-----------ShiftRows:");
                 ShiftRows();
-                //State.PrintMatrixHex();
+                // State.PrintMatrixHex();
                 
                 if (i != roundsQuantity-1)
                 {
-                    //Console.WriteLine("-----------MixColumns:");
+                    // Console.WriteLine("-----------MixColumns:");
                     MixColumns();
-                    //State.PrintMatrixHex();
+                    // State.PrintMatrixHex();
                 }
                     
-                //Console.WriteLine("-----------AddRoundKey:");
+                // Console.WriteLine("-----------AddRoundKey:");
                 AddRoundKey(RoundKeys[i]);
-                //State.PrintMatrixHex();
+                // State.PrintMatrixHex();
             }
 
             return State.ToByteArray();
@@ -214,7 +215,7 @@ namespace AES
             
             //shift 3
             temp = State.Get(3, State.Nb-1);
-            for (int k = State.Nb-1; k >= 0; k--)
+            for (int k = State.Nb-2; k >= 0; k--)
             {
                 State.Set(State.Get(3,k), 3, k+1);
             }
@@ -274,29 +275,29 @@ namespace AES
             
             for (int i = 0; i < roundsQuantity; i++)
             {
-                //Console.WriteLine("////////////////ROUND " + i);
-                //State.PrintMatrixHex();
+                // Console.WriteLine("////////////////ROUND " + i);
+                // State.PrintMatrixHex();
                 
-                //Console.WriteLine("-----------AddRoundKey:");
+                // Console.WriteLine("-----------AddRoundKey:");
                 AddRoundKey(RoundKeys[roundsQuantity-1 - i]);
-                //State.PrintMatrixHex();
+                // State.PrintMatrixHex();
                 
                 if (i != 0)
                 {
-                    //Console.WriteLine("-----------InversedMixColumns:");
+                    // Console.WriteLine("-----------InversedMixColumns:");
                     InversedMixColumns();
-                    //State.PrintMatrixHex();
+                    // State.PrintMatrixHex();
                 }
                 
-                //Console.WriteLine("-----------InversedShiftRows:");
+                // Console.WriteLine("-----------InversedShiftRows:");
                 InversedShiftRows();
-                //State.PrintMatrixHex();
+                // State.PrintMatrixHex();
                 
                
                     
-                //Console.WriteLine("-----------InversedSubBytes:");
+                // Console.WriteLine("-----------InversedSubBytes:");
                 InversedSubBytes();
-                //State.PrintMatrixHex();
+                // State.PrintMatrixHex();
                 
                 
             }
@@ -395,5 +396,22 @@ namespace AES
             //State.PrintMatrixHex();
         }
         #endregion
+        
+        
+        
+        public void ExportKey(string outPutFile)
+        {
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(CipherKey.ToByteArray(), 0, CipherKey.ToByteArray().Length);
+        }
+        public void ImportKey(string inPutFile, int keySize)
+        {
+           
+            var temp = new byte[keySize];
+            using (var inputStream = File.OpenRead(inPutFile))
+                inputStream.Read(temp, 0, keySize); // 8 bytes = 64 bit key
+
+            Key = temp;
+        }
     }
 }

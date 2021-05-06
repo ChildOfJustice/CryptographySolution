@@ -29,7 +29,7 @@ namespace EncryptionModes
             EncryptChain(tempIv, allData, blockNumber + 1, result);
         }
         
-        public byte[][] EncryptAll(byte[][] allBlocks)
+        public override byte[][] EncryptAll(byte[][] allBlocks)
         {
             byte[][] result = new byte[allBlocks.Length][];
             EncryptChain(IV, allBlocks, 0, result);
@@ -98,7 +98,7 @@ namespace EncryptionModes
             return result;
         }
         
-        public byte[][] DecryptAll(byte[][] allBlocks)
+        public override byte[][] DecryptAll(byte[][] allBlocks)
         {
             CurrIv = IV;
         

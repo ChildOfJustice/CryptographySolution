@@ -27,7 +27,7 @@ namespace EncryptionModes
             return EncryptChain(result[blockNumber], allData, blockNumber + 1, result);
         }
 
-        public byte[][] EncryptAll(byte[][] allBlocks)
+        public override byte[][] EncryptAll(byte[][] allBlocks)
         {
             byte[][] result = new byte[allBlocks.Length][];
             result = EncryptChain(IV, allBlocks, 0, result);
@@ -50,7 +50,7 @@ namespace EncryptionModes
             return res;
         }
         
-        public byte[][] DecryptAll(byte[][] allBlocks)
+        public override byte[][] DecryptAll(byte[][] allBlocks)
         {
             byte[][] result = new byte[allBlocks.Length][];
             result[0] = Decrypt(IV, allBlocks[0]);

@@ -9,3 +9,7 @@ C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\Cr
 C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\bin\Debug\SecondTask_1.pdb
 C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\bin\Debug\SecondTask_2.pdb
 C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\obj\Debug\AES.csproj.CopyComplete
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\bin\Debug\Task_4.exe
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\bin\Debug\Task_1.exe
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\bin\Debug\Task_4.pdb
+C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\AES\bin\Debug\Task_1.pdb

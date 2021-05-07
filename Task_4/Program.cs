@@ -13,15 +13,18 @@ namespace Task_4
             st[0] = 1;
             st.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
+            
+            byte[] key = new byte[8];
+            key[5] = 3;
 
             FeistelNet fn = new NotAbstractFeistelNet();
             fn.FeistelRoundQuantity = 16;
-            fn.Key = 100;
-            var result = fn.CipherTemplateMethod(st, true);
+            fn.Key = key;
+            var result = fn.Encrypt(st);
             result.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
 	        
-            var decrypted = fn.CipherTemplateMethod(result, false);
+            var decrypted = fn.Decrypt(result);
             decrypted.ToList().ForEach(i => Console.Write(i.ToString() + " "));
             Console.WriteLine();
         }

@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Task_4
 {
-    public abstract class FeistelNet
+    public abstract class FeistelNet : ICypherAlgorithm
     {
         protected ulong[] RoundKeys;
         //public abstract ulong[] generateRoundKeys();//RoundKeys = new ulong[16];
@@ -20,11 +20,11 @@ namespace Task_4
 	
         private int byteSize = 8;
 
-        public byte[] CipherTemplateMethod(byte[] DataBytes, bool encrypt)
+        public byte[] Encrypt(byte[] dataBytes)
         {
-	        ProcessDataBytes(DataBytes);
+	        ProcessDataBytes(dataBytes);
 	        Hook1();//InitialPermutation
-	        DoTheJob(encrypt);
+	        DoTheJob(true);
 	        Hook2();//FinalPermutation
 
 
@@ -83,6 +83,44 @@ namespace Task_4
 
 
 	        return BitConverter.GetBytes(Data);
+        }
+        public byte[] Decrypt(byte[] dataBytes)
+        {
+	        ProcessDataBytes(dataBytes);
+	        Hook1();//InitialPermutation
+	        DoTheJob(false);
+	        Hook2();//FinalPermutation
+
+
+	        var leftByteArray = new byte[DataSize / 2];
+	        var rightByteArray = new byte[DataSize / 2];
+
+
+	        if (DataSize == 8)
+	        {
+		        leftByteArray = BitConverter.GetBytes((uint)R); 
+		        rightByteArray = BitConverter.GetBytes((uint)L); 
+	        } else if (DataSize == 16)
+	        {
+		        leftByteArray = BitConverter.GetBytes(R); 
+		        rightByteArray = BitConverter.GetBytes(L);
+	        }
+	        else
+	        {
+		        throw new ArgumentException("Wrong data block size in the end of the cipher function");
+	        }
+	        
+	        var resultByteArray = new byte[DataSize];
+	        for (int i = 0; i < DataSize/2; i++)
+	        {
+		        resultByteArray[i] = leftByteArray[i];
+	        }
+	        for (int i = DataSize/2; i < DataSize; i++)
+	        {
+		        resultByteArray[i] = rightByteArray[i-DataSize/2];
+	        }
+	        
+	        return resultByteArray;
         }
 
         protected void ProcessDataBytes(byte[] DataBytes)
@@ -160,7 +198,7 @@ namespace Task_4
 
         protected virtual void Hook2() { }
         
-        public abstract  ulong Key
+        public abstract  byte[] Key
         {
 	        set;
         }

@@ -63,7 +63,7 @@ namespace SecondTask_3
             {
                 MessageBox.Show("Wrong Irreducible Polynomial, will be used <283>");
             }
-            
+
 
             Task.Run(() =>
             {
@@ -75,7 +75,7 @@ namespace SecondTask_3
                     });
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(CypherAlgorithm.Rijndael,
-                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize, _mainWindowViewModel.EncryptionMode);
+                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize, _mainWindowViewModel.EncryptionMode, irreduciblePoly);
                     
 
                     // if (_mainWindowViewModel.SymmetricKeyFile == null)
@@ -113,6 +113,16 @@ namespace SecondTask_3
         {
             var outputFileName = OutPutFilePathHolder.Text;
             
+            int irreduciblePoly = 283;
+            try
+            {
+                irreduciblePoly = Int32.Parse(IrreduciblePolynomialHolder.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Wrong Irreducible Polynomial, will be used <283>");
+            }
+            
             Task.Run(() =>
             {
                 try
@@ -124,7 +134,7 @@ namespace SecondTask_3
                     
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(CypherAlgorithm.Rijndael,
-                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize, _mainWindowViewModel.EncryptionMode);
+                        _mainWindowViewModel.RijndaelBlockSize, _mainWindowViewModel.RijndaelKeySize, _mainWindowViewModel.EncryptionMode, irreduciblePoly);
 
                     // if (_mainWindowViewModel.SymmetricKeyFile == null)
                     //     throw new NullReferenceException("The key file path is empty");

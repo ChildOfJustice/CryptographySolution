@@ -21,7 +21,7 @@ namespace SecondTask_2
             return res;
         }
 
-        public static byte MultyplyPolynoms(byte a, byte b)
+        public static byte MultyplyPolynoms(byte a, byte b, byte irreduciblePolynomial = 0x1b)
         {
             byte p = 0;
             byte counter;
@@ -36,7 +36,7 @@ namespace SecondTask_2
                 a <<= 1;
                 if (hi_bit_set != 0)
                 {
-                    a ^= 0x1b;
+                    a ^= irreduciblePolynomial;// irreducible polynomial 283 = 0x1b + 256
                 }
                 b >>= 1;
             }

@@ -138,7 +138,7 @@
                         Grid.Column="0"
                         Click="OnEncryptButtonClick"
                         Foreground="DimGray"
-                        FontSize="50"
+                        FontSize="30"
                         Margin="5">
                     
                         Encrypt
@@ -147,7 +147,7 @@
                         Grid.Column="1"
                         Click="OnDecryptButtonClick"
                         Foreground="DimGray"
-                        FontSize="50"
+                        FontSize="30"
                         Margin="5">
                     
                         Decrypt

@@ -46,7 +46,7 @@ namespace Task_8.AsyncCypher
             if (!SecondTask_1.Program.CheckIrreduciblePolynomial(_irreduciblePoly))
                 throw new ArgumentException("It's not an irreducible polynomial: " + _irreduciblePoly);
             if (_irreduciblePoly >= 256)
-                _irreduciblePoly -= 256;
+                _irreduciblePoly = _irreduciblePoly % 256;
             irreduciblePoly = _irreduciblePoly;
 
             //new ASCIIEncoding().GetBytes(sData);

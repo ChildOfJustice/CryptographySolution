@@ -42,6 +42,12 @@
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\ThirdTask_1\ThirdTask_1.csproj">
+        <Project>{6e39cc7a-c3c2-4198-90aa-471fe280e382}</Project>
+        <Name>ThirdTask_1</Name>
+      </ProjectReference>
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.

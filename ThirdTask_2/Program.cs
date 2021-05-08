@@ -8,6 +8,7 @@ namespace ThirdTask_2
     {
         public static void Main(string[] args)
         {
+            
             BigInteger prime = 0;
             for (BigInteger i = BigInteger.Pow(2, 500); i < BigInteger.Pow(2, 2048); i++)
             {
@@ -20,6 +21,25 @@ namespace ThirdTask_2
             }
 
             Console.WriteLine(prime.ToString());
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+
+            prime = 0;
+            for (BigInteger i = BigInteger.Pow(2, 500); i < BigInteger.Pow(2, 2048); i++)
+            {
+                if (FermaTest(i, BigInteger.Pow(2, 500)))
+                {
+                    prime = i;
+                    break;
+                }
+                    
+            }
+
+            Console.WriteLine(prime.ToString());
+
+            Console.WriteLine(FermaTest(9746347772161, 1));
         }
         
         
@@ -90,6 +110,38 @@ namespace ThirdTask_2
             }
 
             // вернуть "вероятно простое"
+            return true;
+        }
+        
+        
+        
+        
+        public static BigInteger MHP(BigInteger a, BigInteger k, BigInteger b)
+        {
+            return ThirdTask_1.Program.FastPowModeBigInt(a, k % ThirdTask_1.Program.EulerFunction(b), b);
+            //return Math.Pow(a, k % ThirdTask_1.Program.EulerFunction(b)) % b;
+        }
+        public static bool FermaTest(BigInteger n, BigInteger startPosCheckFrom)
+        {
+            // если n == 2 или n == 3 - эти числа простые, возвращаем true
+            if (n == 2 || n == 3)
+                return true;
+
+            // если n < 2 или n четное - возвращаем false
+            if (n < 2 || n % 2 == 0)
+                return false;
+
+            if (startPosCheckFrom < 1)
+                throw new ArgumentException("Cannot check from this position");
+
+            for(BigInteger a = startPosCheckFrom; a < n-1; a++)
+            {
+                if (MHP(a, n-1, n) != 1) 
+                {
+                    return false;
+                }
+            }
+            //Console.WriteLine(String.Format("Число {0} вероятно простое", n));
             return true;
         }
     }

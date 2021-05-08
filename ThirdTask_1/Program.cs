@@ -49,7 +49,7 @@ namespace ThirdTask_1
             y = newY;
             return gcd;
         }
-        public static BigInteger FastPowModeBigInt(BigInteger number, uint pow, BigInteger mode)
+        public static BigInteger FastPowModeBigInt(BigInteger number, BigInteger pow, BigInteger mode)
         {
             BigInteger result = 1;      
             while (pow != 0) {
@@ -194,30 +194,111 @@ namespace ThirdTask_1
             // Console.WriteLine(Gcd(98, 178, out x, out y));
             // Console.WriteLine(x);
             // Console.WriteLine(y);
-            BigInteger a = 7, b = 3, x, y, gcd;
-            gcd = ExtendedEuclideanAlgorithm(a, b, out x, out y);
-            Console.WriteLine($"{x} * {a} + {y} * {b} = {gcd}"); // -2 * 7 + 1 * 3 = 1
-            gcd = ExtendedEuclideanAlgorithm(b, a, out y, out x);
-            Console.WriteLine($"{x} * {a} + {y} * {b} = {gcd}"); // 1 * 7 + -2 * 3 = 1
+            // BigInteger a = 7, b = 3, x, y, gcd;
+            // gcd = ExtendedEuclideanAlgorithm(a, b, out x, out y);
+            // Console.WriteLine($"{x} * {a} + {y} * {b} = {gcd}"); // -2 * 7 + 1 * 3 = 1
+            // gcd = ExtendedEuclideanAlgorithm(b, a, out y, out x);
+            // Console.WriteLine($"{x} * {a} + {y} * {b} = {gcd}"); // 1 * 7 + -2 * 3 = 1
+            //
+            // Console.WriteLine(EulerFunction(7));
 
-            Console.WriteLine(EulerFunction(7));
+
+            // Console.WriteLine(CalcSymbolL(3,11));
+            // Console.WriteLine(CalcSymbolL(6,7));
+            // Console.WriteLine(CalcSymbolL(68,113));
+            Console.WriteLine(L(3,11));
+            Console.WriteLine(L(6,7));
+            Console.WriteLine(L(68,113));
+
+            Console.WriteLine();
+            
+            Console.WriteLine(J(2,15));
+            Console.WriteLine(J(506,1103));
+            Console.WriteLine(J(-286,4272943));
+        }
+        public static int L(int a, int p)
+        {
+            if (ExtendedEuclideanAlgorithm(a, p, out BigInteger x1, out BigInteger y1) != 1)
+                return 0;
+            
+            if (a == 1)
+            {
+                return 1;
+            }
+            if (a % 2 == 0)
+            {
+                return ((int)(L(a / 2, p) * Math.Pow(-1, (p * p - 1) / 8)));
+            }
+            if ((a % 2 != 0) && (a != 1))
+            {
+                return ((int)(L(p % a, a) * Math.Pow(-1, (a - 1) * (p - 1) / 4)));
+            }
+            return 0;
         }
 
+        public static int J(int a, int m)
+        {
+            if (ExtendedEuclideanAlgorithm(a, m, out BigInteger x1, out BigInteger y1) != 1)
+                return 0;
+            int x = a; //Заводим переменные x, y, s под a, m
+                int y = m; // и знак вычисляемого символа (a/m).
+                int s = 1;
+                if (a < 0) //Если a - отрицательное число
+                {
+                    x = -a; //выносим (по свойству 4)
+                    s = (int)Math.Pow((-1), ((m - 1) / 2)); //символ (-1/m) по формуле (свойство 2).???
+                }
 
+                while (true)
+                {
+                    int t = 0; //Количество двоек, вынесенных из "числителя" символа.
+                    int c = x % y; //Заменяем a остатком по модулю m
+                    x = c; //в соответствии со свойством 1.
+                    if (x == 0)
+                    {
+                        return 1; //Если m делится на a, (a/m)=1
+                    }
+                    else
+                    {
+                        while (x % 2 == 0) //Пока a четно, выносим (свойство 4)
+                        {
+                            x = x / 2; //двойки, считаем их количество
+                            t++;
+                        }
+                        if (t % 2 == 1) s = (int)(s * Math.Pow( (-1) ,((y * y - 1) / 8))); //Четное количество двоек влияет на знак,для нечетного - по формуле
 
+                        //Имеем (a/m), где a, m - нечетные.
+                        //Используем формулу (свойство 5) и перевернем символ Якоби,если мы не можем вычислить его по свойству 2, т.е. a! = 1.
+                        if(x > 1)
+                        {
+                            s = (int)(s * Math.Pow((-1), (((x - 1) / 2) * ((y - 1) / 2))));
+                            c = x;
+                            x = y;
+                            y = c;
+                        }
+                        else //Иначе если a = 1, (a/m)=1.
+                        {
+                            break; //Вычисление окончено.
+                        }
+                    }
+                }
+                return s;
+        }
 
-        // public static int CalcSymbolL(BigInteger a, BigInteger p)
-        // {
-        //     bool negative = false;
-        //     if (a.Sign == -1)
-        //     {
-        //         a *= -1;
-        //         negative = true;
-        //     }
-        //
-        //     a = a % p;
-        //     FactorOut(a, out List<BigInteger> primes, out List<int> degrees);
-        // }
-        
+        public static BigInteger CalcSymbolL(BigInteger a, BigInteger p)
+        {
+            //критерий Эйлера:
+            return FastPowModeBigInt(a, (p - 1) / 2, p);
+        }
+        public static BigInteger CalcSymbolJ(BigInteger a, BigInteger p)
+        {
+            //закон взаимности
+            BigInteger powerForOne = ((p - 1) / 2) * ((a - 1) / 2);
+            int sign = 1;
+            if (!powerForOne.IsEven)
+                sign = -1;
+
+            return sign*CalcSymbolL(a,p);
+        }
     }
 }

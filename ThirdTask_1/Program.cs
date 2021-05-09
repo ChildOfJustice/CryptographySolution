@@ -285,6 +285,68 @@ namespace ThirdTask_1
                 return s;
         }
 
+        public static int Jacobi(BigInteger a, BigInteger b)
+        {
+            int r = 1;
+            while (a != 0)
+            {
+                int t = 0;
+                while ((a & 1) == 0)
+                {
+                    t++;
+                    a >>= 1;
+                }
+
+                if ((t & 1) != 0)
+                {
+                    BigInteger temp = b % 8;
+                    if (temp == 3 || temp == 5)
+                    {
+                        r = -r;
+                    }
+                }
+
+                BigInteger a4 = a % 4, b4 = b % 4;
+                if (a4 == 3 && b4 == 3)
+                {
+                    r = -r;
+                }
+
+                BigInteger c = a;
+                a = b % c;
+                b = c;
+            }
+
+            return r;
+        }
+
+        public static BigInteger BinaryGCD(BigInteger A, BigInteger B)
+        {
+            BigInteger k = 1;
+            while ((A != 0) && (B != 0))
+            {
+                while (((A & 1) == 0) && ((B & 1) == 0))
+                {
+                    A >>= 1;
+                    B >>= 1;
+                    k <<= 1;
+                }
+                while ((A & 1) == 0) A >>= 1;
+                while ((B & 1) == 0) B >>= 1;
+                if (A >= B) A -= B; else B -= A;
+            }
+            return B * k;
+        }
+
+
+
+
+
+
+
+
+
+        //Do not work
         public static BigInteger CalcSymbolL(BigInteger a, BigInteger p)
         {
             //критерий Эйлера:

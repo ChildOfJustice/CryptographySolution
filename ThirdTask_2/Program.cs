@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace ThirdTask_2
 {
-    internal class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
@@ -57,8 +57,52 @@ namespace ThirdTask_2
             
             Console.WriteLine(prime.ToString());
         }
-        
-        
+
+        public static BigInteger GeneratePrimeNumber(uint sizeBits, int confidence)
+        {
+            BigInteger prime = 0;
+
+            var first2048BitNumber = BigInteger.Pow(2, sizeBits);
+            var last2048BitNumber = BigInteger.Pow(2, sizeBits+1) - 1;
+            
+            var maxToAdd = BigInteger.Pow(2, sizeBits);
+            
+            while (true)
+            {
+                // выберем случайное целое число a в отрезке [2, n − 2]
+                RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            
+                byte[] _a = new byte[first2048BitNumber.getBytes().LongLength];
+            
+                BigInteger a;
+            
+                do
+                {
+                    rng.GetBytes(_a);
+                    a = new BigInteger(_a);
+                }
+                while (a < 2 || a >= maxToAdd);
+            
+                var ourCandidate = first2048BitNumber + a;
+
+                //Console.WriteLine("Candidate is " + ourCandidate);
+                if (PrimeTests.SolovayStrassenTest(ourCandidate, confidence))
+                {
+                    if (PrimeTests.RabinMillerTest(ourCandidate, confidence))
+                    {
+                       
+                        prime = a;
+                        break;
+                    }
+                }
+
+                //Console.WriteLine("It is not a prime number !-!");
+                
+            }
+            
+            //Console.WriteLine(prime.ToString());
+            return prime;
+        }
         
         
         

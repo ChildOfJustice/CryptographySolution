@@ -215,6 +215,11 @@ namespace ThirdTask_1
             Console.WriteLine(J(2,15));
             Console.WriteLine(J(506,1103));
             Console.WriteLine(J(-286,4272943));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine(Jacobi(2,15));
+            Console.WriteLine(Jacobi(506,1103));
+            Console.WriteLine(Jacobi(-286,4272943));
         }
         public static int L(int a, int p)
         {
@@ -236,23 +241,76 @@ namespace ThirdTask_1
             return 0;
         }
 
-        public static int J(int a, int m)
+        // public static int J(int a, int m)
+        // {
+        //     if (ExtendedEuclideanAlgorithm(a, m, out BigInteger x1, out BigInteger y1) != 1)
+        //         return 0;
+        //     int x = a; //Заводим переменные x, y, s под a, m
+        //         int y = m; // и знак вычисляемого символа (a/m).
+        //         int s = 1;
+        //         if (a < 0) //Если a - отрицательное число
+        //         {
+        //             x = -a; //выносим (по свойству 4)
+        //             s = (int)Math.Pow((-1), ((m - 1) / 2)); //символ (-1/m) по формуле (свойство 2).???
+        //         }
+        //
+        //         while (true)
+        //         {
+        //             int t = 0; //Количество двоек, вынесенных из "числителя" символа.
+        //             int c = x % y; //Заменяем a остатком по модулю m
+        //             x = c; //в соответствии со свойством 1.
+        //             if (x == 0)
+        //             {
+        //                 return 1; //Если m делится на a, (a/m)=1
+        //             }
+        //             else
+        //             {
+        //                 while (x % 2 == 0) //Пока a четно, выносим (свойство 4)
+        //                 {
+        //                     x = x / 2; //двойки, считаем их количество
+        //                     t++;
+        //                 }
+        //                 if (t % 2 == 1) s = (int)(s * Math.Pow( (-1) ,((y * y - 1) / 8))); //Четное количество двоек влияет на знак,для нечетного - по формуле
+        //
+        //                 //Имеем (a/m), где a, m - нечетные.
+        //                 //Используем формулу (свойство 5) и перевернем символ Якоби,если мы не можем вычислить его по свойству 2, т.е. a! = 1.
+        //                 if(x > 1)
+        //                 {
+        //                     s = (int)(s * Math.Pow((-1), (((x - 1) / 2) * ((y - 1) / 2))));
+        //                     c = x;
+        //                     x = y;
+        //                     y = c;
+        //                 }
+        //                 else //Иначе если a = 1, (a/m)=1.
+        //                 {
+        //                     break; //Вычисление окончено.
+        //                 }
+        //             }
+        //         }
+        //         return s;
+        // }
+        public static int J(BigInteger a, BigInteger m)
         {
             if (ExtendedEuclideanAlgorithm(a, m, out BigInteger x1, out BigInteger y1) != 1)
                 return 0;
-            int x = a; //Заводим переменные x, y, s под a, m
-                int y = m; // и знак вычисляемого символа (a/m).
+            BigInteger x = a; //Заводим переменные x, y, s под a, m
+            BigInteger y = m; // и знак вычисляемого символа (a/m).
                 int s = 1;
                 if (a < 0) //Если a - отрицательное число
                 {
                     x = -a; //выносим (по свойству 4)
-                    s = (int)Math.Pow((-1), ((m - 1) / 2)); //символ (-1/m) по формуле (свойство 2).???
+                    //s = (int)Math.Pow((-1), ((m - 1) / 2)); //символ (-1/m) по формуле (свойство 2).???
+                    var powOne = ((m - 1) / 2);
+                    if (powOne.IsEven)
+                        s = 1;
+                    else
+                        s = -1;
                 }
 
                 while (true)
                 {
                     int t = 0; //Количество двоек, вынесенных из "числителя" символа.
-                    int c = x % y; //Заменяем a остатком по модулю m
+                    BigInteger c = x % y; //Заменяем a остатком по модулю m
                     x = c; //в соответствии со свойством 1.
                     if (x == 0)
                     {
@@ -265,13 +323,26 @@ namespace ThirdTask_1
                             x = x / 2; //двойки, считаем их количество
                             t++;
                         }
-                        if (t % 2 == 1) s = (int)(s * Math.Pow( (-1) ,((y * y - 1) / 8))); //Четное количество двоек влияет на знак,для нечетного - по формуле
+                        if (t % 2 == 1)
+                        {
+                            //s = (int)(s * Math.Pow( (-1) ,((y * y - 1) / 8))); //Четное количество двоек влияет на знак,для нечетного - по формуле
+                            var powOne = ((y * y - 1) / 8);
+                            if (powOne.IsEven)
+                                s *= 1;
+                            else
+                                s *= -1;
+                        }
 
                         //Имеем (a/m), где a, m - нечетные.
                         //Используем формулу (свойство 5) и перевернем символ Якоби,если мы не можем вычислить его по свойству 2, т.е. a! = 1.
                         if(x > 1)
                         {
-                            s = (int)(s * Math.Pow((-1), (((x - 1) / 2) * ((y - 1) / 2))));
+                            //s = (int)(s * Math.Pow((-1), (((x - 1) / 2) * ((y - 1) / 2))));
+                            var powOne = (((x - 1) / 2) * ((y - 1) / 2));
+                            if (powOne.IsEven)
+                                s *= 1;
+                            else
+                                s *= -1;
                             c = x;
                             x = y;
                             y = c;
@@ -284,7 +355,6 @@ namespace ThirdTask_1
                 }
                 return s;
         }
-
         public static int Jacobi(BigInteger a, BigInteger b)
         {
             int r = 1;

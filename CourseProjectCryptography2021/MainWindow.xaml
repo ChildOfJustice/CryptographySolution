@@ -56,6 +56,14 @@
                             <Button Click="OnChooseSymmetricKeyFileButtonClick">
                                 Key file
                             </Button>
+                            <Button
+                                Click="OnChoosePublicKeyFileButtonClick">
+                                Pub key file
+                            </Button>
+                            <Button 
+                                Click="OnChoosePrivateKeyFileButtonClick">
+                                Private key file
+                            </Button>
                             <Button Click="OnChooseIvFileButtonClick">
                                 IV file
                             </Button>
@@ -63,28 +71,8 @@
                                 x:Name="OutPutFilePathHolder">
                                 OutPutFilePath
                             </TextBox>
-                            <TextBlock TextAlignment="Center">
-                                Irreducible Polynomial
-                            </TextBlock>
-                            <TextBox
-                                x:Name="IrreduciblePolynomialHolder">
-                                283
-                            </TextBox>
                         </StackPanel>
                         
-                        <StackPanel
-                            Grid.Column="1"
-                            Grid.Row="0">
-                            <TextBlock TextAlignment="Center">
-                                Rijndael block size
-                            </TextBlock>
-                            <ComboBox Height="30" VerticalAlignment="Top"
-                                      SelectionChanged="ComboBoxRijndaelBlockSizeSelected">
-                                <TextBlock>128</TextBlock>
-                                <TextBlock>192</TextBlock>
-                                <TextBlock>256</TextBlock>
-                            </ComboBox>
-                        </StackPanel>
                         <StackPanel
                             Grid.Column="2"
                             Grid.Row="0">
@@ -92,7 +80,7 @@
                                 Rijndael key size
                             </TextBlock>
                             <ComboBox Height="30" VerticalAlignment="Top"
-                                      SelectionChanged="ComboBoxRijndaelKeySizeSelected">
+                                      SelectionChanged="ComboBoxMagentaKeySizeSelected">
                                 <TextBlock>128</TextBlock>
                                 <TextBlock>192</TextBlock>
                                 <TextBlock>256</TextBlock>
@@ -133,25 +121,50 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     
                     <Button
-                        Grid.Column="0"
-                        Click="OnEncryptButtonClick"
-                        Foreground="DimGray"
-                        FontSize="30"
-                        Margin="5">
-                    
-                        Encrypt
-                    </Button>
-                    <Button
+                        Grid.Row="0"
                         Grid.Column="1"
-                        Click="OnDecryptButtonClick"
+                        x:Name="StartSessionButton"
+                        
+                        Click="OnStartSessionButtonClick"
                         Foreground="DimGray"
                         FontSize="30"
                         Margin="5">
                     
-                        Decrypt
+                        Start Session
                     </Button>
+                    
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        x:Name="SendFileButton"
+                        
+                        Click="OnSendFileButtonClick"
+                        Foreground="DimGray"
+                        FontSize="30"
+                        Margin="5">
+                        
+                        Send a file
+                    </Button>
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        x:Name="ReceiveFileButton"
+                        
+                        Click="OnReceiveFileButtonClick"
+                        Foreground="DimGray"
+                        FontSize="30"
+                        Margin="5">
+                        
+                        Receive a file
+                    </Button>
+                    
+                    
                     <!-- <Button -->
                     <!--     Grid.Column="2" -->
                     <!--     Click="OnCancelButtonClick" -->

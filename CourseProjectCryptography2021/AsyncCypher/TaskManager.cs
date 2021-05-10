@@ -33,10 +33,11 @@ namespace Task_8.AsyncCypher
 
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         
-        public TaskManager(int _keySize, string _encryptionMode = "ECB")
+        public TaskManager(string _keyFilePath, int _keySize, string _encryptionMode = "ECB")
         {
             blockSize = 16;
             keySize = _keySize;
+            keyFilePath = _keyFilePath;
 
             //Algorithm = mc;
             Algorithm = new MagentaCore();

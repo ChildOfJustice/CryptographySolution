@@ -40,8 +40,7 @@ namespace Task_8.AsyncCypher
             FileInfo fi = new FileInfo(keyFileName);
             int blockSize = 8;
             int blocks = (int)fi.Length / 8;
-           
-            outputFilePath = "./resources/" + outputFilePath;
+            
             var outputStream = File.Open(outputFilePath, FileMode.Create);
             FileStream fs = new FileStream(keyFileName, FileMode.Open, FileAccess.Read);
             
@@ -75,8 +74,7 @@ namespace Task_8.AsyncCypher
         }
         public static void DecryptKey(RsaCore rsaCore, string encryptedKeyFileName, string outputFilePath)
         {
-
-            outputFilePath = "./resources/" + outputFilePath;
+            
             var outputStream = File.Open(outputFilePath, FileMode.Create);
             //FileStream fs = new FileStream(encryptedKeyFileName, FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(encryptedKeyFileName);

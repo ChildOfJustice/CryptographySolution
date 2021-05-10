@@ -436,7 +436,7 @@ namespace Task_8.AsyncCypher
             return res; 
         }
 
-        public byte[] ReadDesiredPart(FileStream fs, int startPosition, int endPosition) {
+        public static byte[] ReadDesiredPart(FileStream fs, int startPosition, int endPosition) {
             byte[] buffer = new byte[endPosition - startPosition];
 
             int arrayOffset = 0;

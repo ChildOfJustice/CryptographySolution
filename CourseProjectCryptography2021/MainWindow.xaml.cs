@@ -7,6 +7,7 @@ using SecondTask_3.Spinner;
 using Task_4;
 using Task_8;
 using Task_8.AsyncCypher;
+using ThirdTask_3;
 
 namespace CourseProjectCryptography2021
 {
@@ -16,7 +17,7 @@ namespace CourseProjectCryptography2021
     public partial class MainWindow
     {
         private MainWindowViewModel _mainWindowViewModel;
-        
+        private RsaCore tempRsa;
         public MainWindow()
         {
             InitializeComponent();
@@ -72,8 +73,17 @@ namespace CourseProjectCryptography2021
                     {
                         setContent();
                     });
+
+                    tempRsa = new RsaCore(500);
+                    CypherMethods.EncryptKey(tempRsa, _mainWindowViewModel.SymmetricKeyFile, "AAAA");
+                    Application.Current.Dispatcher.Invoke(() => 
+                    {
+                        removeContent();
+                    });
                     
                     
+                    
+                    return;
                     // byte[] key = new byte[8];
                     // key[5] = 3;
                     // key[1] = 3;
@@ -136,7 +146,13 @@ namespace CourseProjectCryptography2021
                     {
                         setContent();
                     });
-                    
+
+                    CypherMethods.DecryptKey(tempRsa, "./resources/" + "AAAA", "decKey");
+                    Application.Current.Dispatcher.Invoke(() => 
+                    {
+                        removeContent();
+                    });
+                    return;
                     // byte[] key = new byte[8];
                     // key[5] = 3;
                     // key[1] = 3;

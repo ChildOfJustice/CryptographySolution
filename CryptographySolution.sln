@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_2", "ThirdTask_2\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRSA", "TestRSA\TestRSA.csproj", "{11507757-28AD-4881-BCDD-1ABEDAE51DEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProjectCryptography2021", "CourseProjectCryptography2021\CourseProjectCryptography2021.csproj", "{5AA97944-ACE5-4629-852F-31E5A8938B02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,5 +110,9 @@ Global
 		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

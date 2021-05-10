@@ -126,6 +126,16 @@ namespace ThirdTask_3
 
             return encrypted;
         }
+        public BigInteger[] Encrypt(BigInteger[] data)
+        {
+            BigInteger[] encrypted = new BigInteger[data.Length];
+            for (int i = 0; i < data.Length; i++)
+            {
+                encrypted[i] = EncryptOneByte(data[i]);
+            }
+
+            return encrypted;
+        }
         
         public BigInteger DecryptOneByte(BigInteger c)
         {
@@ -149,7 +159,16 @@ namespace ThirdTask_3
 
             return decrypted;
         }
-
+        public BigInteger[] DecryptToBigIntegers(BigInteger[] data)
+        {
+            BigInteger[] decrypted = new BigInteger[data.Length];
+            for (int i = 0; i < data.Length; i++)
+            {
+                decrypted[i] = DecryptOneByte(data[i]);
+            }
+        
+            return decrypted;
+        }
 
 
         

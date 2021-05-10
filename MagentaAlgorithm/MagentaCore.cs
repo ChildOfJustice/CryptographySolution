@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Numerics;
 using System.Text;
+using System.Windows;
 using Task_4;
 
 namespace MagentaAlgorithm
 {
-    public class MagentaCore : FeistelNet
+    public class MagentaCore : FeistelNet, ICypherAlgorithm
     {
         const byte byteSize = 8;
+        public byte[] key;
         
         static byte[] MagentaSbox =
         {
@@ -59,7 +62,8 @@ namespace MagentaAlgorithm
         {
             set
             {
-                var temp = BitConverter.ToUInt64(value, 0);
+                key = value;
+                var temp = BitConverter.ToUInt64(key, 0);
                 // K1, K2, and the subkeys for the six rounds in order are K1, K1, K2, K2, K1, K1.
                 ulong mask = ((ulong)1 << 64) - 1;
                 var K1 = (temp >> 64);
@@ -72,6 +76,20 @@ namespace MagentaAlgorithm
                 RoundKeys[4] = K1;
                 RoundKeys[5] = K1;
             }
+        }
+        public void ExportKey(string outPutFile)
+        {
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(key, 0, key.Length);
+        }
+        public void ImportKey(string inPutFile, int keySize)
+        {
+            
+            var temp = new byte[keySize];
+            using (var inputStream = File.OpenRead(inPutFile))
+                inputStream.Read(temp, 0, keySize); // 8 bytes = 64 bit key
+
+            Key = temp;
         }
 
         #region MagentaFunctions

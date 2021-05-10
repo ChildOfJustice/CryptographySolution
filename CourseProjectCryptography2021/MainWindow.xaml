@@ -1,0 +1,168 @@
+﻿<Window x:Class="CourseProjectCryptography2021.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseProjectCryptography2021"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <DockPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                
+                <ContentPresenter x:Name="ProgressBar"></ContentPresenter>
+                
+                <StackPanel
+                    Grid.Column="1"
+                    Grid.Row="0">
+                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock TextAlignment="Center">Control</TextBlock>
+                    </Grid>
+                    
+                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel
+                            Grid.Column="0"
+                            Grid.Row="0">
+                        
+                            <Button Click="OnChooseDataFileButtonClick">
+                                File with data
+                            </Button>
+                            <Button Click="OnChooseSymmetricKeyFileButtonClick">
+                                Key file
+                            </Button>
+                            <Button Click="OnChooseIvFileButtonClick">
+                                IV file
+                            </Button>
+                            <TextBox
+                                x:Name="OutPutFilePathHolder">
+                                OutPutFilePath
+                            </TextBox>
+                            <TextBlock TextAlignment="Center">
+                                Irreducible Polynomial
+                            </TextBlock>
+                            <TextBox
+                                x:Name="IrreduciblePolynomialHolder">
+                                283
+                            </TextBox>
+                        </StackPanel>
+                        
+                        <StackPanel
+                            Grid.Column="1"
+                            Grid.Row="0">
+                            <TextBlock TextAlignment="Center">
+                                Rijndael block size
+                            </TextBlock>
+                            <ComboBox Height="30" VerticalAlignment="Top"
+                                      SelectionChanged="ComboBoxRijndaelBlockSizeSelected">
+                                <TextBlock>128</TextBlock>
+                                <TextBlock>192</TextBlock>
+                                <TextBlock>256</TextBlock>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="2"
+                            Grid.Row="0">
+                            <TextBlock TextAlignment="Center">
+                                Rijndael key size
+                            </TextBlock>
+                            <ComboBox Height="30" VerticalAlignment="Top"
+                                      SelectionChanged="ComboBoxRijndaelKeySizeSelected">
+                                <TextBlock>128</TextBlock>
+                                <TextBlock>192</TextBlock>
+                                <TextBlock>256</TextBlock>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="3"
+                            Grid.Row="0">
+                            <TextBlock TextAlignment="Center">
+                                Encryption mode
+                            </TextBlock>
+                            <ComboBox Height="30" VerticalAlignment="Top"
+                                      SelectionChanged="ComboBoxEncryptionModeSelected">
+                                <TextBlock>ECB</TextBlock>
+                                <TextBlock>CBC</TextBlock>
+                                <TextBlock>CFB</TextBlock>
+                                <TextBlock>OFB</TextBlock>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+               
+            </Grid>
+            
+            
+            <Grid
+                Grid.Row="1">
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button
+                        Grid.Column="0"
+                        Click="OnEncryptButtonClick"
+                        Foreground="DimGray"
+                        FontSize="30"
+                        Margin="5">
+                    
+                        Encrypt
+                    </Button>
+                    <Button
+                        Grid.Column="1"
+                        Click="OnDecryptButtonClick"
+                        Foreground="DimGray"
+                        FontSize="30"
+                        Margin="5">
+                    
+                        Decrypt
+                    </Button>
+                    <!-- <Button -->
+                    <!--     Grid.Column="2" -->
+                    <!--     Click="OnCancelButtonClick" -->
+                    <!--     Foreground="Red" -->
+                    <!--     FontSize="50" -->
+                    <!--     Margin="5"> -->
+                    <!--     Cancel -->
+                    <!-- </Button> -->
+                </Grid>
+            </Grid>
+            
+        </Grid>
+    </DockPanel>
+</Window>

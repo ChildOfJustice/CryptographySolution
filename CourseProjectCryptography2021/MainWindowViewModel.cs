@@ -14,11 +14,11 @@ namespace Task_8
         public TaskManager MainTaskManager;
         
         public int RijndaelBlockSize = 16;
-        public int RijndaelKeySize = 16;
+        public int MagentaKeySize = 16;
         public string EncryptionMode = "ECB";
 
-        public String SymmetricKeyFile;
-        public string IvFilePath;
+        public String SymmetricKeyFile = "./resources/key";
+        public string IvFilePath = "./resources/IV";
         public String DataFile;
         public String PublicKeyFile;
         public String PrivateKeyFile;

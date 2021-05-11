@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,7 +33,7 @@ namespace CourseProjectCryptography2021
         {
             ComboBox comboBox = (ComboBox)sender;
             TextBlock selectedItem = (TextBlock)comboBox.SelectedItem;
-            _mainWindowViewModel.RijndaelKeySize = Int32.Parse(selectedItem.Text)/8;
+            _mainWindowViewModel.MagentaKeySize = Int32.Parse(selectedItem.Text)/8;
         }
         private void ComboBoxEncryptionModeSelected(object sender, RoutedEventArgs e)
         {
@@ -66,9 +68,15 @@ namespace CourseProjectCryptography2021
                     //CypherMethods.DecryptKey(tempRsa, "./resources/" + "AAAA", "decKey");
                     rsaCore = new RsaCore(rsaKeySize);
                     //export keys
-                    rsaCore.ExportPubKey(pubKeyFileName);
-                    rsaCore.ExportPrivateKey(privateKeyFileName);
+                    rsaCore.ExportPubKey("./resources/" + pubKeyFileName);
+                    rsaCore.ExportPrivateKey("./resources/" + privateKeyFileName);
 
+                    //CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+
+                    // rsaCore = new RsaCore(generateKeys: false);
+                    // rsaCore.ImportPrivateKey("./resources/" + privateKeyFileName);
+                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile+"Encrypted", _mainWindowViewModel.SymmetricKeyFile+"Decrypted");
+                    
                     Application.Current.Dispatcher.Invoke(() => 
                     {
                         removeContent();
@@ -89,9 +97,15 @@ namespace CourseProjectCryptography2021
         {
             var outputFileName = OutPutFilePathHolder.Text;
 
-            //TODO generate symmetric key for MAGENTA
-            //TODO export this key and encrypt it with the RSA pub key
-            //TODO generate IV and encrypt it with the RSA pub key
+            var pubKeyFileName = OutPutPubKeyFilePathHolder.Text;
+            
+            //generate symmetric key for MAGENTA
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] magentaKey = new byte[_mainWindowViewModel.MagentaKeySize];
+            rng.GetBytes(magentaKey);
+            
+            byte[] IV = new byte[16];
+            rng.GetBytes(IV);
 
             Task.Run(() =>
             {
@@ -101,6 +115,17 @@ namespace CourseProjectCryptography2021
                     {
                         setContent();
                     });
+                    //export IV and this key and encrypt them with the RSA pub key
+                    using (var outputStream = File.Open(_mainWindowViewModel.SymmetricKeyFile, FileMode.Create))
+                        outputStream.Write(magentaKey, 0, magentaKey.Length);
+                    using (var outputStream = File.Open(_mainWindowViewModel.IvFilePath, FileMode.Create))
+                        outputStream.Write(IV, 0, IV.Length);
+                    
+                    rsaCore = new RsaCore(generateKeys:false);
+                    rsaCore.ImportPubKey(pubKeyFileName);
+
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
                     //
                     // rsaCore = new RsaCore(500);
                     // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, "AAAA");
@@ -121,7 +146,7 @@ namespace CourseProjectCryptography2021
                     // fn.Key = key;
                     _mainWindowViewModel.MainTaskManager = new TaskManager(_mainWindowViewModel.SymmetricKeyFile,8, _mainWindowViewModel.EncryptionMode);
                    
-                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, "./resources/EncryptedSymmetricKey");
+                    //CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, "./resources/EncryptedSymmetricKey");
                    
                     // if (_mainWindowViewModel.SymmetricKeyFile == null)
                     //     throw new NullReferenceException("The key file path is empty");
@@ -157,9 +182,9 @@ namespace CourseProjectCryptography2021
         private void OnReceiveFileButtonClick(object sender, RoutedEventArgs e)
         {
             var outputFileName = OutPutFilePathHolder.Text;
-
-            //TODO decrypt symmetric key with private RSA key
-            //TODO decrypt file with MAGENTA
+            var privateKeyFileName = OutPutPrivateKeyFilePathHolder.Text;
+           
+            
             
             Task.Run(() =>
             {
@@ -170,7 +195,10 @@ namespace CourseProjectCryptography2021
                         setContent();
                     });
 
-                    //rsaCore = new RsaCore(500);
+                    //decrypt symmetric key with private RSA key
+                    rsaCore = new RsaCore(generateKeys:false);
+                    rsaCore.ImportPrivateKey(privateKeyFileName);
+                    
                     var decryptedKeyFilePath = "./resources/DecryptedSymmetricKey";
                     CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, decryptedKeyFilePath);
                     
@@ -182,6 +210,8 @@ namespace CourseProjectCryptography2021
                     // MagentaCore fn = new MagentaCore();
                     // fn.FeistelRoundQuantity = 6;
                     // fn.Key = key;
+                    
+                    //decrypt file with MAGENTA
                     _mainWindowViewModel.MainTaskManager = new TaskManager(decryptedKeyFilePath,8, _mainWindowViewModel.EncryptionMode);
 
                     // if (_mainWindowViewModel.SymmetricKeyFile == null)

@@ -38,20 +38,27 @@ namespace Task_8.AsyncCypher
         public static void EncryptKey(RsaCore rsaCore, string keyFileName, string outputFilePath)
         {
             FileInfo fi = new FileInfo(keyFileName);
-            int blockSize = 8;
             int blocks = (int)fi.Length / 8;
+            
+            //TODO create rsa multipart encryption wuth padding
+            if (fi.Length < 8 || fi.Length % 8 != 0)
+                MessageBox.Show("Very strange key file to encrypt");
+            int blockSize = 8;
+            
             
             var outputStream = File.Open(outputFilePath, FileMode.Create);
             FileStream fs = new FileStream(keyFileName, FileMode.Open, FileAccess.Read);
-            
+
+            //MessageBox.Show("will encrypt " + keyFileName + " to " +outputFilePath);
 
             for (int i = 0; i < blocks; i++)
             {
                 int endPositionToRead = (i + 1) * blockSize;
 
-                
+                //MessageBox.Show("PT: " + new ASCIIEncoding().GetString(TaskManager.ReadDesiredPart(fs, i * blockSize, endPositionToRead)));
                 var encrypted = rsaCore.Encrypt(TaskManager.ReadDesiredPart(fs, i * blockSize, endPositionToRead));
-
+                //MessageBox.Show("CT: " + encrypted);
+                
                 foreach (var encryptedBigInt in encrypted)
                 {
                     try

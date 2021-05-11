@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ThirdTask_3
 {
@@ -29,49 +30,52 @@ namespace ThirdTask_3
         public bool CanDecrypt;
         
         
-        public RsaCore(uint _keySize, String[] keyData = null)
+        public RsaCore(uint _keySize=516, bool generateKeys=true)
         {
             p = 0;
             q = 0;
             phi = 0;
 
-            if (keyData != null && keyData.Length == 3)
+            if (generateKeys)
             {
-                if (keyData[0] != null && keyData[2] != null)
-                {
-                    eC = new BigInteger(keyData[0], 10);
-                    n = new BigInteger(keyData[1], 10);
-                    d = new BigInteger(keyData[2], 10);
+                // if (keyData != null && keyData.Length == 3)
+                // {
+                //     if (keyData[0] != null && keyData[2] != null)
+                //     {
+                //         eC = new BigInteger(keyData[0], 10);
+                //         n = new BigInteger(keyData[1], 10);
+                //         d = new BigInteger(keyData[2], 10);
+                //         CanEncrypt = true;
+                //         CanDecrypt = true;
+                //     }
+                //
+                //     if (keyData[0] != null && keyData[2] == null)
+                //     {
+                //         eC = new BigInteger(keyData[0], 10);
+                //         n = new BigInteger(keyData[1], 10);
+                //         CanEncrypt = true;
+                //         CanDecrypt = false;
+                //     }
+                //
+                //     if (keyData[0] == null && keyData[2] != null)
+                //     {
+                //         d = new BigInteger(keyData[2], 10);
+                //         n = new BigInteger(keyData[1], 10);
+                //         CanEncrypt = false;
+                //         CanDecrypt = true;
+                //     }
+                //
+                //     keySize = (uint)n.bitCount();
+                // }
+                // else
+                // {
+                    eC = 0;
+                    n = 0;
+                    keySize = _keySize;
                     CanEncrypt = true;
                     CanDecrypt = true;
-                }
-
-                if (keyData[0] != null && keyData[2] == null)
-                {
-                    eC = new BigInteger(keyData[0], 10);
-                    n = new BigInteger(keyData[1], 10);
-                    CanEncrypt = true;
-                    CanDecrypt = false;
-                }
-
-                if (keyData[0] == null && keyData[2] != null)
-                {
-                    d = new BigInteger(keyData[2], 10);
-                    n = new BigInteger(keyData[1], 10);
-                    CanEncrypt = false;
-                    CanDecrypt = true;
-                }
-
-                keySize = (uint)n.bitCount();
-            }
-            else
-            {
-                eC = 0;
-                n = 0;
-                keySize = _keySize;
-                CanEncrypt = true;
-                CanDecrypt = true;
-                GenerateKeys();
+                    GenerateKeys();
+                //}
             }
         }
         public void GenerateKeys()
@@ -121,7 +125,7 @@ namespace ThirdTask_3
             using (var outputStream = File.Open(outPutFile, FileMode.Create))
                 outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
         }
-        public void ImportPubKey(string inPutFile, int keySize)
+        public void ImportPubKey(string inPutFile)
         {
            
             StreamReader sr = new StreamReader(inPutFile);
@@ -145,8 +149,9 @@ namespace ThirdTask_3
 
             eC = new BigInteger(sbE.ToString(), 16);
             n = new BigInteger(sbN.ToString(), 16);
+            CanEncrypt = true;
         }
-        public void ImportPrivateKey(string inPutFile, int keySize)
+        public void ImportPrivateKey(string inPutFile)
         {
            
             StreamReader sr = new StreamReader(inPutFile);
@@ -170,6 +175,7 @@ namespace ThirdTask_3
 
             d = new BigInteger(sbD.ToString(), 16);
             n = new BigInteger(sbN.ToString(), 16);
+            CanDecrypt = true;
         }
         public BigInteger EncryptOneByte(BigInteger mToPow)
         {

@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace SecondTask_3.Spinner
+namespace CourseProjectCryptography2021.Spinner
 {
     public partial class CircularProgressBar : UserControl
     {

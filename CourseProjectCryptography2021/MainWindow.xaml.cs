@@ -4,8 +4,8 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using CourseProjectCryptography2021.Spinner;
 using MagentaAlgorithm;
-using SecondTask_3.Spinner;
 using Task_4;
 using Task_8;
 using Task_8.AsyncCypher;
@@ -64,18 +64,11 @@ namespace CourseProjectCryptography2021
                     {
                         setContent();
                     });
-
-                    //CypherMethods.DecryptKey(tempRsa, "./resources/" + "AAAA", "decKey");
+                    
                     rsaCore = new RsaCore(rsaKeySize);
                     //export keys
-                    rsaCore.ExportPubKey("./resources/" + pubKeyFileName);
-                    rsaCore.ExportPrivateKey("./resources/" + privateKeyFileName);
-
-                    //CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
-
-                    // rsaCore = new RsaCore(generateKeys: false);
-                    // rsaCore.ImportPrivateKey("./resources/" + privateKeyFileName);
-                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile+"Encrypted", _mainWindowViewModel.SymmetricKeyFile+"Decrypted");
+                    rsaCore.ExportPubKey(pubKeyFileName);
+                    rsaCore.ExportPrivateKey(privateKeyFileName);
                     
                     Application.Current.Dispatcher.Invoke(() => 
                     {
@@ -334,7 +327,8 @@ namespace CourseProjectCryptography2021
         private void setContent()
         {
             var pb = new CircularProgressBar();
-            ProgressBar.Content = new CircularProgressBar();
+            //pb.Message = "Wait...";
+            ProgressBar.Content = pb;
         }
         
         private void removeContent()

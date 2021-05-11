@@ -32,21 +32,28 @@ namespace CourseProjectCryptography2021
             ComboBox comboBox = (ComboBox)sender;
             TextBlock selectedItem = (TextBlock)comboBox.SelectedItem;
             _mainWindowViewModel.RijndaelKeySize = Int32.Parse(selectedItem.Text)/8;
-            // MessageBox.Show(selectedItem.Text);
         }
         private void ComboBoxEncryptionModeSelected(object sender, RoutedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
             TextBlock selectedItem = (TextBlock)comboBox.SelectedItem;
             _mainWindowViewModel.EncryptionMode = selectedItem.Text;
-            // MessageBox.Show(selectedItem.Text);
         }
         private void OnStartSessionButtonClick(object sender, RoutedEventArgs e)
         {
-            //var outputFileName = OutPutFilePathHolder.Text;
-            //TODO get key path to export them
-            //TODO get RSA key size
-
+            //get key path to export them
+            var pubKeyFileName = OutPutPubKeyFilePathHolder.Text;
+            var privateKeyFileName = OutPutPrivateKeyFilePathHolder.Text;
+            // get RSA key size
+            uint rsaKeySize = 516;
+            try
+            {
+                rsaKeySize = UInt32.Parse(RsaKeySizeHolder.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Wrong RSA key size, will be used <516>");
+            }
             Task.Run(() =>
             {
                 try
@@ -57,8 +64,10 @@ namespace CourseProjectCryptography2021
                     });
 
                     //CypherMethods.DecryptKey(tempRsa, "./resources/" + "AAAA", "decKey");
-                    rsaCore = new RsaCore(500);
-                    //TODO export keys
+                    rsaCore = new RsaCore(rsaKeySize);
+                    //export keys
+                    rsaCore.ExportPubKey(pubKeyFileName);
+                    rsaCore.ExportPrivateKey(privateKeyFileName);
 
                     Application.Current.Dispatcher.Invoke(() => 
                     {

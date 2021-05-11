@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ThirdTask_3
@@ -104,6 +106,70 @@ namespace ThirdTask_3
         public String GetPrivateKeyAsString(int keyBase)
         {
             return d.ToString(keyBase) + "," + n.ToString(keyBase);
+        }
+        public void ExportPubKey(string outPutFile)
+        {
+            var exportedKey = GetPublicKeyAsString(16);
+            var exportedKeyBytes= new ASCIIEncoding().GetBytes(exportedKey);
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
+        }
+        public void ExportPrivateKey(string outPutFile)
+        {
+            var exportedKey = GetPrivateKeyAsString(16);
+            var exportedKeyBytes= new ASCIIEncoding().GetBytes(exportedKey);
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
+        }
+        public void ImportPubKey(string inPutFile, int keySize)
+        {
+           
+            StreamReader sr = new StreamReader(inPutFile);
+            string line = sr.ReadLine();
+            StringBuilder sbE = new StringBuilder();
+            StringBuilder sbN = new StringBuilder();
+
+            int i = 0;
+            while (line[i] != ',')
+            {
+                sbE.Append(line[i]);
+                i++;
+            }
+
+            i++;
+            while (i != line.Length)
+            {
+                sbN.Append(line[i]);
+                i++;
+            }
+
+            eC = new BigInteger(sbE.ToString(), 16);
+            n = new BigInteger(sbN.ToString(), 16);
+        }
+        public void ImportPrivateKey(string inPutFile, int keySize)
+        {
+           
+            StreamReader sr = new StreamReader(inPutFile);
+            string line = sr.ReadLine();
+            StringBuilder sbD = new StringBuilder();
+            StringBuilder sbN = new StringBuilder();
+
+            int i = 0;
+            while (line[i] != ',')
+            {
+                sbD.Append(line[i]);
+                i++;
+            }
+
+            i++;
+            while (i != line.Length)
+            {
+                sbN.Append(line[i]);
+                i++;
+            }
+
+            d = new BigInteger(sbD.ToString(), 16);
+            n = new BigInteger(sbN.ToString(), 16);
         }
         public BigInteger EncryptOneByte(BigInteger mToPow)
         {

@@ -97,13 +97,11 @@ namespace ThirdTask_3
                 else
                 {
                     GenerateEncryptionExponent();
-
-                    // For a key of 1024 bits, the d was found in 192 milliseconds
                     GenerateDecryptionExponent();
                 }
                
 
-                MessageBox.Show("Is weak: " + (d < (Sqrt(Sqrt(n)))));
+                //MessageBox.Show("Is weak: " + (d < (Sqrt(Sqrt(n)))));
                 
                 //check:
                 {
@@ -158,7 +156,7 @@ namespace ThirdTask_3
             BigInteger generatedD;
             
             //generatedD = GenerateOddNBitNumber((uint)(keySize / 4.0));
-            generatedD = 25;
+            generatedD = 125;
 
             for (; ; generatedD++)
             {
@@ -173,7 +171,9 @@ namespace ThirdTask_3
             {
                 throw new Exception("Cannnot select d!");
             }
-            
+
+            //MessageBox.Show("Decryption exponent is: " + d.ToString());
+
         }
         
         private void GenerateWeakEncryptionExponent()
@@ -194,13 +194,7 @@ namespace ThirdTask_3
                 x = y;
             }
         }
-
-        private static BigInteger Square(BigInteger n)
-        {
-            BigInteger s = Sqrt(n);
-            if (s*s == n) return s;
-            return -1;
-        }
+        
 
         
         
@@ -284,7 +278,7 @@ namespace ThirdTask_3
         public BigInteger EncryptOneByte(BigInteger mToPow)
         {
             if (!CanEncrypt)
-                return -1;
+                throw new CryptographicException("Dont have a public key imported to do encryption process");
 
             BigInteger exp = new BigInteger(eC);
             BigInteger modN = new BigInteger(n);
@@ -316,7 +310,7 @@ namespace ThirdTask_3
         public BigInteger DecryptOneByte(BigInteger c)
         {
             if (!CanDecrypt)
-                return -1;
+                throw new CryptographicException("Dont have a private key imported to do decryption process");
 
             BigInteger cToPow = new BigInteger(c);
             BigInteger exp = new BigInteger(d);
@@ -457,27 +451,7 @@ namespace ThirdTask_3
             return x;
         }
         
-       
-        public static BigInteger ExtendedEuclideanAlgorithm(BigInteger a, BigInteger b, out BigInteger x, out BigInteger y)
-        {
-            
-    
-            if (a == 0)
-            {
-                x = 0;
-                y = 1;
-                return b;
-            }
- 
-            BigInteger gcd = ExtendedEuclideanAlgorithm(b % a, a, out x, out y);
-    
-            BigInteger newY = x;
-            BigInteger newX = y - (b / a) * x;
-    
-            x = newX;
-            y = newY;
-            return gcd;
-        }
+        
         public static BigInteger[] Extended_GDC(BigInteger a, BigInteger modulus, Boolean calcOnlyModuloInverse)
         {
             BigInteger x, lastX, b_, y, lastY, a_, quotient, temp, temp2, temp3;

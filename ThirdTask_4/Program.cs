@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using Task_8.AsyncCypher;
 using ThirdTask_3;
@@ -17,7 +19,7 @@ namespace ThirdTask_4
            
             
             
-            var rsaCore = new RsaCore(516,weak:false);
+            var rsaCore = new RsaCore(516,weak:true);
             
             
             //export keys
@@ -29,60 +31,55 @@ namespace ThirdTask_4
                     
                     
             CypherMethods.EncryptKey(rsaCore, "./resources/key", "./resources/keyEncrypted");
-            CypherMethods.DecryptKey(rsaCore, "./resources/keyEncrypted", "./resources/keyDecrypted");
+            //CypherMethods.DecryptKey(rsaCore, "./resources/keyEncrypted", "./resources/keyDecrypted");
             
-            // BigInteger WienerD = Hack(rsaCore.eC, rsaCore.n);
-            //
-            // var temp = new RsaCore(generateKeys: false);
-            // temp.d = WienerD;
-            // temp.n = rsaCore.n;
-            //
-            // CypherMethods.DecryptKey(temp, "./resources/keyEncrypted", "./resources/keyDecryptedHacked");
+            BigInteger WienerD = Hack(rsaCore.eC, rsaCore.n);
+            
+            
+            var temp = new RsaCore(generateKeys: false);
+            temp.d = WienerD;
+            temp.n = rsaCore.n;
+            temp.CanDecrypt = true;
+            
+            CypherMethods.DecryptKey(temp, "./resources/keyEncrypted", "./resources/keyDecryptedHacked");
         }
+
+        // static IEnumerator<BigInteger> convergents(BigInteger[] cf)
+        // {
+        //     BigInteger r = 0;
+        //     BigInteger s = 1;
+        //     BigInteger p = 1;
+        //     BigInteger q = 0;
+        //     foreach (var c in cf)
+        //     {
+        //         r = p;
+        //         s = q;
+        //         p =  c*p+r;
+        //         q = c*q+s;
+        //         
+        //         yield return p, q;
+        //     }
+        //     
+        // }
         
-        public static BigInteger ExtendedEuclideanAlgorithm(BigInteger a, BigInteger b, out BigInteger x, out BigInteger y)
-        {
-            
-    
-            if (a == 0)
-            {
-                x = 0;
-                y = 1;
-                return b;
-            }
- 
-            BigInteger gcd = ExtendedEuclideanAlgorithm(b % a, a, out x, out y);
-    
-            BigInteger newY = x;
-            BigInteger newX = y - (b / a) * x;
-    
-            x = newX;
-            y = newY;
-            return gcd;
-        }
         public static BigInteger Hack(BigInteger e, BigInteger N)
         {
+            BigInteger hackedD = -1;
+            
             ContinuedFraction continuedFraction = new ContinuedFraction(e, N);
             List<Tuple<BigInteger, BigInteger >> convergents = continuedFraction.GetConvergents();
             foreach (var pair in convergents)
             {
-                if (pair.Item1 == 0) continue;
-                BigInteger f = (e * pair.Item2 - 1) / pair.Item1;
-                BigInteger b = (N - f) + 1;
-                BigInteger D = b * b - 4*N;
-                if (D >= 0)
-                {
-                    BigInteger sqr = Square(D);
-                    if (sqr != -1) {
-                        BigInteger p = (-b - sqr) / 2;
-                        BigInteger q = (-b + sqr) / 2;
-                        if (p * q == N) return pair.Item2;
-                    }
-                }
+                if(pair.Item2 > Sqrt(Sqrt(N))/3)
+                    break;
+                Console.WriteLine("Fraction: " + pair.Item1 + " | " + pair.Item2);
+                hackedD = pair.Item2;
             }
-
-            throw new CryptographicException();
+            if(hackedD == -1)
+                throw new CryptographicException();
+            return hackedD;
         }
+        
         private static BigInteger Sqrt(BigInteger n)
         {
             int bitlength = n.bitCount();

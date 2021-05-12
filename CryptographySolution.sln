@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRSA", "TestRSA\TestRSA.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProjectCryptography2021", "CourseProjectCryptography2021\CourseProjectCryptography2021.csproj", "{5AA97944-ACE5-4629-852F-31E5A8938B02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_4", "ThirdTask_4\ThirdTask_4.csproj", "{06B666BE-32B7-4E9F-BF42-75BA86337A26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,5 +116,9 @@ Global
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

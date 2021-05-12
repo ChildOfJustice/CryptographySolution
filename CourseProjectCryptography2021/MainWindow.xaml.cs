@@ -65,11 +65,17 @@ namespace CourseProjectCryptography2021
                         setContent();
                     });
                     
-                    rsaCore = new RsaCore(rsaKeySize);
+                    rsaCore = new RsaCore(rsaKeySize, weak:true);
                     //export keys
                     rsaCore.ExportPubKey(pubKeyFileName);
                     rsaCore.ExportPrivateKey(privateKeyFileName);
                     
+                    
+                    
+                    
+                    
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+                    CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile+"Encrypted", _mainWindowViewModel.SymmetricKeyFile+"Decrypted");
                     Application.Current.Dispatcher.Invoke(() => 
                     {
                         removeContent();

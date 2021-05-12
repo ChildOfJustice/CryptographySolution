@@ -78,11 +78,11 @@
                             Grid.Row="0">
                             <TextBox
                                 x:Name="OutPutPubKeyFilePathHolder">
-                                PubKeyFile
+                                ./resources/PubKeyFile
                             </TextBox>
                             <TextBox
                                 x:Name="OutPutPrivateKeyFilePathHolder">
-                                PrivateKeyFile
+                                ./resources/PrivateKeyFile
                             </TextBox>
                             <TextBlock TextAlignment="Center">
                                 RSA key size

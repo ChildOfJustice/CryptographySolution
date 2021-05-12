@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,13 +17,13 @@ namespace ThirdTask_3
 
         
         // Encryption exponent
-        private BigInteger eC;
+        public BigInteger eC;
         
-        private BigInteger n;
+        public BigInteger n;
         // (p-1)(q-1)
         private BigInteger phi;
         // (1+k*phi)/eC
-        private BigInteger d;
+        public BigInteger d;
         
         
         public uint keySize;
@@ -30,7 +31,7 @@ namespace ThirdTask_3
         public bool CanDecrypt;
         
         
-        public RsaCore(uint _keySize=516, bool generateKeys=true)
+        public RsaCore(uint _keySize=516, bool generateKeys=true, bool weak=false)
         {
             p = 0;
             q = 0;
@@ -74,11 +75,11 @@ namespace ThirdTask_3
                     keySize = _keySize;
                     CanEncrypt = true;
                     CanDecrypt = true;
-                    GenerateKeys();
+                    GenerateKeys(weak);
                 //}
             }
         }
-        public void GenerateKeys()
+        public void GenerateKeys(bool  weak=false)
         {
             bool algorithmReady = false;
             BigInteger messageToTest = new BigInteger(77);
@@ -88,10 +89,21 @@ namespace ThirdTask_3
                 Generate_Primes();
                 n = q * p;
                 CalculatePhi();
-                GenerateEncryptionExponent();
+                if (weak)
+                {
+                    GenerateWeakDecryptionExponent();
+                    GenerateWeakEncryptionExponent();
+                }
+                else
+                {
+                    GenerateEncryptionExponent();
 
-                // For a key of 1024 bits, the d was found in 192 miliseconds
-                GenerateDecryptionExponent();
+                    // For a key of 1024 bits, the d was found in 192 milliseconds
+                    GenerateDecryptionExponent();
+                }
+               
+
+                MessageBox.Show("Is weak: " + (d < (Sqrt(Sqrt(n)))));
                 
                 //check:
                 {
@@ -103,6 +115,98 @@ namespace ThirdTask_3
                 algorithmReady = true;
             }
         }
+        
+        public void GenerateVulnerableKeys(uint size)
+        {
+            keySize = size;
+            Generate_Primes();
+
+            n = p * q;
+
+            BigInteger eiler = (p - 1) * (q - 1);
+
+
+            d = 25;
+            
+            while (true)
+            {
+                //d = GenerateOddNBitNumber((uint)(size / 32));
+                d++;
+
+                if (GreatestCommonDivizor(eiler, d) == 1) // && 36 * BigInteger.Pow(d, 4) < n
+                {
+                    //check:
+                    {
+                        eC = (Extended_GDC(d, eiler, true))[1];
+                        
+                        BigInteger messageToTest = new BigInteger(77);
+                        BigInteger encryptedTest = EncryptOneByte(messageToTest);
+                        BigInteger decryptedTest = DecryptOneByte(encryptedTest);
+
+                        //MessageBox.Show("! : " + (encryptedTest == messageToTest));
+                        if (decryptedTest == messageToTest) break;
+                    }
+                };
+            }
+
+            
+        }
+        
+        
+        private void GenerateWeakDecryptionExponent()
+        {
+            BigInteger generatedD;
+            
+            //generatedD = GenerateOddNBitNumber((uint)(keySize / 4.0));
+            generatedD = 25;
+
+            for (; ; generatedD++)
+            {
+                if (GreatestCommonDivizor(phi, generatedD) == 1)
+                {
+                    d = generatedD;
+                    break;
+                }
+            }
+
+            if (d == 0)
+            {
+                throw new Exception("Cannnot select d!");
+            }
+            
+        }
+        
+        private void GenerateWeakEncryptionExponent()
+        {
+            eC = (Extended_GDC(d, phi, true))[1];
+        }
+        private static BigInteger Sqrt(BigInteger n)
+        {
+            int bitlength = n.bitCount();
+            BigInteger a = bitlength / 2;
+            BigInteger b = bitlength % 2;
+
+            BigInteger x = BigInteger.Pow(2, (a + b));
+            while (true)
+            {
+                BigInteger y = (x + n / x) / 2;
+                if (y >= x) return x;
+                x = y;
+            }
+        }
+
+        private static BigInteger Square(BigInteger n)
+        {
+            BigInteger s = Sqrt(n);
+            if (s*s == n) return s;
+            return -1;
+        }
+
+        
+        
+        
+        
+        
         public String GetPublicKeyAsString(int keyBase)
         {
             return eC.ToString(keyBase) + "," + n.ToString(keyBase);
@@ -298,7 +402,9 @@ namespace ThirdTask_3
         
         private void GenerateEncryptionExponent()
         {
-            BigInteger generatedE = GenerateOddNBitNumber((uint)(keySize / 2.0));
+            BigInteger generatedE;
+           
+            generatedE = GenerateOddNBitNumber((uint)(keySize / 2.0));
 
             for (; ; generatedE++)
             {
@@ -318,6 +424,10 @@ namespace ThirdTask_3
         private void GenerateDecryptionExponent()
         {
             d = (Extended_GDC(eC, phi, true))[1];
+            // BigInteger x;
+            // BigInteger y;
+            // ExtendedEuclideanAlgorithm(eC, phi, out x, out y);
+            // d = y;
         }
         
         
@@ -346,8 +456,28 @@ namespace ThirdTask_3
             // This will be the GCD
             return x;
         }
-
+        
        
+        public static BigInteger ExtendedEuclideanAlgorithm(BigInteger a, BigInteger b, out BigInteger x, out BigInteger y)
+        {
+            
+    
+            if (a == 0)
+            {
+                x = 0;
+                y = 1;
+                return b;
+            }
+ 
+            BigInteger gcd = ExtendedEuclideanAlgorithm(b % a, a, out x, out y);
+    
+            BigInteger newY = x;
+            BigInteger newX = y - (b / a) * x;
+    
+            x = newX;
+            y = newY;
+            return gcd;
+        }
         public static BigInteger[] Extended_GDC(BigInteger a, BigInteger modulus, Boolean calcOnlyModuloInverse)
         {
             BigInteger x, lastX, b_, y, lastY, a_, quotient, temp, temp2, temp3;

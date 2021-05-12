@@ -36,6 +36,7 @@ namespace ThirdTask_3
             p = 0;
             q = 0;
             phi = 0;
+            keySize = _keySize;
 
             if (generateKeys)
             {
@@ -70,12 +71,11 @@ namespace ThirdTask_3
                 // }
                 // else
                 // {
-                    eC = 0;
-                    n = 0;
-                    keySize = _keySize;
-                    CanEncrypt = true;
-                    CanDecrypt = true;
-                    GenerateKeys(weak);
+                eC = 0;
+                n = 0;
+                CanEncrypt = true;
+                CanDecrypt = true;
+                GenerateKeys(weak);
                 //}
             }
         }

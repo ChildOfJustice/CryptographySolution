@@ -20,6 +20,9 @@ namespace CourseProjectCryptography2021
     {
         private MainWindowViewModel _mainWindowViewModel;
         private RsaCore rsaCore;
+
+        private string serverLocation = "C:\\Users\\Administrator\\Desktop\\READY\\Cryptography\\Server\\";
+        private string clientLocation = "C:\\Users\\Administrator\\Desktop\\READY\\Cryptography\\Client\\";
         public MainWindow()
         {
             InitializeComponent();
@@ -45,7 +48,8 @@ namespace CourseProjectCryptography2021
         {
             //get key path to export them
             var pubKeyFileName = OutPutPubKeyFilePathHolder.Text;
-            var privateKeyFileName = OutPutPrivateKeyFilePathHolder.Text;
+            //TODO adding the folder prefix
+            var privateKeyFileName = "./resources/" + OutPutPrivateKeyFilePathHolder.Text;
             // get RSA key size
             uint rsaKeySize = 516;
             try
@@ -69,8 +73,8 @@ namespace CourseProjectCryptography2021
                     //export keys
                     rsaCore.ExportPubKey(pubKeyFileName);
                     rsaCore.ExportPrivateKey(privateKeyFileName);
-                    
-                    
+                    MessageBox.Show("Moving " + pubKeyFileName + " to " + clientLocation + pubKeyFileName);
+                    File.Move(pubKeyFileName, clientLocation+pubKeyFileName);
                     //
                     //
                     //
@@ -97,6 +101,17 @@ namespace CourseProjectCryptography2021
             var outputFileName = OutPutFilePathHolder.Text;
 
             var pubKeyFileName = _mainWindowViewModel.PublicKeyFile;
+            // get RSA key size
+            uint rsaKeySize = 516;
+            try
+            {
+                rsaKeySize = UInt32.Parse(RsaKeySizeHolder.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Wrong RSA key size, will be used <516>");
+            }
+            
             
             //generate symmetric key for MAGENTA
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
@@ -120,12 +135,13 @@ namespace CourseProjectCryptography2021
                     using (var outputStream = File.Open(_mainWindowViewModel.IvFilePath, FileMode.Create))
                         outputStream.Write(IV, 0, IV.Length);
                     
-                    rsaCore = new RsaCore(generateKeys:false);
+                    rsaCore = new RsaCore(rsaKeySize,generateKeys:false);
                     rsaCore.ImportPubKey(pubKeyFileName);
                     
                     CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+                    File.Move(_mainWindowViewModel.SymmetricKeyFile+"Encrypted", serverLocation+"EncryptedSymmetricKey");
                     CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
-                    
+                    File.Move(_mainWindowViewModel.IvFilePath+"Encrypted", serverLocation+"EncryptedIV");
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(_mainWindowViewModel.SymmetricKeyFile,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
                    
@@ -146,7 +162,7 @@ namespace CourseProjectCryptography2021
                     _mainWindowViewModel.MainTaskManager.outputFilePath = outputFileName;
                     
                     _mainWindowViewModel.MainTaskManager.RunEncryptionProcess();
-
+                    File.Move(outputFileName, serverLocation+outputFileName);
                     Application.Current.Dispatcher.Invoke(() => 
                     {
                         removeContent();
@@ -164,10 +180,20 @@ namespace CourseProjectCryptography2021
         }
         private void OnReceiveFileButtonClick(object sender, RoutedEventArgs e)
         {
-            var outputFileName = OutPutFilePathHolder.Text;
-            var privateKeyFileName = OutPutPrivateKeyFilePathHolder.Text;
-           
-            
+            //TODO adding the folder prefix:
+            var outputFileName = "./resources/" + OutPutFilePathHolder.Text;
+            var privateKeyFileName = _mainWindowViewModel.PrivateKeyFile;
+
+            // get RSA key size
+            uint rsaKeySize = 516;
+            try
+            {
+                rsaKeySize = UInt32.Parse(RsaKeySizeHolder.Text);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Wrong RSA key size, will be used <516>");
+            }
             
             Task.Run(() =>
             {
@@ -179,7 +205,7 @@ namespace CourseProjectCryptography2021
                     });
 
                     //decrypt symmetric key with private RSA key
-                    rsaCore = new RsaCore(generateKeys:false);
+                    rsaCore = new RsaCore(rsaKeySize, generateKeys:false);
                     rsaCore.ImportPrivateKey(privateKeyFileName);
                     
                     var decryptedKeyFilePath = "./resources/DecryptedSymmetricKey";

@@ -113,10 +113,6 @@
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>
-      <Content Include="resources\IV">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Include="resources\key" />
       <Content Include="resources\mainMenu.jpg" />
     </ItemGroup>
     <ItemGroup>

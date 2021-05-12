@@ -69,7 +69,7 @@
                             </Button>
                             <TextBox
                                 x:Name="OutPutFilePathHolder">
-                                ./resources/OutPutFilePath
+                                OutPutFilePath
                             </TextBox>
                         </StackPanel>
                         
@@ -78,11 +78,11 @@
                             Grid.Row="0">
                             <TextBox
                                 x:Name="OutPutPubKeyFilePathHolder">
-                                ./resources/PubKeyFile
+                                PubKeyFile
                             </TextBox>
                             <TextBox
                                 x:Name="OutPutPrivateKeyFilePathHolder">
-                                ./resources/PrivateKeyFile
+                                PrivateKeyFile
                             </TextBox>
                             <TextBlock TextAlignment="Center">
                                 RSA key size

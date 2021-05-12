@@ -134,7 +134,6 @@ namespace Task_8.AsyncCypher
             }
             else
             {
-                outputFilePath = "./resources/" + outputFilePath;
                 using (var outputStream = File.Open(outputFilePath, FileMode.Create))
                 {
                     foreach (var promise in allTasks)
@@ -277,8 +276,6 @@ namespace Task_8.AsyncCypher
             }
             else
             {
-                outputFilePath = "./resources/" + outputFilePath;
-                
                 int blockNumber = 0;
                 int actualFileSize = 0;
                 int fullArrSize = 0;

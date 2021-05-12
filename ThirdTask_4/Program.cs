@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using Task_8.AsyncCypher;
 using ThirdTask_3;
-using ThirdTask_2;
 
 namespace ThirdTask_4
 {

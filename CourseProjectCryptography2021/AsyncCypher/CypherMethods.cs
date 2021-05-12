@@ -40,7 +40,7 @@ namespace Task_8.AsyncCypher
             FileInfo fi = new FileInfo(keyFileName);
             int blocks = (int)fi.Length / 8;
             
-            //TODO create rsa multipart encryption wuth padding
+            //TODO create rsa multipart encryption with padding
             if (fi.Length < 8 || fi.Length % 8 != 0)
                 MessageBox.Show("Very strange key file to encrypt");
             int blockSize = 8;

@@ -96,7 +96,7 @@ namespace CourseProjectCryptography2021
         {
             var outputFileName = OutPutFilePathHolder.Text;
 
-            var pubKeyFileName = OutPutPubKeyFilePathHolder.Text;
+            var pubKeyFileName = _mainWindowViewModel.PublicKeyFile;
             
             //generate symmetric key for MAGENTA
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
@@ -122,28 +122,12 @@ namespace CourseProjectCryptography2021
                     
                     rsaCore = new RsaCore(generateKeys:false);
                     rsaCore.ImportPubKey(pubKeyFileName);
-
+                    
                     CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
                     CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
-                    //
-                    // rsaCore = new RsaCore(500);
-                    // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, "AAAA");
-                    // Application.Current.Dispatcher.Invoke(() => 
-                    // {
-                    //     removeContent();
-                    // });
-                    //
-                    //
-                    //
-                    // return;
-                    // byte[] key = new byte[8];
-                    // key[5] = 3;
-                    // key[1] = 3;
-                    // key[2] = 4;
-                    // MagentaCore fn = new MagentaCore();
-                    // fn.FeistelRoundQuantity = 6;
-                    // fn.Key = key;
-                    _mainWindowViewModel.MainTaskManager = new TaskManager(_mainWindowViewModel.SymmetricKeyFile,8, _mainWindowViewModel.EncryptionMode);
+                    
+                    
+                    _mainWindowViewModel.MainTaskManager = new TaskManager(_mainWindowViewModel.SymmetricKeyFile,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
                    
                     //CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, "./resources/EncryptedSymmetricKey");
                    
@@ -202,16 +186,9 @@ namespace CourseProjectCryptography2021
                     CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, decryptedKeyFilePath);
                     
                     
-                    // byte[] key = new byte[8];
-                    // key[5] = 3;
-                    // key[1] = 3;
-                    // key[2] = 4;
-                    // MagentaCore fn = new MagentaCore();
-                    // fn.FeistelRoundQuantity = 6;
-                    // fn.Key = key;
-                    
                     //decrypt file with MAGENTA
-                    _mainWindowViewModel.MainTaskManager = new TaskManager(decryptedKeyFilePath,8, _mainWindowViewModel.EncryptionMode);
+                    // _mainWindowViewModel.MainTaskManager = new TaskManager(decryptedKeyFilePath,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
+                    _mainWindowViewModel.MainTaskManager = new TaskManager(decryptedKeyFilePath,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
 
                     // if (_mainWindowViewModel.SymmetricKeyFile == null)
                     //     throw new NullReferenceException("The key file path is empty");

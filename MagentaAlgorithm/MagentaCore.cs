@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Numerics;
 using System.Text;
+using System.Windows;
 using Task_4;
 
 namespace MagentaAlgorithm
 {
-    public class MagentaCore : FeistelNet
+    public class MagentaCore : FeistelNet, ICypherAlgorithm
     {
         const byte byteSize = 8;
+        public byte[] key;
         
         static byte[] MagentaSbox =
         {
@@ -59,19 +62,154 @@ namespace MagentaAlgorithm
         {
             set
             {
-                var temp = BitConverter.ToUInt64(value, 0);
-                // K1, K2, and the subkeys for the six rounds in order are K1, K1, K2, K2, K1, K1.
-                ulong mask = ((ulong)1 << 64) - 1;
-                var K1 = (temp >> 64);
-                var K2 = temp & mask;
-                RoundKeys = new ulong[FeistelRoundQuantity];
-                RoundKeys[0] = K1;
-                RoundKeys[1] = K1;
-                RoundKeys[2] = K2;
-                RoundKeys[3] = K2;
-                RoundKeys[4] = K1;
-                RoundKeys[5] = K1;
+                key = value;
+
+                if (key.Length == 16)
+                {
+                    //128 bit key
+                    FeistelRoundQuantity = 6;
+                    
+                    int currIndex = 0;
+                    byte[] tempForKey = new byte[8];
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    var temp = BitConverter.ToUInt64(key, 0);
+                    var K1 = temp;
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    temp = BitConverter.ToUInt64(key, 0);
+                    var K2 = temp;
+                    
+                    
+                    RoundKeys = new ulong[FeistelRoundQuantity];
+                    RoundKeys[0] = K1;
+                    RoundKeys[1] = K1;
+                    RoundKeys[2] = K2;
+                    RoundKeys[3] = K2;
+                    RoundKeys[4] = K1;
+                    RoundKeys[5] = K1;
+                }
+                else if (key.Length == 24)
+                {
+                    //192 bit key
+                    FeistelRoundQuantity = 6;
+                    
+                    int currIndex = 0;
+                    byte[] tempForKey = new byte[8];
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    var temp = BitConverter.ToUInt64(key, 0);
+                    var K1 = temp;
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    temp = BitConverter.ToUInt64(key, 0);
+                    var K2 = temp;
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    temp = BitConverter.ToUInt64(key, 0);
+                    var K3 = temp;
+                    
+                    RoundKeys = new ulong[FeistelRoundQuantity];
+                    RoundKeys[0] = K1;
+                    RoundKeys[1] = K2;
+                    RoundKeys[2] = K3;
+                    RoundKeys[3] = K3;
+                    RoundKeys[4] = K2;
+                    RoundKeys[5] = K1;
+                }
+                else if (key.Length == 32)
+                {
+                    //256 bit key
+                    FeistelRoundQuantity = 8;
+                    
+                    int currIndex = 0;
+                    byte[] tempForKey = new byte[8];
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    var temp = BitConverter.ToUInt64(key, 0);
+                    var K1 = temp;
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    temp = BitConverter.ToUInt64(key, 0);
+                    var K2 = temp;
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    temp = BitConverter.ToUInt64(key, 0);
+                    var K3 = temp;
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        tempForKey[i] = key[currIndex];
+                        currIndex++;
+                    }
+                    
+                    temp = BitConverter.ToUInt64(key, 0);
+                    var K4 = temp;
+                    
+                    RoundKeys = new ulong[FeistelRoundQuantity];
+                    RoundKeys[0] = K1;
+                    RoundKeys[1] = K2;
+                    RoundKeys[2] = K3;
+                    RoundKeys[3] = K4;
+                    RoundKeys[4] = K4;
+                    RoundKeys[5] = K3;
+                    RoundKeys[6] = K2;
+                    RoundKeys[7] = K1;
+                }
+                
+                
             }
+        }
+        public void ExportKey(string outPutFile)
+        {
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(key, 0, key.Length);
+        }
+        public void ImportKey(string inPutFile, int keySize)
+        {
+            
+            var temp = new byte[keySize];
+            using (var inputStream = File.OpenRead(inPutFile))
+                inputStream.Read(temp, 0, keySize); // 8 bytes = 64 bit key
+
+            Key = temp;
         }
 
         #region MagentaFunctions

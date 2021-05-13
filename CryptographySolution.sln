@@ -28,6 +28,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondTask_3", "SecondTask_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondTask_6", "SecondTask_6\SecondTask_6.csproj", "{0D9A83E5-B62A-4FF4-8521-60EDD23B8DA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_3", "ThirdTask_3\ThirdTask_3.csproj", "{74EBDAF5-D142-45B5-BF86-6C76961175F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_2", "ThirdTask_2\ThirdTask_2.csproj", "{C59469F9-4625-4D5F-9070-390FB2711ADF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRSA", "TestRSA\TestRSA.csproj", "{11507757-28AD-4881-BCDD-1ABEDAE51DEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProjectCryptography2021", "CourseProjectCryptography2021\CourseProjectCryptography2021.csproj", "{5AA97944-ACE5-4629-852F-31E5A8938B02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_4", "ThirdTask_4\ThirdTask_4.csproj", "{06B666BE-32B7-4E9F-BF42-75BA86337A26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,5 +100,25 @@ Global
 		{0D9A83E5-B62A-4FF4-8521-60EDD23B8DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D9A83E5-B62A-4FF4-8521-60EDD23B8DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D9A83E5-B62A-4FF4-8521-60EDD23B8DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74EBDAF5-D142-45B5-BF86-6C76961175F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74EBDAF5-D142-45B5-BF86-6C76961175F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74EBDAF5-D142-45B5-BF86-6C76961175F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74EBDAF5-D142-45B5-BF86-6C76961175F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

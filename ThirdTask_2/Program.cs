@@ -10,9 +10,9 @@ namespace ThirdTask_2
         public static void Main(string[] args)
         {
             
-            //Console.WriteLine(PrimeTests.RabinMillerTest(7, 10));
+            Console.WriteLine(PrimeTests.FermaTest(991, 15));
             
-            //return;
+            // return;
                 
                 
             BigInteger prime = 0;

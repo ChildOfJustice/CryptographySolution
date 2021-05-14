@@ -17,8 +17,8 @@ namespace Task_8
         public int MagentaKeySize = 16;
         public string EncryptionMode = "ECB";
 
-        public String SymmetricKeyFile = "./resources/key";
-        public string IvFilePath = "./resources/IV";
+        public String SymmetricKeyFile = null;
+        public string IvFilePath = null;
         public String DataFile;
         public String PublicKeyFile;
         public String PrivateKeyFile;

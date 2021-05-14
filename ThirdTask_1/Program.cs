@@ -7,9 +7,7 @@ namespace ThirdTask_1
 {
     public class Program
     {
-        // вычисление символа Лежандра;
-        // вычисление символа Якоби
-        
+    
         
         static BigInteger EuclideanAlgorithm(BigInteger m, BigInteger n){
             BigInteger nod;
@@ -49,15 +47,20 @@ namespace ThirdTask_1
             y = newY;
             return gcd;
         }
-        public static BigInteger FastPowModeBigInt(BigInteger number, BigInteger pow, BigInteger mode)
+        
+        public static BigInteger FastPowMod(BigInteger baseNum, BigInteger exponent, BigInteger modulus)
         {
-            BigInteger result = 1;      
-            while (pow != 0) {
-                if (pow % 2 == 1)  result = (result * number) % mode;
-                pow >>= 1;
-                result = (result * result) % mode;
+            if (modulus == 1)
+                return 0;
+            BigInteger curPow = baseNum % modulus;
+            BigInteger res = 1;
+            while(exponent > 0){
+                if (exponent % 2 == 1)
+                    res = (res * curPow) % modulus;
+                exponent = exponent / 2;
+                curPow = (curPow * curPow) % modulus; 
             }
-            return result;
+            return res;
         }
 
         // public static BigInteger EulerFunction(BigInteger n)
@@ -188,40 +191,59 @@ namespace ThirdTask_1
 
         public static void Main(string[] args)
         {
-            // int x;
-            // int y;
-            //
-            // Console.WriteLine(Gcd(98, 178, out x, out y));
-            // Console.WriteLine(x);
-            // Console.WriteLine(y);
-            // BigInteger a = 7, b = 3, x, y, gcd;
+            BigInteger bigInteger1 = BigInteger.Pow(2, 20);
+            BigInteger bigInteger2 = BigInteger.Pow(3, 10);
+            BigInteger bigInteger3 = BigInteger.Pow(4, 50);
+            
+            BigInteger x;
+            BigInteger y;
+
+            Console.WriteLine("Euclidean Algorithm GCD("+bigInteger1+","+bigInteger2+"):");
+            Console.WriteLine(EuclideanAlgorithm(bigInteger1, bigInteger2));
+            
+            Console.WriteLine("Extended Euclidean Algorithm GCD("+bigInteger1+","+bigInteger2+"):");
+            BigInteger gcd;
+            gcd = ExtendedEuclideanAlgorithm(bigInteger1, bigInteger2, out x, out y);
+            Console.WriteLine($"{x} * {bigInteger1} + {y} * {bigInteger2} = {gcd}");
+
+            Console.WriteLine("Fast BigIntModPow ("+bigInteger1+"^"+bigInteger2+") mod 913:");
+            Console.Write("My fast pow mod: ");
+            Console.WriteLine(FastPowMod(bigInteger1,bigInteger2, 913));
+            Console.Write("BigInteger.ModPow: ");
+            Console.WriteLine(BigInteger.ModPow(bigInteger1,bigInteger2, 913));
+            
+            
+            // a = 7;
+            // b = 3;
             // gcd = ExtendedEuclideanAlgorithm(a, b, out x, out y);
             // Console.WriteLine($"{x} * {a} + {y} * {b} = {gcd}"); // -2 * 7 + 1 * 3 = 1
             // gcd = ExtendedEuclideanAlgorithm(b, a, out y, out x);
             // Console.WriteLine($"{x} * {a} + {y} * {b} = {gcd}"); // 1 * 7 + -2 * 3 = 1
-            //
-            // Console.WriteLine(EulerFunction(7));
+            Console.WriteLine("Euler function of " + bigInteger1);
+            Console.WriteLine(EulerFunction(bigInteger1));
 
 
             // Console.WriteLine(CalcSymbolL(3,11));
             // Console.WriteLine(CalcSymbolL(6,7));
             // Console.WriteLine(CalcSymbolL(68,113));
+            Console.WriteLine(L(bigInteger1,bigInteger2));
             Console.WriteLine(L(3,11));
             Console.WriteLine(L(6,7));
             Console.WriteLine(L(68,113));
 
             Console.WriteLine();
             
+            Console.WriteLine(J(bigInteger1,bigInteger2));
             Console.WriteLine(J(2,15));
             Console.WriteLine(J(506,1103));
-            Console.WriteLine(J(-286,4272943));
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine(Jacobi(2,15));
-            Console.WriteLine(Jacobi(506,1103));
-            Console.WriteLine(Jacobi(-286,4272943));
+            // Console.WriteLine(J(-286,4272943));
+            // Console.WriteLine();
+            // Console.WriteLine();
+            // Console.WriteLine(Jacobi(2,15));
+            // Console.WriteLine(Jacobi(506,1103));
+            // Console.WriteLine(Jacobi(-286,4272943));
         }
-        public static int L(int a, int p)
+        public static BigInteger L(BigInteger a, BigInteger p)
         {
             if (ExtendedEuclideanAlgorithm(a, p, out BigInteger x1, out BigInteger y1) != 1)
                 return 0;
@@ -232,11 +254,24 @@ namespace ThirdTask_1
             }
             if (a % 2 == 0)
             {
-                return ((int)(L(a / 2, p) * Math.Pow(-1, (p * p - 1) / 8)));
+                var temp = 1;
+                var powOne = (p * p - 1) / 8;
+                if (powOne.IsEven)
+                    temp = 1;
+                else
+                    temp = -1;
+                
+                return ((int)(L(a / 2, p) * temp));
             }
             if ((a % 2 != 0) && (a != 1))
             {
-                return ((int)(L(p % a, a) * Math.Pow(-1, (a - 1) * (p - 1) / 4)));
+                var temp = 1;
+                var powOne = (a - 1) * (p - 1) / 4;
+                if (powOne.IsEven)
+                    temp = 1;
+                else
+                    temp = -1;
+                return ((int)(L(p % a, a) * temp));
             }
             return 0;
         }
@@ -420,7 +455,7 @@ namespace ThirdTask_1
         public static BigInteger CalcSymbolL(BigInteger a, BigInteger p)
         {
             //критерий Эйлера:
-            return FastPowModeBigInt(a, (p - 1) / 2, p);
+            return FastPowMod(a, (p - 1) / 2, p);
         }
         public static BigInteger CalcSymbolJ(BigInteger a, BigInteger p)
         {

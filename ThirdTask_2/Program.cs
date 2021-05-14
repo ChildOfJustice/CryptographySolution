@@ -10,9 +10,9 @@ namespace ThirdTask_2
         public static void Main(string[] args)
         {
             
-            //Console.WriteLine(PrimeTests.RabinMillerTest(7, 10));
+            Console.WriteLine(PrimeTests.FermaTest(991, 15));
             
-            //return;
+            // return;
                 
                 
             BigInteger prime = 0;
@@ -46,7 +46,7 @@ namespace ThirdTask_2
                     if (PrimeTests.RabinMillerTest(ourCandidate, 10))
                     {
                        
-                        prime = a;
+                        prime = ourCandidate;
                         break;
                     }
                 }
@@ -55,7 +55,7 @@ namespace ThirdTask_2
                 
             }
             
-            Console.WriteLine(prime.ToString());
+            Console.WriteLine("Prime number with hight probability: " + prime.ToString());
         }
 
         public static BigInteger GeneratePrimeNumber(uint sizeBits, int confidence)

@@ -110,6 +110,12 @@ namespace SecondTask_6
             byte[][] allBlocks = 
             {
                 st2,
+                st2,
+                st2,
+                st2,
+                st2,
+                st2,
+                st2,
                 st3
             };
             var res = mode.EncryptAll(allBlocks);
@@ -126,6 +132,7 @@ namespace SecondTask_6
             }
             Console.WriteLine();
 
+            //mode = new Cbc(iv, des);
             Console.WriteLine("Decrypted data:");
             var decrypted = mode.DecryptAll(res);
             foreach (var block in decrypted)

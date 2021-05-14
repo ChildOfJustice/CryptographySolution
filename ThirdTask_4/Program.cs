@@ -10,23 +10,14 @@ namespace ThirdTask_4
     {
         public static void Main(string[] args)
         {
-            // var rsaCore = new RsaCore(generateKeys:false);
-            
-            //rsaCore.GenerateVulnerableKeys(516);
-           
-            
-            
             var rsaCore = new RsaCore(516,weak:true);
-            
             
             //export keys
             rsaCore.ExportPubKey("./resources/pubkey");
             rsaCore.ExportPrivateKey("./resources/privkey");
-                    
-                    
-                    
-                    
-                    
+
+
+
             CypherMethods.EncryptKey(rsaCore, "./resources/key", "./resources/keyEncrypted");
             //CypherMethods.DecryptKey(rsaCore, "./resources/keyEncrypted", "./resources/keyDecrypted");
             

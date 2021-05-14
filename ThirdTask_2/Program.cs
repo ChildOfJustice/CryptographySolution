@@ -12,7 +12,7 @@ namespace ThirdTask_2
             
             Console.WriteLine(PrimeTests.FermaTest(991, 15));
             
-            // return;
+            //return;
                 
                 
             BigInteger prime = 0;

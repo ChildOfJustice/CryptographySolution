@@ -225,6 +225,7 @@ namespace ThirdTask_2
                  if (ThirdTask_1.Program.FastPowMod(a, n - 1, n) != 1)
                  {
 	                 // Console.WriteLine("FOUND! " + a);
+	                 // //Console.WriteLine(ThirdTask_1.Program.ExtendedEuclideanAlgorithm());
 	                 // Console.WriteLine(ThirdTask_1.Program.FastPowMod(a,n-1,n));
 	                 // Console.WriteLine(System.Numerics.BigInteger.ModPow(a, n - 1, n));
 	                 return false;

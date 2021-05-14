@@ -10,6 +10,9 @@ namespace ThirdTask_3
 {
     public class RsaCore
     {
+        
+        //Log 256 (N)   + 1 
+        
         public const int testConfidence = 10;
         
         private BigInteger p;
@@ -29,7 +32,8 @@ namespace ThirdTask_3
         public uint keySize;
         public bool CanEncrypt;
         public bool CanDecrypt;
-        
+
+        public int numberSize;
         
         public RsaCore(uint _keySize=516, bool generateKeys=true, bool weak=false)
         {
@@ -106,6 +110,7 @@ namespace ThirdTask_3
                 //check:
                 {
                     BigInteger encryptedTest = EncryptOneByte(messageToTest);
+                    numberSize = encryptedTest.getBytes().Length;
                     BigInteger decryptedTest = DecryptOneByte(encryptedTest);
 
                     if (decryptedTest != messageToTest) continue;

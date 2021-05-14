@@ -1,4 +1,5 @@
-﻿using Task_4;
+﻿using System;
+using Task_4;
 
 namespace EncryptionModes
 {
@@ -11,12 +12,14 @@ namespace EncryptionModes
         {
             IV = iv;
             algorithm = _algorithm;
+            //CurrIv = new byte[IV.Length];
         }
 
 
         private void EncryptChain(byte[] prevIv, byte[][] allData, int blockNumber, byte[][] result)
         {
             var tempIv = algorithm.Encrypt(prevIv);
+            //Array.Copy(tempIv, CurrIv, tempIv.Length);
         
             result[blockNumber] = new byte[allData[blockNumber].Length];
             for (int i = 0; i < result[blockNumber].Length; i++)

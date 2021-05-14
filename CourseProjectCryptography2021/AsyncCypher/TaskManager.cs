@@ -212,7 +212,116 @@ namespace Task_8.AsyncCypher
                 outputStream.Close();
             }
         }
-        
+        private void RunEncryptionProcessInModeOptimized()
+        {
+            importIv();
+            
+            
+            var encryptionModeBlocksForOneSection = 8;
+            var needToShrink = false;
+
+            var encryptionModeSectionQuantity = blocksQuantity / encryptionModeBlocksForOneSection;
+            // if (encryptionModeSectionQuantity == 0)
+            //     encryptionModeSectionQuantity = 1;
+            //MessageBox.Show("Will split by " + encryptionModeSectionQuantity);
+            if (blocksQuantity % encryptionModeBlocksForOneSection != 0)
+                needToShrink = true;
+            //MessageBox.Show("Will shrink " + needToShrink);
+            var counter = 0;
+            var previousBlock = new byte[IV.Length];
+            Array.Copy(IV, previousBlock, IV.Length);
+
+            while (counter <= encryptionModeSectionQuantity)
+            {
+                //MessageBox.Show("Next round: " + counter + " of " + encryptionModeSectionQuantity);
+                byte[][] currAllBlocks = null;
+                if (counter < encryptionModeSectionQuantity)
+                {
+                    currAllBlocks = new byte[encryptionModeBlocksForOneSection][];
+                    for (int i = 0; i < encryptionModeBlocksForOneSection; i++)
+                    {
+                        int endPositionToRead = (counter*encryptionModeBlocksForOneSection + (i + 1)) * blockSize;
+                        using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                            currAllBlocks[i] = ReadDesiredPart(fs, (counter*encryptionModeBlocksForOneSection + i) * blockSize, endPositionToRead);
+                        //MessageBox.Show("read block: " + new ASCIIEncoding().GetString(currAllBlocks[i]));
+                    }
+                }
+
+
+                var prevEncryptionModeBlocksForOneSection = encryptionModeBlocksForOneSection;
+                if (counter == encryptionModeSectionQuantity && needToShrink)
+                {
+                    
+                    encryptionModeBlocksForOneSection = blocksQuantity % encryptionModeBlocksForOneSection;
+                    //MessageBox.Show("Shrinked: Will use in the last read: " + encryptionModeBlocksForOneSection);
+                }
+                if(counter == encryptionModeSectionQuantity)
+                {
+                    
+                    currAllBlocks = new byte[encryptionModeBlocksForOneSection][];
+                    for (int i = 0; i < encryptionModeBlocksForOneSection-1; i++)
+                    {
+                        int endPositionToRead = (counter*prevEncryptionModeBlocksForOneSection + (i + 1)) * blockSize;
+                        using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                            currAllBlocks[i] = ReadDesiredPart(fs, (counter*prevEncryptionModeBlocksForOneSection + i) * blockSize, endPositionToRead);
+                        //MessageBox.Show("read block in the last section: " + new ASCIIEncoding().GetString(currAllBlocks[i]));
+                    }
+                    
+                    byte[] theLastBlock = new byte[blockSize];
+                    var tempArr = new ASCIIEncoding().GetBytes(new FileInfo(inputFilePath).Length.ToString());
+                    Array.Copy(tempArr, theLastBlock, tempArr.Length);
+                    
+                    currAllBlocks[currAllBlocks.Length-1] = theLastBlock;
+                    //MessageBox.Show("final block is: " + new ASCIIEncoding().GetString(currAllBlocks[currAllBlocks.Length-1]));
+                
+                }
+
+
+                var result = new byte[currAllBlocks.Length][];
+                switch (EncryptionMode)
+                {
+                    case "CBC":
+                        Cbc mode = new Cbc(previousBlock, Algorithm);
+                        
+                        result = mode.EncryptAll(currAllBlocks);
+                        //MessageBox.Show("All blocks in this section is encrypted: " + result.Length);
+                        break;
+                    case "CFB":
+                        Cfb cfbMode = new Cfb(previousBlock, Algorithm);
+                        
+                        result = cfbMode.EncryptAll(currAllBlocks);
+                        break;
+                    case "OFB":
+                        Ofb ofbMode = new Ofb(previousBlock, Algorithm);
+                        
+                        result = ofbMode.EncryptAll(currAllBlocks);
+                        break;
+                }
+                
+                using (var outputStream = File.Open(outputFilePath, FileMode.Append))
+                {
+                    foreach (var block in result)
+                    {
+                        try
+                        {
+                            //MessageBox.Show("Writing");
+                            outputStream.Write(block, 0, block.Length);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
+                    }
+                    outputStream.Close();
+                }
+                
+                Array.Copy(currAllBlocks[currAllBlocks.Length-1], previousBlock, currAllBlocks[currAllBlocks.Length-1].Length);
+                counter++;
+                
+            }
+            
+            MessageBox.Show("Output file is " + outputFilePath);
+        }
         
         
         
@@ -395,7 +504,149 @@ namespace Task_8.AsyncCypher
                 outputStream.Close();
             }
         }
-        
+         private void RunDecryptionProcessInModeOptimized()
+        {
+            importIv();
+
+            var encryptionModeBlocksForOneSection = 8;
+            var needToShrink = false;
+
+            var encryptionModeSectionQuantity = blocksQuantity / encryptionModeBlocksForOneSection;
+            // if (encryptionModeSectionQuantity == 0)
+            //     encryptionModeSectionQuantity = 1;
+            //MessageBox.Show("Will split by " + encryptionModeSectionQuantity);
+            if (blocksQuantity % encryptionModeBlocksForOneSection != 0)
+                needToShrink = true;
+            //MessageBox.Show("Will shrink " + needToShrink);
+            var counter = 0;
+            var previousBlock = new byte[IV.Length];
+            Array.Copy(IV, previousBlock, IV.Length);
+
+            while (counter <= encryptionModeSectionQuantity)
+            {
+                //MessageBox.Show("Next round: " + counter + " of " + encryptionModeSectionQuantity);
+                byte[][] currAllBlocks = null;
+                if (counter < encryptionModeSectionQuantity)
+                {
+                    currAllBlocks = new byte[encryptionModeBlocksForOneSection][];
+                    for (int i = 0; i < encryptionModeBlocksForOneSection; i++)
+                    {
+                        int endPositionToRead = (counter*encryptionModeBlocksForOneSection + (i + 1)) * blockSize;
+                        using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                            currAllBlocks[i] = ReadDesiredPart(fs, (counter*encryptionModeBlocksForOneSection + i) * blockSize, endPositionToRead);
+                        //MessageBox.Show("read block: " + new ASCIIEncoding().GetString(currAllBlocks[i]));
+                    }
+                }
+
+                var prevEncryptionModeBlocksForOneSection = encryptionModeBlocksForOneSection;
+                if (counter == encryptionModeSectionQuantity && needToShrink)
+                {
+                    encryptionModeBlocksForOneSection = blocksQuantity % encryptionModeBlocksForOneSection;
+                    //MessageBox.Show("Will use in the last read: " + encryptionModeBlocksForOneSection);
+                }
+                if(counter == encryptionModeSectionQuantity){
+                    
+                    currAllBlocks = new byte[encryptionModeBlocksForOneSection][];
+                    for (int i = 0; i < encryptionModeBlocksForOneSection; i++)
+                    {
+                        int endPositionToRead = (counter*prevEncryptionModeBlocksForOneSection + (i + 1)) * blockSize;
+                        using (FileStream fs = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                            currAllBlocks[i] = ReadDesiredPart(fs,  (counter*prevEncryptionModeBlocksForOneSection + i) * blockSize, endPositionToRead);
+                        //MessageBox.Show("read block in the last section: " + new ASCIIEncoding().GetString(currAllBlocks[i]));
+                    }
+                    
+                }
+
+
+                var result = new byte[currAllBlocks.Length][];
+                switch (EncryptionMode)
+                {
+                    case "CBC":
+                        Cbc mode = new Cbc(previousBlock, Algorithm);
+                        
+                        result = mode.DecryptAll(currAllBlocks);
+                        //MessageBox.Show("All blocks in this section are decrypted: " + result.Length);
+                        break;
+                    case "CFB":
+                        Cfb cfbMode = new Cfb(previousBlock, Algorithm);
+                        
+                        result = cfbMode.DecryptAll(currAllBlocks);
+                        break;
+                    case "OFB":
+                        Ofb ofbMode = new Ofb(previousBlock, Algorithm);
+                        
+                        result = ofbMode.DecryptAll(currAllBlocks);
+                        break;
+                }
+
+                // foreach (var block in result)
+                // {
+                //     MessageBox.Show("Block: " + new ASCIIEncoding().GetString(block));
+                // }
+
+                if (counter == encryptionModeSectionQuantity)
+                {
+                    //the last section
+                    using (var outputStream = File.Open(outputFilePath, FileMode.Append))
+                    {
+                        for (int i = 0; i < result.Length-1; i++)
+                        {
+                    
+                            try
+                            {
+                                if(i == result.Length - 2)
+                                {
+                                    //MessageBox.Show("final block is: " + new ASCIIEncoding().GetString(result[i]));
+                                    //MessageBox.Show("the size is: " + new ASCIIEncoding().GetString(result[result.Length-1]));
+                                    //MessageBox.Show("F: " +(Int32.Parse(new ASCIIEncoding().GetString(result[result.Length-1])) - blockSize*(blocksQuantity-2)) );
+                                    
+                                    outputStream.Write(result[i], 0, Int32.Parse(new ASCIIEncoding().GetString(result[result.Length-1])) - blockSize*(blocksQuantity-2) );
+                                    
+                                }
+                                else
+                                {
+                                    //MessageBox.Show("write in the last section: " + new ASCIIEncoding().GetString(result[i]));
+                                    outputStream.Write(result[i], 0, result[i].Length);
+                                }
+                                    
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message);
+                            }
+                        }
+                
+                        
+                        outputStream.Close();
+                    }
+                }
+                else
+                {
+                    using (var outputStream = File.Open(outputFilePath, FileMode.Append))
+                    {
+                        foreach (var block in result)
+                        {
+                            try
+                            {
+                                //MessageBox.Show("Writing");
+                                //MessageBox.Show("block is: " + new ASCIIEncoding().GetString(block));
+                                outputStream.Write(block, 0, block.Length);
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message);
+                            }
+                        }
+                        outputStream.Close();
+                    }
+                }
+                
+                //previousBlock = currAllBlocks[currAllBlocks.Length-1];
+                Array.Copy(currAllBlocks[currAllBlocks.Length-1], previousBlock, currAllBlocks[currAllBlocks.Length-1].Length);
+                counter++;
+            }
+            MessageBox.Show("Output file is " + outputFilePath);
+        }
         
         
         

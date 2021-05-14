@@ -222,7 +222,7 @@ namespace ThirdTask_2
                  }
                  while (a < 2 || a >= n - 2);
 
-                 if (System.Numerics.BigInteger.ModPow(a, n - 1, n) != 1)
+                 if (ThirdTask_1.Program.FastPowMod(a, n - 1, n) != 1)
                  {
 	                 // Console.WriteLine("FOUND! " + a);
 	                 // Console.WriteLine(ThirdTask_1.Program.FastPowMod(a,n-1,n));

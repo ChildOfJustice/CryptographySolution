@@ -149,13 +149,13 @@ namespace CourseProjectCryptography2021
                             outputStream.Write(IV, 0, IV.Length);
                     }
 
-                    // rsaCore = new RsaCore(rsaKeySize,generateKeys:false);
-                    // rsaCore.ImportPubKey(pubKeyFileName);
-                    //
-                    // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
-                    // File.Move(_mainWindowViewModel.SymmetricKeyFile+"Encrypted", serverLocation+"EncryptedSymmetricKey");
-                    // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
-                    // File.Move(_mainWindowViewModel.IvFilePath+"Encrypted", serverLocation+"EncryptedIV");
+                    rsaCore = new RsaCore(rsaKeySize,generateKeys:false);
+                    rsaCore.ImportPubKey(pubKeyFileName);
+                    
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+                    File.Move(_mainWindowViewModel.SymmetricKeyFile+"Encrypted", serverLocation+"EncryptedSymmetricKey");
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
+                    File.Move(_mainWindowViewModel.IvFilePath+"Encrypted", serverLocation+"EncryptedIV");
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(_mainWindowViewModel.SymmetricKeyFile,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
                     
@@ -164,7 +164,7 @@ namespace CourseProjectCryptography2021
                     _mainWindowViewModel.MainTaskManager.outputFilePath = outputFileName;
                     
                     _mainWindowViewModel.MainTaskManager.RunEncryptionProcess();
-                    //File.Move(outputFileName, serverLocation+outputFileName);
+                    File.Move(outputFileName, serverLocation+outputFileName);
                     Application.Current.Dispatcher.Invoke(() => 
                     {
                         removeContent();
@@ -206,23 +206,26 @@ namespace CourseProjectCryptography2021
                     });
 
                     //decrypt symmetric key with private RSA key
-                    // rsaCore = new RsaCore(rsaKeySize, generateKeys:false);
-                    // rsaCore.ImportPrivateKey(privateKeyFileName);
-                    //
-                    // var decryptedKeyFilePath = "./resources/DecryptedSymmetricKey";
-                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, decryptedKeyFilePath);
-                    // var decryptedIvFilePath = "./resources/DecryptedIv";
-                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.IvFilePath, decryptedIvFilePath);
-
+                    rsaCore = new RsaCore(rsaKeySize, generateKeys:false);
+                    rsaCore.ImportPrivateKey(privateKeyFileName);
+                    
+                    var decryptedKeyFilePath = "./resources/DecryptedSymmetricKey";
+                    CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, decryptedKeyFilePath);
+                    if (_mainWindowViewModel.IvFilePath != null)
+                    {
+                        var decryptedIvFilePath = "./resources/DecryptedIv";
+                        CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.IvFilePath, decryptedIvFilePath);
+                        _mainWindowViewModel.MainTaskManager.ivFilePath = decryptedIvFilePath;
+                    }
+                    
                     //TODO:
-                    var decryptedKeyFilePath = "./resources/key";
-                    var decryptedIvFilePath = "./resources/IV";
+                    // var decryptedKeyFilePath = "./resources/key";
+                    // var decryptedIvFilePath = "./resources/IV";
                     
                     //decrypt file with MAGENTA
                     _mainWindowViewModel.MainTaskManager = new TaskManager(decryptedKeyFilePath,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
-                    
                     _mainWindowViewModel.MainTaskManager.keyFilePath = decryptedKeyFilePath;
-                    _mainWindowViewModel.MainTaskManager.ivFilePath = decryptedIvFilePath;
+                    
                     _mainWindowViewModel.MainTaskManager.inputFilePath = _mainWindowViewModel.DataFile;
                     _mainWindowViewModel.MainTaskManager.outputFilePath = outputFileName;
                     

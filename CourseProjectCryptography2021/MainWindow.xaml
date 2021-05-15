@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProjectCryptography2021"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="CourseProjectCryptography" Height="350" Width="525">
     <DockPanel>
         <Grid>
             <Grid.RowDefinitions>
@@ -160,7 +160,7 @@
                         
                         Click="OnStartSessionButtonClick"
                         Foreground="DimGray"
-                        FontSize="30"
+                        FontSize="20"
                         Margin="5">
                     
                         Start Session
@@ -173,7 +173,7 @@
                         
                         Click="OnSendFileButtonClick"
                         Foreground="DimGray"
-                        FontSize="30"
+                        FontSize="20"
                         Margin="5">
                         
                         Send a file
@@ -185,7 +185,7 @@
                         
                         Click="OnReceiveFileButtonClick"
                         Foreground="DimGray"
-                        FontSize="30"
+                        FontSize="20"
                         Margin="5">
                         
                         Receive a file

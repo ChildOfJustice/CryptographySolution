@@ -74,13 +74,13 @@ namespace CourseProjectCryptography2021
                     rsaCore.ExportPubKey(pubKeyFileName);
                     rsaCore.ExportPrivateKey(privateKeyFileName);
                     // MessageBox.Show("Moving " + pubKeyFileName + " to " + clientLocation + pubKeyFileName);
-                    //File.Move(pubKeyFileName, clientLocation+pubKeyFileName);
+                    File.Move(pubKeyFileName, clientLocation+pubKeyFileName);
                     //
                     //
                     //
-                    _mainWindowViewModel.SymmetricKeyFile = "./resources/key";
-                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
-                    CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile+"Encrypted", _mainWindowViewModel.SymmetricKeyFile+"Decrypted");
+                    // _mainWindowViewModel.SymmetricKeyFile = "./resources/key";
+                    // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile+"Encrypted", _mainWindowViewModel.SymmetricKeyFile+"Decrypted");
                     Application.Current.Dispatcher.Invoke(() => 
                     {
                         removeContent();

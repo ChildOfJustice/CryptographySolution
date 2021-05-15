@@ -103,18 +103,34 @@ namespace ThirdTask_3
                     GenerateEncryptionExponent();
                     GenerateDecryptionExponent();
                 }
-               
 
-                //MessageBox.Show("Is weak: " + (d < (Sqrt(Sqrt(n)))));
+                foreach (var VARIABLE in n.getBytes())
+                {
+                    Console.Write(VARIABLE);
+                }
+                Console.WriteLine();
+                var tempB = new System.Numerics.BigInteger(n.getBytes());
+                foreach (var VARIABLE in tempB.ToByteArray())
+                {
+                    Console.Write(VARIABLE);
+                }
+
                 
+                
+                
+                MessageBox.Show("Eq: " + new System.Numerics.BigInteger(n.getBytes()) + " | " + n);
+                numberSize = (int)Math.Round(System.Numerics.BigInteger.Log(new System.Numerics.BigInteger(n.getBytes()), 256));
+                //MessageBox.Show("Is weak: " + (d < (Sqrt(Sqrt(n)))));
+                //MessageBox.Show("Max bigint size is: " + numberSize);
                 //check:
                 {
                     BigInteger encryptedTest = EncryptOneByte(messageToTest);
-                    numberSize = encryptedTest.getBytes().Length;
+                    //numberSize = encryptedTest.getBytes().Length;
                     BigInteger decryptedTest = DecryptOneByte(encryptedTest);
                 
                     if (decryptedTest != messageToTest) continue;
                 }
+                MessageBox.Show("Max bigint size is: " + numberSize);
                 algorithmReady = true;
             }
         }

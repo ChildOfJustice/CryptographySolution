@@ -74,7 +74,7 @@ namespace CourseProjectCryptography2021
                     rsaCore.ExportPubKey(pubKeyFileName);
                     rsaCore.ExportPrivateKey(privateKeyFileName);
                     // MessageBox.Show("Moving " + pubKeyFileName + " to " + clientLocation + pubKeyFileName);
-                    // File.Move(pubKeyFileName, clientLocation+pubKeyFileName);
+                    //File.Move(pubKeyFileName, clientLocation+pubKeyFileName);
                     //
                     //
                     //
@@ -131,6 +131,11 @@ namespace CourseProjectCryptography2021
                         RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
                         byte[] magentaKey = new byte[_mainWindowViewModel.MagentaKeySize];
                         rng.GetBytes(magentaKey);
+                        for (int i = 0; i < magentaKey.Length; i++)
+                        {
+                            if (magentaKey[i] < 2)
+                                magentaKey[i] = 2;
+                        }
 
                         _mainWindowViewModel.SymmetricKeyFile = "./resources/key";
                         //export IV and this key and encrypt them with the RSA pub key
@@ -143,6 +148,11 @@ namespace CourseProjectCryptography2021
                         RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
                         byte[] IV = new byte[16];
                         rng.GetBytes(IV);
+                        for (int i = 0; i < IV.Length; i++)
+                        {
+                            if (IV[i] < 2)
+                                IV[i] = 2;
+                        }
                         
                         _mainWindowViewModel.IvFilePath = "./resources/IV";
                         //export IV and this key and encrypt them with the RSA pub key
@@ -150,13 +160,13 @@ namespace CourseProjectCryptography2021
                             outputStream.Write(IV, 0, IV.Length);
                     }
 
-                    // rsaCore = new RsaCore(rsaKeySize,generateKeys:false);
-                    // rsaCore.ImportPubKey(pubKeyFileName);
-                    //
-                    // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
-                    // File.Move(_mainWindowViewModel.SymmetricKeyFile+"Encrypted", serverLocation+"EncryptedSymmetricKey");
-                    // CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
-                    // File.Move(_mainWindowViewModel.IvFilePath+"Encrypted", serverLocation+"EncryptedIV");
+                    rsaCore = new RsaCore(rsaKeySize,generateKeys:false);
+                    rsaCore.ImportPubKey(pubKeyFileName);
+                    
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, _mainWindowViewModel.SymmetricKeyFile+"Encrypted");
+                    File.Move(_mainWindowViewModel.SymmetricKeyFile+"Encrypted", serverLocation+"EncryptedSymmetricKey");
+                    CypherMethods.EncryptKey(rsaCore, _mainWindowViewModel.IvFilePath, _mainWindowViewModel.IvFilePath+"Encrypted");
+                    File.Move(_mainWindowViewModel.IvFilePath+"Encrypted", serverLocation+"EncryptedIV");
                     
                     _mainWindowViewModel.MainTaskManager = new TaskManager(_mainWindowViewModel.SymmetricKeyFile,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
                     
@@ -165,7 +175,7 @@ namespace CourseProjectCryptography2021
                     _mainWindowViewModel.MainTaskManager.outputFilePath = outputFileName;
                     
                     _mainWindowViewModel.MainTaskManager.RunEncryptionProcess();
-                    //File.Move(outputFileName, serverLocation+outputFileName);
+                    File.Move(outputFileName, serverLocation+outputFileName);
                     Application.Current.Dispatcher.Invoke(() => 
                     {
                         removeContent();
@@ -207,18 +217,18 @@ namespace CourseProjectCryptography2021
                     });
 
                     //decrypt symmetric key with private RSA key
-                    // rsaCore = new RsaCore(rsaKeySize, generateKeys:false);
-                    // rsaCore.ImportPrivateKey(privateKeyFileName);
-                    //
-                    // var decryptedKeyFilePath = "./resources/DecryptedSymmetricKey";
-                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, decryptedKeyFilePath);
-                    // var decryptedIvFilePath = "./resources/DecryptedIv";
-                    // CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.IvFilePath, decryptedIvFilePath);
-
-                    //TODO:
-                    var decryptedKeyFilePath = "./resources/key";
-                    var decryptedIvFilePath = "./resources/IV";
+                    rsaCore = new RsaCore(rsaKeySize, generateKeys:false);
+                    rsaCore.ImportPrivateKey(privateKeyFileName);
                     
+                    var decryptedKeyFilePath = "./resources/DecryptedSymmetricKey";
+                    CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.SymmetricKeyFile, decryptedKeyFilePath);
+                    var decryptedIvFilePath = "./resources/DecryptedIv";
+                    CypherMethods.DecryptKey(rsaCore, _mainWindowViewModel.IvFilePath, decryptedIvFilePath);
+
+                    
+                    // var decryptedKeyFilePath = "./resources/key";
+                    // var decryptedIvFilePath = "./resources/IV";
+                    //
                     //decrypt file with MAGENTA
                     _mainWindowViewModel.MainTaskManager = new TaskManager(decryptedKeyFilePath,_mainWindowViewModel.MagentaKeySize, _mainWindowViewModel.EncryptionMode);
                     

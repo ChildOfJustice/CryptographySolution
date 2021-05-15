@@ -112,7 +112,7 @@ namespace ThirdTask_3
                     BigInteger encryptedTest = EncryptOneByte(messageToTest);
                     numberSize = encryptedTest.getBytes().Length;
                     BigInteger decryptedTest = DecryptOneByte(encryptedTest);
-
+                
                     if (decryptedTest != messageToTest) continue;
                 }
                 algorithmReady = true;
@@ -422,11 +422,53 @@ namespace ThirdTask_3
         
         private void GenerateDecryptionExponent()
         {
-            d = (Extended_GDC(eC, phi, true))[1];
+            // d = (Extended_GDC(eC, phi, false))[0];
+            // if (d < 0)
+            //     d = -d;
+            
+            //d = (Extended_GDC(eC, phi, true))[1];
+
+            d = (ExtendedEuclideanAlgorithm(eC, phi))[0];
+            if (d < 0)
+                d = -d;
             // BigInteger x;
             // BigInteger y;
             // ExtendedEuclideanAlgorithm(eC, phi, out x, out y);
             // d = y;
+        }
+
+        public BigInteger[] ExtendedEuclideanAlgorithm(BigInteger a, BigInteger modulus)
+        {
+            BigInteger x, lastX, b_, y, lastY, a_, quotient, temp, temp2, temp3;
+            BigInteger[] result;
+            
+            if (a < modulus)
+            {
+                x = 0; lastX = 1; b_ = modulus;
+                y = 1; lastY = 0; a_ = a;
+            }
+            else
+            {
+                x = 1; lastX = 0; b_ = a;
+                y = 0; lastY = 1; a_ = modulus;
+            }
+            
+            
+            while (a_ > 1)
+            {
+                quotient = b_ / a_; 
+                temp = x - quotient * y;
+                temp2 = lastX - quotient * lastY;
+                temp3 = b_ - quotient * a_;
+
+                x = y; lastX = lastY; b_ = a_;
+                y = temp; lastY = temp2; a_ = temp3;
+            }
+
+            if (a_ == 0) result = new BigInteger[] { x, lastX, b_ };
+            else result = new BigInteger[] { y, lastY, a_ };
+
+            return result;
         }
         
         

@@ -40,6 +40,8 @@ namespace Task_8.AsyncCypher
 
         public static void EncryptKey(RsaCore rsaCore, string keyFileName, string outputFilePath)
         {
+            //rsaCore.numberSize
+            
             MessageBox.Show("Reading: " + keyFileName);
             FileInfo fi = new FileInfo(keyFileName);
             int blocks = (int)fi.Length / 8;

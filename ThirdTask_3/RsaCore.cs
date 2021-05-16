@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace ThirdTask_3
         
         //Log 256 (N)   + 1 
         
-        public const int testConfidence = 10;
+        public const int testConfidence = 20;
         
         private BigInteger p;
         private BigInteger q;
@@ -86,11 +88,12 @@ namespace ThirdTask_3
         public void GenerateKeys(bool  weak=false)
         {
             bool algorithmReady = false;
-            BigInteger messageToTest = new BigInteger(77);
+            byte messageToTest = 77;
 
             while (!algorithmReady)
             {
                 Generate_Primes();
+                
                 n = q * p;
                 CalculatePhi();
                 if (weak)
@@ -104,79 +107,29 @@ namespace ThirdTask_3
                     GenerateDecryptionExponent();
                 }
 
-                foreach (var VARIABLE in n.getBytes())
-                {
-                    Console.Write(VARIABLE);
-                }
-                Console.WriteLine();
-                var tempB = new System.Numerics.BigInteger(n.getBytes());
-                foreach (var VARIABLE in tempB.ToByteArray())
-                {
-                    Console.Write(VARIABLE);
-                }
-
                 
                 
+                //TODO use your own log_256()
+                //numberSize = (int)Math.Round(System.Numerics.BigInteger.Log(new System.Numerics.BigInteger(n.getBytes()), 256));
                 
-                MessageBox.Show("Eq: " + new System.Numerics.BigInteger(n.getBytes()) + " | " + n);
-                numberSize = (int)Math.Round(System.Numerics.BigInteger.Log(new System.Numerics.BigInteger(n.getBytes()), 256));
-                //MessageBox.Show("Is weak: " + (d < (Sqrt(Sqrt(n)))));
-                //MessageBox.Show("Max bigint size is: " + numberSize);
+                
                 //check:
-                {
-                    BigInteger encryptedTest = EncryptOneByte(messageToTest);
-                    //numberSize = encryptedTest.getBytes().Length;
-                    BigInteger decryptedTest = DecryptOneByte(encryptedTest);
-                
-                    if (decryptedTest != messageToTest) continue;
-                }
-                MessageBox.Show("Max bigint size is: " + numberSize);
+                // {
+                //     BigInteger encryptedTest = EncryptOneByte(messageToTest);
+                //     //numberSize = encryptedTest.getBytes().Length;
+                //     byte decryptedTest = DecryptOneByte(encryptedTest);
+                //     MessageBox.Show("pt: " + messageToTest + " dec: " + decryptedTest);
+                //     if (decryptedTest != messageToTest) continue;
+                // }
+                // MessageBox.Show("Max bigint size is: " + numberSize);
                 algorithmReady = true;
             }
         }
-        
-        public void GenerateVulnerableKeys(uint size)
-        {
-            keySize = size;
-            Generate_Primes();
-
-            n = p * q;
-
-            BigInteger eiler = (p - 1) * (q - 1);
-
-
-            d = 25;
-            
-            while (true)
-            {
-                //d = GenerateOddNBitNumber((uint)(size / 32));
-                d++;
-
-                if (GreatestCommonDivizor(eiler, d) == 1) // && 36 * BigInteger.Pow(d, 4) < n
-                {
-                    //check:
-                    {
-                        eC = (Extended_GDC(d, eiler, true))[1];
-                        
-                        BigInteger messageToTest = new BigInteger(77);
-                        BigInteger encryptedTest = EncryptOneByte(messageToTest);
-                        BigInteger decryptedTest = DecryptOneByte(encryptedTest);
-
-                        //MessageBox.Show("! : " + (encryptedTest == messageToTest));
-                        if (decryptedTest == messageToTest) break;
-                    }
-                };
-            }
-
-            
-        }
-        
         
         private void GenerateWeakDecryptionExponent()
         {
             BigInteger generatedD;
             
-            //generatedD = GenerateOddNBitNumber((uint)(keySize / 4.0));
             generatedD = 125;
 
             for (; ; generatedD++)
@@ -192,54 +145,36 @@ namespace ThirdTask_3
             {
                 throw new Exception("Cannnot select d!");
             }
-
-            //MessageBox.Show("Decryption exponent is: " + d.ToString());
-
         }
         
         private void GenerateWeakEncryptionExponent()
         {
             eC = (Extended_GDC(d, phi, true))[1];
         }
-        private static BigInteger Sqrt(BigInteger n)
-        {
-            int bitlength = n.bitCount();
-            BigInteger a = bitlength / 2;
-            BigInteger b = bitlength % 2;
-
-            BigInteger x = BigInteger.Pow(2, (a + b));
-            while (true)
-            {
-                BigInteger y = (x + n / x) / 2;
-                if (y >= x) return x;
-                x = y;
-            }
-        }
         
 
+
         
-        
-        
-        
-        
-        public String GetPublicKeyAsString(int keyBase)
+
+
+        public String GetPublicKeyAsString()
         {
-            return eC.ToString(keyBase) + "," + n.ToString(keyBase);
+            return eC.ToString("X") + "," + n.ToString("X");
         }
-        public String GetPrivateKeyAsString(int keyBase)
+        public String GetPrivateKeyAsString()
         {
-            return d.ToString(keyBase) + "," + n.ToString(keyBase);
+            return d.ToString("X") + "," + n.ToString("X");
         }
         public void ExportPubKey(string outPutFile)
         {
-            var exportedKey = GetPublicKeyAsString(16);
+            var exportedKey = GetPublicKeyAsString();
             var exportedKeyBytes= new ASCIIEncoding().GetBytes(exportedKey);
             using (var outputStream = File.Open(outPutFile, FileMode.Create))
                 outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
         }
         public void ExportPrivateKey(string outPutFile)
         {
-            var exportedKey = GetPrivateKeyAsString(16);
+            var exportedKey = GetPrivateKeyAsString();
             var exportedKeyBytes= new ASCIIEncoding().GetBytes(exportedKey);
             using (var outputStream = File.Open(outPutFile, FileMode.Create))
                 outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
@@ -251,7 +186,9 @@ namespace ThirdTask_3
             string line = sr.ReadLine();
             StringBuilder sbE = new StringBuilder();
             StringBuilder sbN = new StringBuilder();
-
+            sbE.Append("0");
+            sbN.Append("0");// to convert to BigInteger
+            
             int i = 0;
             while (line[i] != ',')
             {
@@ -265,9 +202,10 @@ namespace ThirdTask_3
                 sbN.Append(line[i]);
                 i++;
             }
-
-            eC = new BigInteger(sbE.ToString(), 16);
-            n = new BigInteger(sbN.ToString(), 16);
+            
+            
+            eC = BigInteger.Parse(sbE.ToString(),NumberStyles.AllowHexSpecifier);
+            n = BigInteger.Parse(sbN.ToString(),NumberStyles.AllowHexSpecifier);
             CanEncrypt = true;
         }
         public void ImportPrivateKey(string inPutFile)
@@ -277,6 +215,8 @@ namespace ThirdTask_3
             string line = sr.ReadLine();
             StringBuilder sbD = new StringBuilder();
             StringBuilder sbN = new StringBuilder();
+            sbD.Append("0");
+            sbN.Append("0");// to convert to BigInteger
 
             int i = 0;
             while (line[i] != ',')
@@ -292,32 +232,22 @@ namespace ThirdTask_3
                 i++;
             }
 
-            d = new BigInteger(sbD.ToString(), 16);
-            n = new BigInteger(sbN.ToString(), 16);
+            d = BigInteger.Parse(sbD.ToString(),NumberStyles.AllowHexSpecifier);
+            n = BigInteger.Parse(sbN.ToString(),NumberStyles.AllowHexSpecifier);
             CanDecrypt = true;
         }
-        public BigInteger EncryptOneByte(BigInteger mToPow)
+        public BigInteger EncryptOneByte(byte mToPow)
         {
             if (!CanEncrypt)
                 throw new CryptographicException("Dont have a public key imported to do encryption process");
 
-            BigInteger exp = new BigInteger(eC);
-            BigInteger modN = new BigInteger(n);
-            BigInteger modRes = mToPow.modPow(exp, modN);
+            BigInteger exp = eC;
+            BigInteger modN = n;
+            BigInteger modRes = BigInteger.ModPow(mToPow, exp, modN);
 
             return modRes;
         }
         public BigInteger[] Encrypt(byte[] data)
-        {
-            BigInteger[] encrypted = new BigInteger[data.Length];
-            for (int i = 0; i < data.Length; i++)
-            {
-                encrypted[i] = EncryptOneByte((int)data[i]);
-            }
-
-            return encrypted;
-        }
-        public BigInteger[] Encrypt(BigInteger[] data)
         {
             BigInteger[] encrypted = new BigInteger[data.Length];
             for (int i = 0; i < data.Length; i++)
@@ -328,16 +258,16 @@ namespace ThirdTask_3
             return encrypted;
         }
         
-        public BigInteger DecryptOneByte(BigInteger c)
+        public byte DecryptOneByte(BigInteger c)
         {
             if (!CanDecrypt)
                 throw new CryptographicException("Dont have a private key imported to do decryption process");
 
-            BigInteger cToPow = new BigInteger(c);
-            BigInteger exp = new BigInteger(d);
-            BigInteger modN = new BigInteger(n);
-            BigInteger modRes = cToPow.modPow(exp, modN);
-
+            BigInteger cToPow = c;
+            BigInteger exp = d;
+            BigInteger modN = n;
+            var powed = BigInteger.ModPow(cToPow, exp, modN);
+            byte modRes = (byte)(int) powed;
             return modRes;
         }
         public byte[] Decrypt(BigInteger[] data)
@@ -345,65 +275,52 @@ namespace ThirdTask_3
             byte[] decrypted = new byte[data.Length];
             for (int i = 0; i < data.Length; i++)
             {
-                decrypted[i] =(byte) DecryptOneByte(data[i]).IntValue();
+                decrypted[i] = (byte)(int)DecryptOneByte(data[i]);
             }
 
             return decrypted;
         }
-        public BigInteger[] DecryptToBigIntegers(BigInteger[] data)
-        {
-            BigInteger[] decrypted = new BigInteger[data.Length];
-            for (int i = 0; i < data.Length; i++)
-            {
-                decrypted[i] = DecryptOneByte(data[i]);
-            }
-        
-            return decrypted;
-        }
-
-
-        
 
 
 
-       
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
         private void Generate_Primes()
         {
             uint pLength = (uint)(keySize / 2.0), qLength = keySize - pLength;
-            
-        
+
             var tasks = new List<Task>();
             tasks.Add(Task.Run(() =>
             {
-                do 
-                {
-                    p = GenerateOddNBitNumber(pLength);
-                } while (!ThirdTask_2.PrimeTests.RabinMillerTest(p, testConfidence));
+                p = ThirdTask_2.Program.FindPrime((int)pLength, testConfidence);
             }));
             tasks.Add(Task.Run(() =>
             {
-                do 
-                {
-                    q = GenerateOddNBitNumber(qLength);
-                } while (!ThirdTask_2.PrimeTests.RabinMillerTest(q, testConfidence));
+                q = ThirdTask_2.Program.FindPrime((int)qLength, testConfidence);
             }));
 
             Task t = Task.WhenAll(tasks);
-            try {
+            try
+            {
                 t.Wait();
             }
-            catch {}   
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }   
 
 
             if(p < q)
             {
-                BigInteger tmp = new BigInteger(p);
+                BigInteger tmp = p;
                 p = q;
                 q = tmp;
             }
@@ -417,25 +334,58 @@ namespace ThirdTask_3
         
         private void GenerateEncryptionExponent()
         {
+            // RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            //
+            // byte[] _a = new byte[(uint)(keySize / 2.0)];
+            //
+            // rng.GetBytes(_a);
+            // generatedE = new BigInteger(_a);
+            
+            var eSize = (int) (keySize / 2.0);
+            // var minE = BigInteger.Pow(2, eSize);
+            // var maxE = BigInteger.Pow(2, eSize+1)-1;
+            // RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            
+            byte[] randomBytes = new byte[(eSize / 8)+1];
+            Random rand = new Random(Environment.TickCount);
+            
             BigInteger generatedE;
-           
-            generatedE = GenerateOddNBitNumber((uint)(keySize / 2.0));
-
-            for (; ; generatedE++)
+            
+            do
             {
-                if (GreatestCommonDivizor(phi, generatedE) == 1)
-                {
-                    eC = generatedE;
-                    break;
-                }
-            }
+                rand.NextBytes(randomBytes);
+                //Making the extra byte 0x0 so the BigInts are unsigned (little endian).
+                randomBytes[randomBytes.Length - 1] = 0x0;
 
-            if (eC == 0)
-            {
-                throw new Exception("Cannnot select e!");
+                //Setting the bottom bit and top two bits of the number.
+                //This ensures the number is odd, and ensures the high bit of N is set when generating keys.
+                SetBitInByte(0, ref randomBytes[0]);
+                SetBitInByte(7, ref randomBytes[randomBytes.Length - 2]);
+                SetBitInByte(6, ref randomBytes[randomBytes.Length - 2]);
+                generatedE = new BigInteger(randomBytes);
             }
+            while (GreatestCommonDivizor(phi, generatedE) != 1);
+            
+            //generatedE = GenerateOddNBitNumber((uint)(keySize / 2.0));
+
+            // for (; ; generatedE++)
+            // {
+            //     if (GreatestCommonDivizor(phi, generatedE) == 1)
+            //     {
+            //         eC = generatedE;
+            //         break;
+            //     }
+            // }
+            eC = generatedE;
+
+            MessageBox.Show("Generated e: " + eC);
+            MessageBox.Show("Condition: GCD(phi, eC)=" + GreatestCommonDivizor(phi, eC));
         }
-        
+        public static void SetBitInByte(int bitNumFromRight, ref byte toSet)
+        {
+            byte mask = (byte)(1 << bitNumFromRight);
+            toSet |= mask;
+        }
         private void GenerateDecryptionExponent()
         {
             // d = (Extended_GDC(eC, phi, false))[0];
@@ -443,53 +393,150 @@ namespace ThirdTask_3
             //     d = -d;
             
             //d = (Extended_GDC(eC, phi, true))[1];
-
-            d = (ExtendedEuclideanAlgorithm(eC, phi))[0];
-            if (d < 0)
-                d = -d;
-            // BigInteger x;
-            // BigInteger y;
-            // ExtendedEuclideanAlgorithm(eC, phi, out x, out y);
-            // d = y;
-        }
-
-        public BigInteger[] ExtendedEuclideanAlgorithm(BigInteger a, BigInteger modulus)
-        {
-            BigInteger x, lastX, b_, y, lastY, a_, quotient, temp, temp2, temp3;
-            BigInteger[] result;
             
-            if (a < modulus)
+            
+            // d = (ExtendedEuclideanAlgorithm(eC, phi))[0];
+            // while(d < 0)
+            //     d += phi;
+            
+            BigInteger x;
+            BigInteger y;
+            ThirdTask_1.Program.ExtendedEuclideanAlgorithm(eC, phi, out x, out y);
+            d = x;
+            while(d < 0)
+                d += phi;
+            
+            MessageBox.Show("Generated d: " + d);
+
+            MessageBox.Show("Condition e*d + phi*y = GCD(eC,phi) = " + (eC * x + phi * y));
+        }
+        public static BigInteger ModularInverse(BigInteger u, BigInteger v)
+        {
+            //Declaring new variables on the heap.
+            BigInteger inverse, u1, u3, v1, v3, t1, t3, q = new BigInteger();
+            //Staying on the stack, quite small, so no need for extra memory time.
+            BigInteger iteration;
+
+            //Stating initial variables.
+            u1 = 1;
+            u3 = u;
+            v1 = 0;
+            v3 = v;
+
+            //Beginning iteration.
+            iteration = 1;
+            while (v3 != 0)
             {
-                x = 0; lastX = 1; b_ = modulus;
-                y = 1; lastY = 0; a_ = a;
+                //Divide and sub q, t3 and t1.
+                q = u3 / v3;
+                t3 = u3 % v3;
+                t1 = u1 + q * v1;
+
+                //Swap variables for next pass.
+                u1 = v1; v1 = t1; u3 = v3; v3 = t3;
+                iteration = -iteration;
+            }
+
+            if (u3 != 1)
+            {
+                //No inverse, return 0.
+                return 0;
+            }
+            else if (iteration < 0)
+            {
+                inverse = v - u1;
             }
             else
             {
-                x = 1; lastX = 0; b_ = a;
-                y = 0; lastY = 1; a_ = modulus;
-            }
-            
-            
-            while (a_ > 1)
-            {
-                quotient = b_ / a_; 
-                temp = x - quotient * y;
-                temp2 = lastX - quotient * lastY;
-                temp3 = b_ - quotient * a_;
-
-                x = y; lastX = lastY; b_ = a_;
-                y = temp; lastY = temp2; a_ = temp3;
+                inverse = u1;
             }
 
-            if (a_ == 0) result = new BigInteger[] { x, lastX, b_ };
-            else result = new BigInteger[] { y, lastY, a_ };
-
-            return result;
+            //Return.
+            return inverse;
         }
+        //________________________________________________________________________________________________
+        public byte[] EncryptBytes(byte[] bytes)
+        {
+            //Checking that the size of the bytes is less than n, and greater than 1.
+            // if (1>bytes.Length || bytes.Length>=public_key.n.ToByteArray().Length)
+            // {
+            //     throw new Exception("Bytes given are longer than length of key element n (" + bytes.Length + " bytes).");
+            // }
+
+            //Padding the array to unsign.
+            byte[] bytes_padded = new byte[bytes.Length+2];
+            Array.Copy(bytes, bytes_padded, bytes.Length);
+            bytes_padded[bytes_padded.Length-1] = 0x00;
+            
+            //Setting high byte right before the data, to prevent data loss.
+            bytes_padded[bytes_padded.Length-2] = 0xFF;
+
+            //Computing as a BigInteger the encryption operation.
+            var cipher_bigint = new BigInteger();
+            var padded_bigint = new BigInteger(bytes_padded);
+            cipher_bigint = BigInteger.ModPow(padded_bigint, eC, n);
+
+            //Returning the byte array of encrypted bytes.
+            return cipher_bigint.ToByteArray();
+        }
+
+        //Decrypts a set of bytes when given a private key.
+        public byte[] DecryptBytes(byte[] bytes)
+        {
+            //Checking that the private key is legitimate, and contains d.
+            // if (private_key.type!=KeyType.PRIVATE)
+            // {
+            //     throw new Exception("Private key given for decrypt is classified as non-private in instance.");
+            // }
+
+            //Decrypting.
+            var plain_bigint = new BigInteger();
+            var padded_bigint = new BigInteger(bytes);
+            plain_bigint = BigInteger.ModPow(padded_bigint, d, n);
+
+            //Removing all padding bytes, including the marker 0xFF.
+            byte[] plain_bytes = plain_bigint.ToByteArray();
+            int lengthToCopy=-1;
+            for (int i=plain_bytes.Length-1; i>=0; i--) 
+            {
+                if (plain_bytes[i]==0xFF)
+                {
+                    lengthToCopy = i;
+                    break;
+                }
+            }
+
+            //Checking for a failure to find marker byte.
+            if (lengthToCopy==-1)
+            {
+                throw new Exception("Marker byte for padding (0xFF) not found in plain bytes.\nPossible Reasons:\n1: PAYLOAD TOO LARGE\n2: KEYS INVALID\n3: ENCRYPT/DECRYPT FUNCTIONS INVALID");
+            }
+
+            //Copying into return array, returning.
+            byte[] return_array = new byte[lengthToCopy];
+            Array.Copy(plain_bytes, return_array, lengthToCopy);
+            return return_array;
+        }
+        //________________________________________________________________________________________________
         
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
         public static BigInteger GreatestCommonDivizor(BigInteger x, BigInteger y)
         {
             BigInteger tmp;
@@ -577,36 +624,6 @@ namespace ThirdTask_3
             }
 
             return result;
-        }
-
-        //generate a random number of n bits
-        public static BigInteger GenerateOddNBitNumber(uint nrBits)
-        {
-            //String tmp = "";
-            int nr;
-            BigInteger b = new BigInteger();
-
-            Random rand = new Random((int)DateTime.Now.Ticks);
-
-            // This cycle can be changed to generate not one bit, but more bits at a time
-            for (uint i = 0; i < nrBits; i++)
-            {
-                nr = rand.Next(2);
-
-                // The generated binary number will be calculated like this, because
-                // the assignation of the bits is done from the lower to high ones
-                // tmp = nr.ToString() + tmp;
-                if (nr == 1) b.setBit(i);
-            }
-
-            // We assure ourselves that the number is odd, by setting the lower bit to 1
-            b.setBit(0);
-
-            // this ensures that the high bit of n is also set
-            b.setBit(nrBits - 2);
-            b.setBit(nrBits - 1);
-
-            return b;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Numerics;
 using System.Text;
+//using BigInteger = System.Numerics.BigInteger;
 
 namespace ThirdTask_3
 {
@@ -11,47 +13,86 @@ namespace ThirdTask_3
         
         public static void Main(string[] args)
         {
-            TestWithFile();
-            return;
+            //TestWithFile();
+            //Console.WriteLine(LogPow2(System.Numerics.BigInteger.Pow(16,19),4));
+            //return;
             
             
-            RsaCore rsa = new RsaCore(516);
+            RsaCore rsa = new RsaCore(512);
 
-            Console.WriteLine(rsa.EncryptOneByte(0));
-            
-            
-            Console.WriteLine("Public key as hex string:");
-            Console.WriteLine(rsa.GetPublicKeyAsString(16));
-            Console.WriteLine();
-            
-            Console.WriteLine("Private key as hex string:");
-            Console.WriteLine(rsa.GetPrivateKeyAsString(16));
-            Console.WriteLine();
+            byte[] raw = {0x00, 0x01, 0x02, 0x03, 0x04};
 
-
-            Console.WriteLine("Data to be encrypted:");
-            var dataS = "Secret 2 123456789";
-            Console.WriteLine(dataS);
-            var data = new ASCIIEncoding().GetBytes(dataS);
-
-            
-            
-            
-            var encrypted = rsa.Encrypt(data);
-            Console.WriteLine();
-            Console.WriteLine("Encrypted data:");
-            for (int i = 0; i < encrypted.Length; i++)
+//These bytes are now encrypted using RSA, of the bitlength specified before.
+            byte[] encrypted = rsa.EncryptBytes(raw);
+            Console.WriteLine("Encrypted:");
+            foreach (var VARIABLE in encrypted)
             {
-                Console.WriteLine("Byte number " + i + ", |"+data[i]+" size is " + encrypted[i].getBytes().Length);
-                Console.WriteLine(encrypted[i]);
+                Console.Write(VARIABLE);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Decrypted: ");
+            byte[] decrypted = rsa.DecryptBytes(encrypted);
+            foreach (var VARIABLE in decrypted)
+            {
+                Console.Write(VARIABLE);
             }
             
-            Console.WriteLine();
-
-            var decrypted = rsa.Decrypt(encrypted);
-            Console.WriteLine("Decrypted data: " + new ASCIIEncoding().GetString(decrypted));
+            return;
+            //
+            //
+            //
+            //
+            // Console.WriteLine(rsa.EncryptOneByte(0));
+            //
+            //
+            // Console.WriteLine("Public key as hex string:");
+            // Console.WriteLine(rsa.GetPublicKeyAsString());
+            // Console.WriteLine();
+            //
+            // Console.WriteLine("Private key as hex string:");
+            // Console.WriteLine(rsa.GetPrivateKeyAsString());
+            // Console.WriteLine();
+            //
+            //
+            // Console.WriteLine("Data to be encrypted:");
+            // var dataS = "Secret 2 123456789";
+            // Console.WriteLine(dataS);
+            // var data = new ASCIIEncoding().GetBytes(dataS);
+            //
+            //
+            //
+            //
+            // var encrypted = rsa.Encrypt(data);
+            // Console.WriteLine();
+            // Console.WriteLine("Encrypted data:");
+            // for (int i = 0; i < encrypted.Length; i++)
+            // {
+            //     Console.WriteLine("Byte number " + i + ", |"+data[i]+" size is " + encrypted[i].ToByteArray().Length);
+            //     Console.WriteLine(encrypted[i]);
+            // }
+            //
+            // Console.WriteLine();
+            //
+            // var decrypted = rsa.Decrypt(encrypted);
+            // Console.WriteLine("Decrypted data: " + new ASCIIEncoding().GetString(decrypted));
         }
-        
+
+
+        public static int LogPow2(System.Numerics.BigInteger number, int powOfTwo)
+        {
+            int res = 0;
+            
+            var temp = number;
+            while (temp != 0)
+            {
+                temp >>= powOfTwo;
+                res++;
+            }
+
+            return res-1;
+        }
         
         public static void TestWithFile()
         {
@@ -95,15 +136,15 @@ namespace ThirdTask_3
                 var encryptedAllBytes = new byte[plainText.Length][];
                 for (int j = 0; j < encryptedBigIntegers.Length; j++)
                 {
-                    encryptedBigIntegers[j] = rsaCore.EncryptOneByte(new BigInteger(plainText[j]));
-                    Console.WriteLine("Encrypted byte: " + plainText[j] + " length is " + encryptedBigIntegers[j].getBytes().Length);
+                    encryptedBigIntegers[j] = rsaCore.EncryptOneByte(plainText[j]);
+                    Console.WriteLine("Encrypted byte: " + plainText[j] + " length is " + encryptedBigIntegers[j].ToByteArray().Length);
                     
-                    encryptedAllBytes[j] = encryptedBigIntegers[j].getBytes();
+                    encryptedAllBytes[j] = encryptedBigIntegers[j].ToByteArray();
                     if (encryptedAllBytes[j].Length != rsaCore.numberSize)
                     {
                         //MessageBox.Show("Error : " + encrypted[j].getBytes().Length + " != " + rsaCore.numberSize);
                         Console.WriteLine("Found wrong data size: " + encryptedAllBytes[j].Length);
-                        var temp = encryptedBigIntegers[j].getBytes();
+                        var temp = encryptedBigIntegers[j].ToByteArray();
 
                         var fixedWithPadding = new byte[rsaCore.numberSize];
                         if (temp.Length == 1)
@@ -217,13 +258,13 @@ namespace ThirdTask_3
                         {
                             temp[j] = block[j + 1];
                         }
-                        decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(temp)).IntValue();
+                        decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(temp));
                     }
                     
                 }
                 else
                 {
-                    decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(block)).IntValue();
+                    decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(block));
                 }
                 // List<byte> temp = new List<byte>();
                 // for (int j = 0; j < block.Length; j++)

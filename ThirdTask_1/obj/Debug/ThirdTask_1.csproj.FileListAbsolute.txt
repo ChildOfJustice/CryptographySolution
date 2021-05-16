@@ -1,6 +1,0 @@
-C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\ThirdTask_1\bin\Debug\ThirdTask_1.exe
-C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\ThirdTask_1\bin\Debug\ThirdTask_1.pdb
-C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\ThirdTask_1\obj\Debug\ThirdTask_1.csprojAssemblyReference.cache
-C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\ThirdTask_1\obj\Debug\ThirdTask_1.csproj.CoreCompileInputs.cache
-C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\ThirdTask_1\obj\Debug\ThirdTask_1.exe
-C:\Users\Administrator\Desktop\TEMP UCHEBA\Cryptography\CryptographyYuldashev\CryptographySolution\ThirdTask_1\obj\Debug\ThirdTask_1.pdb

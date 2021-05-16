@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Numerics;
+using System.Text;
+using System.Windows;
 
 namespace SardorRsa
 {
@@ -118,7 +122,86 @@ namespace SardorRsa
         }
         
         
-        
+        public String GetPublicKeyAsString()
+        {
+            return e.ToString("X") + "," + n.ToString("X");
+        }
+        public String GetPrivateKeyAsString()
+        {
+            return d.ToString("X") + "," + n.ToString("X");
+        }
+        public void ExportPubKey(string outPutFile)
+        {
+            var exportedKey = GetPublicKeyAsString();
+            var exportedKeyBytes= new ASCIIEncoding().GetBytes(exportedKey);
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
+        }
+        public void ExportPrivateKey(string outPutFile)
+        {
+            var exportedKey = GetPrivateKeyAsString();
+            var exportedKeyBytes= new ASCIIEncoding().GetBytes(exportedKey);
+            using (var outputStream = File.Open(outPutFile, FileMode.Create))
+                outputStream.Write(exportedKeyBytes, 0, exportedKeyBytes.Length);
+        }
+        public void ImportPubKey(string inPutFile)
+        {
+           
+            StreamReader sr = new StreamReader(inPutFile);
+            string line = sr.ReadLine();
+            StringBuilder sbE = new StringBuilder();
+            StringBuilder sbN = new StringBuilder();
+            sbE.Append("0");
+            sbN.Append("0");// to convert to BigInteger
+            
+            int i = 0;
+            while (line[i] != ',')
+            {
+                sbE.Append(line[i]);
+                i++;
+            }
+            
+            i++;
+            
+            while (i != line.Length)
+            {
+                sbN.Append(line[i]);
+                i++;
+            }
+            
+            
+            e = BigInteger.Parse(sbE.ToString(),NumberStyles.AllowHexSpecifier);
+            n = BigInteger.Parse(sbN.ToString(),NumberStyles.AllowHexSpecifier);
+            NumberSize = LogPow2(n, 8) + 1;
+        }
+        public void ImportPrivateKey(string inPutFile)
+        {
+           
+            StreamReader sr = new StreamReader(inPutFile);
+            string line = sr.ReadLine();
+            StringBuilder sbD = new StringBuilder();
+            StringBuilder sbN = new StringBuilder();
+            sbD.Append("0");
+            sbN.Append("0");// to convert to BigInteger
+
+            int i = 0;
+            while (line[i] != ',')
+            {
+                sbD.Append(line[i]);
+                i++;
+            }
+
+            i++;
+            while (i != line.Length)
+            {
+                sbN.Append(line[i]);
+                i++;
+            }
+
+            d = BigInteger.Parse(sbD.ToString(),NumberStyles.AllowHexSpecifier);
+            n = BigInteger.Parse(sbN.ToString(),NumberStyles.AllowHexSpecifier);
+            NumberSize = LogPow2(n, 8) + 1;
+        }
         
         
         

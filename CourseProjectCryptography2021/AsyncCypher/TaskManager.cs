@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using EncryptionModes;
 using MagentaAlgorithm;
-using Task_4;
-using ThirdTask_3;
 
 namespace Task_8.AsyncCypher
 {

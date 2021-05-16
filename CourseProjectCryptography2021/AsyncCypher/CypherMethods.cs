@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 using System.Windows;
-using System.Windows.Documents;
-using ThirdTask_3;
+using SardorRsa;
 
 namespace Task_8.AsyncCypher
 {
@@ -40,6 +36,7 @@ namespace Task_8.AsyncCypher
 
         public static void EncryptKey(RsaCore rsaCore, string keyFileName, string outputFilePath)
         {
+            //MessageBox.Show("! " + rsaCore.NumberSize);
             FileInfo fi = new FileInfo(keyFileName);
             int blocks = (int)fi.Length / 8;
             
@@ -60,17 +57,17 @@ namespace Task_8.AsyncCypher
                 var encryptedAllBytes = new byte[plainText.Length][];
                 for (int j = 0; j < encryptedBigIntegers.Length; j++)
                 {
-                    encryptedBigIntegers[j] = rsaCore.EncryptOneByte(new BigInteger(plainText[j]));
-                    //Console.WriteLine("Encrypted byte: " + plainText[j] + " length is " + encryptedBigIntegers[j].getBytes().Length);
+                    encryptedBigIntegers[j] = rsaCore.EncryptOneByte(plainText[j]);
+                    //Console.WriteLine("Encrypted byte: " + plainText[j] + " length is " + encryptedBigIntegers[j].ToByteArray().Length);
                     
-                    encryptedAllBytes[j] = encryptedBigIntegers[j].getBytes();
-                    if (encryptedAllBytes[j].Length != rsaCore.numberSize)
+                    encryptedAllBytes[j] = encryptedBigIntegers[j].ToByteArray();
+                    if (encryptedAllBytes[j].Length != rsaCore.NumberSize)
                     {
-                        //MessageBox.Show("Error : " + encrypted[j].getBytes().Length + " != " + rsaCore.numberSize);
+                        //MessageBox.Show("Error : " + encryptedAllBytes[j].Length + " != " + rsaCore.NumberSize);
                         //Console.WriteLine("Found wrong data size: " + encryptedAllBytes[j].Length);
-                        var temp = encryptedBigIntegers[j].getBytes();
+                        var temp = encryptedBigIntegers[j].ToByteArray();
 
-                        var fixedWithPadding = new byte[rsaCore.numberSize];
+                        var fixedWithPadding = new byte[rsaCore.NumberSize];
                         if (temp.Length == 1)
                         {
                             //Console.WriteLine("ONE!!!");
@@ -122,24 +119,13 @@ namespace Task_8.AsyncCypher
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e.Message);
+                        Console.WriteLine(e.Message);
                     }
                 }
                 
             }
             outputStream.Close();
             fs.Close();
-        }
-
-        public static string arrToStr(byte[] arr)
-        {
-            string res = "";
-            foreach (var VARIABLE in arr)
-            {
-                res += VARIABLE;
-            }
-
-            return res;
         }
         public static void DecryptKey(RsaCore rsaCore, string encryptedKeyFileName, string outputFilePath)
         {
@@ -148,18 +134,18 @@ namespace Task_8.AsyncCypher
             FileStream fs = new FileStream(encryptedKeyFileName, FileMode.Open, FileAccess.Read);
 
             var fi = new FileInfo(encryptedKeyFileName);
-            var numbersQuantity = fi.Length/rsaCore.numberSize;
+            var numbersQuantity = fi.Length/rsaCore.NumberSize;
             for (int i = 0; i < numbersQuantity; i++)
             {
-                int endPositionToRead = (i + 1) * rsaCore.numberSize;
-                var block = TaskManager.ReadDesiredPart(fs, (i) * rsaCore.numberSize, endPositionToRead);
+                int endPositionToRead = (i + 1) * rsaCore.NumberSize;
+                var block = TaskManager.ReadDesiredPart(fs, (i) * rsaCore.NumberSize, endPositionToRead);
                 //MessageBox.Show("Dec size: " + block.Length);
                 //MessageBox.Show("read: " + arrToStr(block));
                 byte decryptedByte;
                 if (block[0] == 0)
                 {
-                    // Console.WriteLine("!HMM!");
-                    // Console.WriteLine(arrToStr(block));
+                    //Console.WriteLine("!HMM!");
+                    //Console.WriteLine(arrToStr(block));
                     bool isOne = true;
                     for (int j = 1; j < block.Length-1; j++)
                     {
@@ -172,7 +158,7 @@ namespace Task_8.AsyncCypher
 
                     if (isOne)
                     {
-                        // Console.WriteLine("ITS ONE");
+                        //Console.WriteLine("ITS ONE");
                         decryptedByte = 1;
                     }
                     else
@@ -182,13 +168,13 @@ namespace Task_8.AsyncCypher
                         {
                             temp[j] = block[j + 1];
                         }
-                        decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(temp)).IntValue();
+                        decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(temp));
                     }
                     
                 }
                 else
                 {
-                    decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(block)).IntValue();
+                    decryptedByte = (byte)rsaCore.DecryptOneByte(new BigInteger(block));
                 }
                 // List<byte> temp = new List<byte>();
                 // for (int j = 0; j < block.Length; j++)
@@ -210,12 +196,14 @@ namespace Task_8.AsyncCypher
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message);
+                    Console.WriteLine(e.Message);
                 }
             }
+
             outputStream.Close();
             //sr.Close();
             
         }
+        
     }
 }

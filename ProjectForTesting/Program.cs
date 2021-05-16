@@ -178,17 +178,6 @@ namespace ProjectForTesting
             outputStream.Close();
             fs.Close();
         }
-
-        public static string arrToStr(byte[] arr)
-        {
-            string res = "";
-            foreach (var VARIABLE in arr)
-            {
-                res += VARIABLE;
-            }
-
-            return res;
-        }
         public static void DecryptKey(RsaCore rsaCore, string encryptedKeyFileName, string outputFilePath)
         {
             

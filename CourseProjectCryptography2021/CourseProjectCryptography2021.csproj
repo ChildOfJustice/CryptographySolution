@@ -37,6 +37,7 @@
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
+        <Reference Include="System.Numerics" />
         <Reference Include="System.Xml" />
         <Reference Include="System.Xaml">
             <RequiredTargetFramework>4.0</RequiredTargetFramework>
@@ -99,17 +100,13 @@
         <Project>{c18b37fe-708a-45f5-b399-fd4f3ccc0815}</Project>
         <Name>MagentaAlgorithm</Name>
       </ProjectReference>
+      <ProjectReference Include="..\SardorRsa\SardorRsa.csproj">
+        <Project>{2475ffd8-7464-40b7-a57a-911f7ce51b4e}</Project>
+        <Name>SardorRsa</Name>
+      </ProjectReference>
       <ProjectReference Include="..\Task_4\Task_4.csproj">
         <Project>{0e4b6d49-fe46-4111-8743-d782779f528e}</Project>
         <Name>Task_4</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\ThirdTask_2\ThirdTask_2.csproj">
-        <Project>{c59469f9-4625-4d5f-9070-390fb2711adf}</Project>
-        <Name>ThirdTask_2</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\ThirdTask_3\ThirdTask_3.csproj">
-        <Project>{74ebdaf5-d142-45b5-bf86-6c76961175f6}</Project>
-        <Name>ThirdTask_3</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>

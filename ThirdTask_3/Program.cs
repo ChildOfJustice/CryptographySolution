@@ -19,64 +19,68 @@ namespace ThirdTask_3
             
             
             RsaCore rsa = new RsaCore(512);
+            byte dataByte = 83;
+            var enc = rsa.EncryptOneByte(dataByte);
+            var decryptedByte = rsa.DecryptOneByte(enc);
+            Console.WriteLine("Your data is: " + decryptedByte);
 
-            byte[] raw = {0x00, 0x01, 0x02, 0x03, 0x04};
-
-//These bytes are now encrypted using RSA, of the bitlength specified before.
-            byte[] encrypted = rsa.EncryptBytes(raw);
-            Console.WriteLine("Encrypted:");
-            foreach (var VARIABLE in encrypted)
-            {
-                Console.Write(VARIABLE);
-            }
-
+//             byte[] raw = {0x00, 0x01, 0x02, 0x03, 0x04};
+//
+// //These bytes are now encrypted using RSA, of the bitlength specified before.
+//             byte[] encrypted = rsa.EncryptBytes(raw);
+//             Console.WriteLine("Encrypted:");
+//             foreach (var VARIABLE in encrypted)
+//             {
+//                 Console.Write(VARIABLE);
+//             }
+//
+//             Console.WriteLine();
+//             Console.WriteLine();
+//             Console.WriteLine("Decrypted: ");
+//             byte[] decrypted = rsa.DecryptBytes(encrypted);
+//             foreach (var VARIABLE in decrypted)
+//             {
+//                 Console.Write(VARIABLE);
+//             }
+//             
+           
+            
+            
+            
+            
+            //Console.WriteLine(rsa.EncryptOneByte(0));
+            
+            
+            Console.WriteLine("Public key as hex string:");
+            Console.WriteLine(rsa.GetPublicKeyAsString());
             Console.WriteLine();
+            
+            Console.WriteLine("Private key as hex string:");
+            Console.WriteLine(rsa.GetPrivateKeyAsString());
             Console.WriteLine();
-            Console.WriteLine("Decrypted: ");
-            byte[] decrypted = rsa.DecryptBytes(encrypted);
-            foreach (var VARIABLE in decrypted)
+            
+            
+            Console.WriteLine("Data to be encrypted:");
+            var dataS = "Secret 2 123456789";
+            Console.WriteLine(dataS);
+            var data = new ASCIIEncoding().GetBytes(dataS);
+            
+            
+            
+            
+            var encrypted = rsa.Encrypt(data);
+            Console.WriteLine();
+            Console.WriteLine("Encrypted data:");
+            for (int i = 0; i < encrypted.Length; i++)
             {
-                Console.Write(VARIABLE);
+                Console.WriteLine("Byte number " + i + ", |"+data[i]+" size is " + encrypted[i].ToByteArray().Length);
+                Console.WriteLine(encrypted[i]);
             }
             
-            return;
-            //
-            //
-            //
-            //
-            // Console.WriteLine(rsa.EncryptOneByte(0));
-            //
-            //
-            // Console.WriteLine("Public key as hex string:");
-            // Console.WriteLine(rsa.GetPublicKeyAsString());
-            // Console.WriteLine();
-            //
-            // Console.WriteLine("Private key as hex string:");
-            // Console.WriteLine(rsa.GetPrivateKeyAsString());
-            // Console.WriteLine();
-            //
-            //
-            // Console.WriteLine("Data to be encrypted:");
-            // var dataS = "Secret 2 123456789";
-            // Console.WriteLine(dataS);
-            // var data = new ASCIIEncoding().GetBytes(dataS);
-            //
-            //
-            //
-            //
-            // var encrypted = rsa.Encrypt(data);
-            // Console.WriteLine();
-            // Console.WriteLine("Encrypted data:");
-            // for (int i = 0; i < encrypted.Length; i++)
-            // {
-            //     Console.WriteLine("Byte number " + i + ", |"+data[i]+" size is " + encrypted[i].ToByteArray().Length);
-            //     Console.WriteLine(encrypted[i]);
-            // }
-            //
-            // Console.WriteLine();
-            //
-            // var decrypted = rsa.Decrypt(encrypted);
-            // Console.WriteLine("Decrypted data: " + new ASCIIEncoding().GetString(decrypted));
+            Console.WriteLine();
+            
+            var decrypted = rsa.Decrypt(encrypted);
+            Console.WriteLine("Decrypted data: " + new ASCIIEncoding().GetString(decrypted));
         }
 
 

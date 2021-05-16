@@ -346,7 +346,8 @@ namespace ThirdTask_3
             // var maxE = BigInteger.Pow(2, eSize+1)-1;
             // RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             
-            byte[] randomBytes = new byte[(eSize / 8)+1];
+            // byte[] randomBytes = new byte[(eSize / 8)+1];
+            byte[] randomBytes = new byte[eSize];
             Random rand = new Random(Environment.TickCount);
             
             BigInteger generatedE;

@@ -32,11 +32,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_3", "ThirdTask_3\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_2", "ThirdTask_2\ThirdTask_2.csproj", "{C59469F9-4625-4D5F-9070-390FB2711ADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRSA", "TestRSA\TestRSA.csproj", "{11507757-28AD-4881-BCDD-1ABEDAE51DEE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CourseProjectCryptography2021", "CourseProjectCryptography2021\CourseProjectCryptography2021.csproj", "{5AA97944-ACE5-4629-852F-31E5A8938B02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdTask_4", "ThirdTask_4\ThirdTask_4.csproj", "{06B666BE-32B7-4E9F-BF42-75BA86337A26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SardorRsa", "SardorRsa\SardorRsa.csproj", "{2475FFD8-7464-40B7-A57A-911F7CE51B4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,17 +106,13 @@ Global
 		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C59469F9-4625-4D5F-9070-390FB2711ADF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11507757-28AD-4881-BCDD-1ABEDAE51DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA97944-ACE5-4629-852F-31E5A8938B02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06B666BE-32B7-4E9F-BF42-75BA86337A26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2475FFD8-7464-40B7-A57A-911F7CE51B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2475FFD8-7464-40B7-A57A-911F7CE51B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2475FFD8-7464-40B7-A57A-911F7CE51B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2475FFD8-7464-40B7-A57A-911F7CE51B4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
